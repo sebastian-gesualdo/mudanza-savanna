@@ -2,7 +2,11 @@
 
 ## Personas y contexto
 
-Todos los colaboradores pertenecen a la misma mudanza y pueden trabajar sobre su inventario. Al entrar por invitación, eligen un nombre existente o crean uno. Evitar nombres duplicados por mayúsculas/espacios. Es una atribución familiar: no prueba la identidad de la persona. Se puede cambiar de nombre explícitamente en el dispositivo.
+Todos los colaboradores pertenecen a la misma mudanza y pueden trabajar sobre su inventario. Entran con “Continuar con Google” y una cuenta cuyo correo fue autorizado por el organizador. Cada cuenta corresponde a un participante estable; su apodo familiar, por ejemplo “Seba” o “Lu”, puede editarse sin cambiar la identidad. Evitar apodos duplicados por mayúsculas/espacios. El apodo se comparte entre dispositivos de la misma persona.
+
+Mostrar la cuenta activa y el apodo. Cambiar de persona requiere cerrar sesión y entrar con otra cuenta Google; no existe un selector para actuar como otro participante. Todos necesitan una cuenta Google, que puede usar un correo ajeno a Gmail. Solo se solicitan nombre y correo básicos; no acceso a Gmail, Drive o contactos.
+
+Si Google se cancela o falla, permitir reintentar sin perder borradores. Una cuenta no autorizada ve “Esta cuenta no tiene acceso a la mudanza”, con opción de cambiar de cuenta; no recibe inventario ni puede gastar IA. La primera entrada necesita conexión. La recuperación de una sesión y de pendientes offline sigue [05-offline-ios](05-offline-ios.md).
 
 Cada conversación mantiene su propia unidad activa. El cierre que hace Lu no cambia la caja activa de Seba. Abrir una ficha ajena no debe alterar silenciosamente el contexto del chat: ofrecer “Trabajar con esta caja”. Mostrar siempre una etiqueta visible como “Trabajando en C-024 · Kitchen”.
 
@@ -49,7 +53,7 @@ Un grupo de ocho sillas puede registrarse como un lote de cantidad 8. Si hay que
 
 ### Chat
 
-- Entrada de texto compatible con dictado de iOS, botón Enviar y selección de nombre visible.
+- Entrada de texto compatible con dictado de iOS, botón Enviar y participante actual visible.
 - Caja activa visible; controles “Nueva caja”, “Nueva bolsa”, “Agregar contenido”, “Cerrar” y “Buscar”.
 - Conversación individual por dispositivo/conversación; inventario compartido.
 - Respuestas cortas y tarjetas con código, ambiente y acción para abrir la ficha.
@@ -79,7 +83,7 @@ Un grupo de ocho sillas puede registrarse como un lote de cantidad 8. Si hay que
 ### Mudanza y ajustes
 
 - Resumen por ambiente de destino, pendientes de cargar/entregar/desempacar y elementos “Abrir primero”.
-- Cambio explícito de participante, estado de sincronización, exportación y consumo de IA.
+- Cuenta actual, edición del apodo, cierre de sesión/cambio de cuenta, estado de sincronización, exportación y consumo de IA. Resolver o conservar los pendientes de la cuenta original antes de cambiar de persona.
 - Acceso a revisión de muebles históricos.
 - Pequeña lista opcional “Últimas cosas”: texto, persona opcional y completada. Es P1; no bloquea inventario v1.
 

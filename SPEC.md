@@ -1,6 +1,8 @@
 # Especificación de Mudanza Savanna
 
-Versión 1.0 · 11 de octubre de 2026 · Estado: lista para iniciar implementación por tareas.
+Versión 1.1 · 11 de octubre de 2026 · Estado: lista para iniciar implementación por tareas.
+
+Cambio acordado en v1.1: mantener Vercel + Supabase y usar Google Login mediante Supabase Auth, con correos autorizados y atribución por cuenta. Sustituye la invitación compartida y la selección libre de participante de v1.0.
 
 Este documento y sus documentos vinculados consolidan la conversación con el usuario. Describen el resultado esperado; no afirman que exista una aplicación, infraestructura desplegada o integración de IA probada. Las decisiones técnicas necesarias para completar el diseño se identifican como defaults de implementación.
 
@@ -14,8 +16,8 @@ La persistencia compartida, la ausencia de duplicaciones y la veracidad de las c
 
 | Tema | Decisión |
 | --- | --- |
-| Usuarios | Grupo familiar de 3–5 colaboradores; nombre elegido y recordado por dispositivo. |
-| Acceso | Invitación compartida, sin cuentas con contraseña ni verificación de identidad personal. La API y los gastos requieren una sesión válida. |
+| Usuarios | Grupo familiar de 3–5 colaboradores; participante estable vinculado a su cuenta Google y apodo editable. |
+| Acceso | Google Login mediante Supabase Auth. Solo correos previamente autorizados para la mudanza; cada lectura, escritura y gasto requiere sesión válida y membresía activa. |
 | Plataforma | PWA instalada desde Safari en iPhone; también usable desde el navegador. |
 | Datos | Inventario central en Supabase/PostgreSQL; copia local y cola de operaciones para desconexiones. |
 | Publicación | Vercel conectado a GitHub: producción desde `main`, previews para ramas/PR. |
@@ -31,13 +33,14 @@ La persistencia compartida, la ausencia de duplicaciones y la veracidad de las c
 - Next.js con App Router, React y TypeScript. Componentes accesibles, CSS/Tailwind según conveniencia; ninguna dependencia visual es requisito de producto.
 - Node.js 24 LTS. Fijar versiones estables compatibles del framework, gestor de paquetes y SDK durante T00/T01; guardar lockfile. La documentación de una rama `main` de un SDK no garantiza que la función esté publicada en npm.
 - Consultas al inventario desde el backend; sincronización por cambios y polling de 10 segundos mientras la app esté visible. Supabase Realtime no es necesario en v1.
+- Supabase reúne PostgreSQL y Auth. La lista de correos autorizados se administra fuera de la interfaz familiar; iniciar sesión con Google por sí solo no concede acceso al inventario.
 - Presupuesto inicial de IA: USD 5 por mudanza, aviso al 80%, límite aplicado por la aplicación. Es una configuración propuesta, no una compra ni una estimación garantizada de factura.
 - Alcance de diseño: 5 usuarios concurrentes, hasta 300 unidades de traslado y 2.000 entradas de contenido. Superar estos números no debe perder datos; requiere revisar rendimiento y presupuesto.
 - Zona horaria de la mudanza: `America/New_York`; almacenar instantes en UTC. La fecha exacta de mudanza queda sin asignar hasta que la indique el usuario.
 
 ## Qué debe entregar v1
 
-1. Acceso por invitación, selección de nombre y contexto de caja independiente por conversación.
+1. Acceso con Google, apodo familiar y contexto de caja independiente por conversación. Cambiar de persona requiere cambiar de cuenta.
 2. Crear y consultar cajas, bolsas, muebles y otros objetos; registrar contenido, cantidades opcionales, destino, fragilidad y prioridad de apertura.
 3. Cerrar y reabrir contenedores con autor y fecha; consultar historial y corregir errores.
 4. Registrar traslado y desempaque, con vista de pendientes por ambiente.
@@ -62,6 +65,7 @@ La persistencia compartida, la ausencia de duplicaciones y la veracidad de las c
 - No duplicar operaciones por doble toque, reconexión, reintentos de IA o recarga.
 - No reemplazar todo el inventario al editar un registro. Toda escritura relevante produce un evento de historial en la misma transacción.
 - La IA propone operaciones dentro de un catálogo. El backend valida identidad, destino, estado, versiones y reglas antes de ejecutarlas.
+- El actor se deriva de la cuenta autenticada y su membresía. Cambiar el apodo no cambia de persona ni reasigna operaciones pendientes o históricas.
 - No inventar contenido, ubicación, cantidades ni persona que cerró. La falta de resultados de búsqueda se comunica como tal.
 - Mantener separadas la mudanza anterior, la cotización y la mudanza a Savanna.
 - Mantener funcionales fichas y controles manuales cuando la IA esté deshabilitada, sin saldo o temporalmente caída.
@@ -87,6 +91,6 @@ Una nueva instrucción explícita del usuario prevalece. Dentro de esta versión
 - Modelo generativo exacto, versión desplegable de Jev y versión estable compatible de AI SDK: resolver en T00 con disponibilidad real, precios vigentes y una evaluación pequeña.
 - Umbrales para las probabilidades de Jev: determinar con ejemplos etiquetados del dominio. Hasta entonces, las decisiones ambiguas requieren aclaración.
 - Qué muebles siguen existiendo y a qué ambiente van: resolver con la pantalla de revisión, no inferir de `OK` en una planilla histórica.
-- Cuentas, invitación y credenciales de Vercel/Supabase/Gateway: configurar cuando toque desplegar, mediante campos seguros; nunca en el repositorio.
+- Cuentas y credenciales de Vercel/Supabase/Gateway, configuración OAuth de Google y correos de los participantes: configurar cuando toque desplegar. Secretos y lista real de acceso se guardan fuera del repositorio.
 
 Estas decisiones no bloquean la creación de interfaces, migraciones, lógica determinista y pruebas con adaptadores simulados. No presentar una integración simulada como verificada contra el servicio real.

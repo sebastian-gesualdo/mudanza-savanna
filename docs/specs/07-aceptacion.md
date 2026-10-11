@@ -4,9 +4,9 @@ Los siguientes escenarios son contratos para las tareas de implementación. No s
 
 ## Escenarios funcionales
 
-### A01 · Acceso familiar
+### A01 · Acceso familiar con Google
 
-Entrar por invitación en dos dispositivos, elegir nombres distintos y volver a abrir la app. Se conserva la selección. Una solicitud sin sesión no puede leer inventario, escribir ni gastar IA. Cambiar de nombre en un dispositivo no cambia al otro.
+Entrar con dos cuentas Google autorizadas desde dos dispositivos y volver a abrir la app. Se conservan cuenta y participante. La misma cuenta en dos dispositivos resuelve un solo participante, también con primeros logins simultáneos. Editar el apodo propio se sincroniza entre sus dispositivos sin cambiar ID, autoría histórica ni cuenta de otra persona. No se puede elegir el nombre de otro para operar como él. Una solicitud sin sesión o desde cuenta no autorizada no lee inventario, escribe ni gasta IA.
 
 ### A02 · Ambientes
 
@@ -70,7 +70,7 @@ Abrir los extractos incluidos: 99 contenedores históricos, 145 filas de Invento
 
 ### A17 · Respaldo y restauración
 
-Exportar con escrituras concurrentes y comprobar snapshot coherente. Restaurar JSON en base vacía de prueba conservando UUID, códigos, relaciones e historial. CSV respeta acentos y no ejecuta contenido como fórmula. Ninguna exportación incluye secretos/sesiones. Pendientes offline se etiquetan aparte.
+Exportar con escrituras concurrentes y comprobar snapshot coherente. Restaurar JSON en base vacía de prueba conservando UUID, códigos, relaciones e historial. CSV respeta acentos y no ejecuta contenido como fórmula. Ninguna exportación incluye secretos, sesiones ni lista/vínculos de acceso. Vincular explícitamente cuentas a participantes restaurados y comprobar autoría histórica y nueva sin duplicados. Pendientes offline se etiquetan aparte.
 
 ### A18 · Presupuesto
 
@@ -78,15 +78,15 @@ Configurar presupuesto pequeño y emitir varias solicitudes concurrentes: las re
 
 ### A19 · iPhone real
 
-Instalar desde Safari. Verificar teclado/dictado, safe areas, objetivos táctiles, vuelta desde pantalla bloqueada, modo avión y lectura de fichas. Actualizar la PWA con pendientes y conservarlos. Registrar dispositivos/versiones usados; distinguir WebKit automatizado de validación en equipo real.
+Instalar desde Safari. Verificar Google Login y su retorno tanto desde Safari como desde la PWA instalada, sin asumir que comparten cookies. Verificar teclado/dictado, safe areas, objetivos táctiles, vuelta desde pantalla bloqueada, modo avión y lectura de fichas. Actualizar la PWA con pendientes y conservarlos. Registrar dispositivos/versiones usados; distinguir WebKit automatizado de validación en equipo real.
 
 ### A20 · Despliegue
 
-Un push de rama produce preview; `main` despliega producción según la integración autorizada. Preview no puede modificar datos ni consumir presupuesto de producción. Una actualización de aplicación es compatible con clientes instalados pendientes de actualizar. Los procesos locales no son requisito para el servicio publicado.
+Un push de rama produce preview; `main` despliega producción según la integración autorizada. Preview no puede modificar datos ni consumir presupuesto de producción, ni retornar OAuth hacia producción. Verificar clientes Google, cookies y URLs permitidas separados por entorno; una preview demo se identifica como tal. Una actualización de aplicación es compatible con clientes instalados pendientes de actualizar. Los procesos locales no son requisito para el servicio publicado.
 
 ### A21 · Ámbito de datos y claves
 
-Probar UUID de otra mudanza en ficha, comandos, conversación, enlaces, búsqueda y exportación: rechazar acceso. Verificar que bundles, HTML y logs no contienen claves de servidor. La API privilegiada de Supabase no queda accesible mediante RPC pública.
+Probar UUID de otra mudanza en ficha, comandos, conversación, enlaces, búsqueda y exportación: rechazar acceso. Intentar leer una conversación ajena con otra cuenta de la misma mudanza: rechazar acceso. Verificar que bundles, HTML y logs no contienen claves de servidor o tokens Auth/Google. Las tablas y RPC privilegiadas no son accesibles directamente con clave publicable, ni con JWT válido del rol `authenticated`.
 
 ### A22 · Fallos e instrucciones dentro de datos
 
@@ -100,12 +100,25 @@ Deshacer una adición compatible genera evento compensatorio. Intentar deshacer 
 
 Simular fallo antes de commit: no aparece Guardado/Cerrada compartido. Simular confirmación y falla de refresco posterior: el recibo mantiene el resultado confirmado. Contadores locales y respuestas desde caché muestran su fecha/revisión cuando no son actuales.
 
+### A25 · Ciclo OAuth y sesión
+
+Probar consentimiento cancelado, error de Google, código inválido/reutilizado, PKCE ausente y destino de retorno externo: no se concede acceso ni se pierden borradores. Renovar sesión y verificar que cookies/encabezados llegan al navegador, también tras redirección. Respuestas autenticadas no se comparten en caché entre usuarios. Cerrar sesión en un dispositivo no cierra la del otro. Separar las pruebas simuladas de una prueba real de Google en el entorno test.
+
+### A26 · Pendientes y cambio de cuenta
+
+Crear pendientes offline como Seba, vencer la sesión y volver a Google Login con la misma cuenta: recuperar cola/contexto y sincronizar una sola vez con el actor original. Si entra Lu, no puede ver ni reenviar la cola de Seba; volver a Seba permite recuperarla. Forzar el envío desde una pestaña obsoleta con `expectedParticipantId` de Seba bajo sesión de Lu devuelve `ACTOR_MISMATCH`, sin escritura ni IA. Cambiar apodo no reasigna operaciones. Salir sin red produce bloqueo local y salida pendiente del servidor, conserva/exporta la cola y no la envía antes de resolver la salida y validar la cuenta.
+
+### A27 · Autorización y revocación
+
+Una cuenta Google válida fuera de la lista puede existir en Auth, pero no crea participante ni lee bootstrap/inventario/exportaciones o gasta IA. Falsificar actor/correo en el body o metadata editable no modifica el actor derivado. Desactivar una membresía con sesión abierta bloquea la próxima solicitud; revalidar dentro de una mutación que compita con la revocación. No borrar datos ni permitir modificar membresías desde la API familiar. Con Auth temporalmente caído, conservar pendientes y devolver indisponibilidad sin omitir la validación.
+
 ## Capas de prueba
 
 - Dominio: estados, cantidades, ambigüedad de IDs, validaciones y compensaciones que puedan romper integridad.
 - PostgreSQL real de prueba: transacciones, restricciones, RPC, idempotencia y concurrencia. Un mock no prueba estas propiedades.
 - Adaptadores IA: respuestas tipadas, errores, presupuesto y rutas simuladas; evaluación live separada y con límite explícito.
-- E2E: flujo completo de dos participantes, fichas/chat, desconexión/reconexión y revisión de importación.
+- Auth: contratos de membresía/atribución, revocación y callback con casos inválidos; simulación en CI sin credenciales reales de Google y smoke test OAuth real separado en test.
+- E2E: flujo completo de dos participantes, fichas/chat, cambio/renovación de cuenta, desconexión/reconexión y revisión de importación.
 - iPhone real: aspectos específicos de instalación, teclado, suspensión, almacenamiento y actualización.
 
 No exigir credenciales de producción en CI. No llamar a modelos facturados en cada test ordinario. No considerar una suite con cero pruebas como validación.
@@ -120,6 +133,6 @@ No exigir credenciales de producción en CI. No llamar a modelos facturados en c
 
 ## Condición de lanzamiento
 
-Completar escenarios críticos de integridad, sesión, presupuesto y offline; desplegar un flujo real y verificar una operación compartida desde dos clientes; ejecutar respaldo/restauración en prueba; probar PWA en iPhone; registrar limitaciones restantes.
+Completar escenarios críticos de integridad, Google Login/autorización, presupuesto y offline; desplegar un flujo real y verificar una operación compartida desde dos clientes con cuentas distintas; ejecutar respaldo/restauración en prueba; probar PWA y retorno OAuth en iPhone; registrar limitaciones restantes.
 
 Una tarea puede entregar un componente con mocks, pero el producto no se presenta como listo para la mudanza hasta verificar las integraciones reales. Las discrepancias de muebles pueden permanecer pendientes de revisión sin bloquear la aplicación; no se cargan como hechos confirmados.

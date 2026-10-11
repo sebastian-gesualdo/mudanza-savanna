@@ -2,6 +2,8 @@
 
 PWA familiar para organizar el empaque, traslado y desempaque de una mudanza de Weston Hills a Savanna. Pensada para 3–5 colaboradores con iPhone, interacción por chat o dictado y costo de uso muy bajo.
 
+Arquitectura acordada: Next.js en Vercel, PostgreSQL y Google Login mediante Supabase, y Jev mediante Vercel AI Gateway. El acceso se limita a los correos de los participantes autorizados.
+
 ## Punto de partida
 
 La especificación completa empieza en [SPEC.md](SPEC.md). El repositorio contiene especificaciones y referencias históricas; la aplicación todavía no está implementada.
@@ -15,7 +17,7 @@ La especificación completa empieza en [SPEC.md](SPEC.md). El repositorio contie
 - [Criterios de aceptación y validación](docs/specs/07-aceptacion.md)
 - [Tareas de implementación con dependencias](docs/specs/08-plan-implementacion.md)
 
-Para preparar las cuentas y conectar los servicios, seguir la [guía de configuración de Vercel, Supabase y AI Gateway](docs/GUIA-CONFIGURACION.md). Distingue lo que se puede preparar ahora de los pasos que requieren la aplicación implementada.
+Para preparar las cuentas y conectar los servicios, seguir la [guía de configuración de Vercel, Supabase, Google Login y AI Gateway](docs/GUIA-CONFIGURACION.md). Distingue lo que se puede preparar ahora de los pasos que requieren la aplicación implementada.
 
 ## Para comenzar una tarea
 

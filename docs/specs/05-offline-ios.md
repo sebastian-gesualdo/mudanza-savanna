@@ -6,17 +6,19 @@ PWA con HTTPS, manifiesto, iconos, nombre corto, `display=standalone`, colores d
 
 Probar Safari y la PWA instalada en al menos un iPhone real, además de WebKit automatizado. No considerar una prueba de escritorio como evidencia completa de micrófono, teclado, suspensión o almacenamiento en iOS. Registrar versión de iOS probada; compatibilidad objetivo: versión estable actual y anterior cuando se disponga de dispositivos para comprobarlo.
 
+El primer login con Google y la renovación de una sesión vencida necesitan conexión. Usar redirección completa con PKCE; comprobar el retorno al contexto que inició el login y la persistencia del verificador/cookies. Safari y la PWA instalada pueden tener sesiones/almacenamiento separados: no prometer que instalar copia una sesión ya iniciada. Probar ingreso desde ambos y permitir reintentar desde el contexto original si el retorno abrió otro navegador.
+
 ## Persistencia local
 
 IndexedDB guarda:
 
 - Snapshot confirmado y revisión de la mudanza autorizada.
-- Cola de comandos estructurados, UUID de operación, payload, versiones esperadas, contexto y dependencias.
+- Cola de comandos estructurados, UUID de operación, payload, versiones esperadas, contexto, dependencias y propietario original (`move_id`, `participant_id`, identificador del usuario Auth).
 - Mensajes pendientes de interpretación, diferenciados de comandos ya estructurados.
 - Borradores de texto, unidad activa por conversación y reservas de etiquetas.
 - Estados de sincronización y recibos recibidos.
 
-Separar datos por mudanza y sesión autorizada. Al cambiar de mudanza o salir, ofrecer resolver/exportar pendientes antes de borrar datos locales. El service worker cachea shell y estáticos; no cachea indiscriminadamente respuestas de sesión, invitaciones, IA o mutaciones. La copia de inventario se administra explícitamente en IndexedDB.
+Separar datos por entorno, mudanza y cuenta/participante autorizado, no por el token de sesión que cambia al renovarse. No guardar tokens de Auth o Google en IndexedDB. Al salir, ofrecer sincronizar, exportar o conservar los pendientes bajo su cuenta original antes de borrar datos locales. Otra cuenta no puede ver ni reenviar esa cola. El service worker cachea shell y estáticos; excluye rutas de autenticación/callback y respuestas de IA o mutaciones. La copia de inventario se administra explícitamente en IndexedDB.
 
 ## Estados visibles
 
@@ -56,7 +58,11 @@ No depender de Background Sync, tareas permanentes ni de que una PWA cerrada sig
 
 El almacenamiento de iOS puede ser eliminado por el usuario o el sistema; los datos exclusivamente locales aún no son un respaldo compartido. Mantener pendientes visibles y permitir exportar un archivo con copia local y operaciones pendientes. El archivo debe distinguir estos datos de un export confirmado del servidor.
 
-Si la sesión expiró, conservar la cola, solicitar reingreso y solo reenviar después de validar que corresponde a la misma mudanza. No reasignar silenciosamente a otro participante la autoría de operaciones creadas con una sesión anterior; conservar actor original validable o pedir confirmación explícita de la nueva atribución.
+Si el token de acceso vence, intentar renovación mediante el backend/Supabase al recuperar conexión. Si la sesión ya no es renovable, conservar la cola y solicitar Google Login. Solo reenviar después de validar la misma mudanza, cuenta, participante y membresía activa; mantener los mismos UUID y contexto. Un apodo distinto no afecta la autoría ni obliga a recrear comandos.
+
+Si se ingresa con otra cuenta, mantener ocultos y pausados los pendientes originales hasta volver a la cuenta correcta. No permitir que una confirmación reasigne esos comandos a la persona nueva. Si la membresía fue revocada, bloquear envío y preservar/exportar los pendientes para recuperación revisada; la copia local previa puede seguir existiendo en ese dispositivo, sin acceso renovado al servidor.
+
+La salida requiere cerrar la sesión local de Supabase y limpiar cookies en servidor. Sin red, ofrecer bloqueo local y conservación/exportación de pendientes, indicar que la salida del servidor está pendiente y completarla antes de reactivar sincronización. No simular una revocación remota mientras el dispositivo está desconectado.
 
 ## Actualizaciones de aplicación
 

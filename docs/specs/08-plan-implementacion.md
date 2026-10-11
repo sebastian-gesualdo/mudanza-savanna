@@ -8,7 +8,7 @@ Cada tarea debe comenzar leyendo [SPEC.md](../../SPEC.md) y los contratos vincul
 flowchart LR
     T00[T00 Jev y modelos] --> T05[T05 IA y búsqueda]
     T01[T01 Base] --> T02[T02 Datos]
-    T02 --> T03[T03 Sesión y comandos]
+    T02 --> T03[T03 Google Login y comandos]
     T03 --> T04[T04 Inventario UI]
     T03 --> T05
     T04 --> T06[T06 Chat]
@@ -50,7 +50,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 
 - Next.js App Router, TypeScript, Node 24 LTS y versiones fijadas con lockfile.
 - Estructura propuesta, estilos accesibles, navegación Chat/Inventario/Mudanza y manifiesto/iconos básicos.
-- `.env.example` sin secretos, configuración de tests y CI.
+- `.env.example` sin secretos, con claves Supabase publicable/servidor separadas, configuración de tests y CI. Preparar dependencias compatibles de Supabase Auth/SSR para T03.
 - Scripts documentados: `dev`, `build`, `lint`, `typecheck`, `test`; agregar `test:integration`, `test:e2e` y `eval:ai` cuando existan suites reales. No crear scripts de éxito vacío para simular validación.
 - README con instalación reproducible y arranque. Un modo demo explícito puede usar fixtures, visualmente diferenciado.
 
@@ -65,6 +65,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 **Entregables:**
 
 - Migraciones de entidades, índices, constraints, permisos/RLS y seed idempotente de ambientes.
+- Participantes estables y membresías por correo/cuenta Auth, con unicidad, vinculación inicial atómica y conservación del historial al revocar acceso. Supabase administra las sesiones; no crear sesiones opacas propias.
 - Estados de empaque, traslado, desempaque y archivo; entrada compuesta, cantidades opcionales y relaciones a accesorios.
 - Contadores/reservas de etiquetas y revisión por mudanza con orden de commit correcto.
 - Diseño transaccional de comandos, eventos, recibos e importaciones.
@@ -72,20 +73,21 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 
 **Validación:** A02–A07 en PostgreSQL, incluyendo concurrencia real, suma de lotes y referencias entre mudanzas. No usar los muebles históricos como seed activo.
 
-## T03 · Sesiones, API de inventario y sincronización
+## T03 · Google Login, autorización, API de inventario y sincronización
 
 **Depende de:** T02.
 
 **Entregables:**
 
-- Invitación, sesión, selección/cambio de participante y middleware de ámbito.
-- Herramienta para generar invitación y hash SHA-256, con comando exacto documentado en la guía de configuración; no guardar tokens reales en el repositorio.
+- Google OAuth con PKCE mediante Supabase Auth: inicio, callback, cookies/renovación desde servidor y salida local. Identidad validada por petición y autorización por membresía antes de datos o IA.
+- Herramienta administrativa idempotente para autorizar/desactivar correos, consultar membresías y vincular participantes restaurados. Documentar comandos exactos en la guía; guardar la lista real en la base, fuera de Git.
+- Atribución por cuenta, apodo propio editable, cambio de cuenta y rechazo de suplantación mediante campos del cliente. Separar cliente Auth y cliente de datos privilegiado; documentar configuración real de sesiones.
 - Catálogo transaccional completo de comandos y validación en servidor.
 - Lecturas de ficha/lista, snapshot consistente y feed de deltas con revisión.
 - Reservas de etiquetas por dispositivo, límites de solicitud y recibos recuperables.
 - Errores tipados, conflictos con snapshot actual, confirmaciones/propuestas y compensaciones.
 
-**Validación:** A01, A03–A08, A13, A21, A23, A24. Probar requests sin sesión y UUID ajenos.
+**Validación:** A01, A03–A08, A13, A21, A23–A25, A27. Probar requests sin sesión, cuenta no autorizada, revocación y UUID ajenos. CI usa Auth simulado/local según la capa; registrar por separado el login real contra Google en test cuando esté configurado.
 
 ## T04 · Fichas e inventario usable sin IA
 
@@ -95,7 +97,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 
 - Crear cajas, bolsas, muebles/otros; editar campos y contenido; cerrar/reabrir.
 - Lista, filtros, búsqueda determinista, ficha e historial.
-- Nombre actual, unidad activa explícita, recibos y deshacer.
+- Cuenta/apodo actual, edición del perfil propio, unidad activa explícita, recibos y deshacer; no selector de otra persona.
 - Formularios que permitan guardar descripciones libres y resolver datos faltantes.
 - Estados de carga/error/pending y componentes adaptados a iPhone.
 
@@ -141,9 +143,9 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 - Etiquetas reservadas, borradores temporales cuando se agotan y coordinación entre tabs.
 - Reanudación al primer plano, conflictos revisables y pendientes exportables.
 - Service worker, instalación y actualización sin perder borradores/cola.
-- Estado de sesión expirada y recuperación sin cambiar autoría silenciosamente.
+- Recuperación con Google de sesión no renovable, cola separada por cuenta/mudanza, salida local sin red y cambio de cuenta sin reasignar autoría.
 
-**Validación:** A03, A12, A13, A19, A24 en WebKit y posteriormente iPhone real. Probar cierre forzado entre envío y recibo.
+**Validación:** A03, A12, A13, A19, A24, A26 en WebKit y posteriormente iPhone real. Probar cierre forzado entre envío y recibo, y retorno OAuth desde Safari/PWA instalada.
 
 ## T08 · Revisión de muebles y respaldo
 
@@ -157,6 +159,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 - Clasificación de muebles/otros/contenedores a reiniciar y confirmación del lote.
 - Procedencia e importación idempotente reanudable, sin crear cajas históricas automáticamente.
 - Exportación JSON/CSV y herramienta/procedimiento de restauración verificado en base de prueba.
+- Respaldo conserva participantes/autores sin credenciales ni membresías; restauración con revinculación explícita de cuentas mediante herramienta de T03.
 
 **Validación:** A16, A17 y A21. Datos de precio o cotización no se convierten en campos de inventario por suposición.
 
@@ -180,14 +183,15 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 **Entregables:**
 
 - Proyecto Vercel conectado a GitHub con previews y producción diferenciados.
-- Proyecto(s) Supabase y Gateway configurados con bindings existentes cuando correspondan.
+- Proyecto(s) Supabase con Auth y Gateway configurados con bindings existentes cuando correspondan; clientes Google OAuth Web distintos para prod/test, scopes básicos y URLs de retorno documentadas.
 - Separación de secretos/datos/presupuesto por entorno; credenciales nunca en Git.
 - Migraciones y rollback documentados; métricas de errores, latencia y costo.
-- Guía para instalar PWA, invitar colaboradores, exportar respaldo y comprobar que todos sincronizan.
+- Guía para autorizar correos, ingresar con Google, instalar PWA, revocar acceso sin borrar historial, exportar respaldo y comprobar que todos sincronizan.
+- Origen canónico y callback de preview controlados, aislados de producción; demo explícita cuando una preview no tenga OAuth real.
 - Completar y verificar la [guía de configuración de cuentas y servicios](../GUIA-CONFIGURACION.md) con rutas/comandos vigentes y datos no secretos del entorno elegido.
 - Registro de límites/precios vigentes y verificación de que el plan elegido sirve al uso familiar.
 
-**Validación:** A18, A20, A21 y smoke test de persistencia real. La creación de recursos o publicación se hace en una tarea autorizada para ello; esta especificación no publica ni crea cuentas.
+**Validación:** A01, A18–A21, A25, A27 y smoke test de persistencia con dos cuentas Google reales autorizadas. La creación de recursos o publicación se hace en una tarea autorizada para ello; esta especificación no publica ni crea cuentas.
 
 ## T11 · Validación de lanzamiento
 
@@ -195,8 +199,8 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 
 **Entregables:**
 
-- Ejecutar escenarios A01–A24 pertinentes y evaluación de IA con resultados separados por ruta.
-- Simular empaque, traslado y desempaque con 3–5 sesiones y desconexiones.
+- Ejecutar escenarios A01–A27 pertinentes y evaluación de IA con resultados separados por ruta.
+- Simular empaque, traslado y desempaque con 3–5 cuentas, sesiones renovadas y desconexiones.
 - Verificar iPhone real, actualización de PWA y restauración de respaldo.
 - Registrar limitaciones concretas, integraciones no probadas y métricas de costos/latencia.
 - Resolver fallos de integridad antes de declarar el producto listo.

@@ -7,6 +7,8 @@ flowchart TD
     P[PWA en iPhone] --> A[Backend Next.js en Vercel]
     P <--> L[IndexedDB: copia y pendientes]
     A --> D[Supabase PostgreSQL]
+    A <--> S[Supabase Auth]
+    S <--> O[Google OAuth]
     A --> G[Vercel AI Gateway]
     G --> J[Jev: decisiones]
     G --> F[Modelo económico: extracción excepcional]
@@ -14,7 +16,7 @@ flowchart TD
     V --> A
 ```
 
-La interfaz, API y PWA se publican juntas. PostgreSQL almacena todos los datos compartidos; no guardar inventario en archivos locales de funciones de Vercel. No es necesario un servidor permanente ni un worker de larga duración para v1.
+La interfaz, API y PWA se publican juntas. PostgreSQL almacena todos los datos compartidos; no guardar inventario en archivos locales de funciones de Vercel. Supabase aporta base de datos y Google Login; no se agrega Neon ni Auth.js. No es necesario un servidor permanente ni un worker de larga duración para v1.
 
 ## Organización propuesta del código
 
@@ -31,26 +33,39 @@ No usar el contenido de `docs/references` como base de datos viva ni importar au
 
 ## Acceso y sesiones
 
-Una invitación aleatoria de al menos 128 bits permite incorporarse al grupo. El enlace puede transportar el token en el fragmento de URL; el cliente lo intercambia mediante POST y elimina el fragmento. Evitar incluir el token en logs o enlaces compartidos a fichas.
+### Google OAuth y sesión de Supabase
 
-El servidor entrega una cookie opaca `HttpOnly`, `Secure`, `SameSite=Lax` con expiración propuesta de 30 días. Guardar hash del token de sesión. La invitación se configura por hash en servidor y se puede rotar; la rotación no debe borrar el inventario. No utilizar el nombre elegido como secreto.
+Usar `@supabase/supabase-js` y `@supabase/ssr`, con versiones compatibles fijadas en T01/T03. Flujo de redirección OAuth con PKCE, iniciado por una acción explícita “Continuar con Google”. El backend inicia el flujo y canjea el código; no usar popup obligatorio ni Google One Tap para v1.
 
-Para la invitación, usar SHA-256 hexadecimal del token aleatorio como `INVITE_TOKEN_HASH`. T03 debe entregar una herramienta de generación y documentar cómo obtener el enlace privado y guardar su hash. La guía operativa está en [Guía de configuración](../GUIA-CONFIGURACION.md).
+1. `POST /api/auth/google` valida origen/CSRF, prepara PKCE con el SDK y redirige a Supabase/Google. Pedir solo `openid`, `email` y `profile`; no persistir tokens de acceso a APIs de Google.
+2. Google retorna a `https://<project-ref>.supabase.co/auth/v1/callback`, registrada en su cliente OAuth de tipo Web application. Supabase retorna a `APP_BASE_URL/auth/callback`, registrada en Supabase URL Configuration. Son dos URLs distintas.
+3. `GET /auth/callback` canjea el código mediante `exchangeCodeForSession`, valida el usuario con Supabase Auth y resuelve la membresía. Rechazar código inválido/repetido o verificador PKCE ausente; conservar los controles de estado del proveedor/SDK. Un destino posterior solo admite rutas internas validadas, nunca un origen libre enviado por el cliente.
+4. Si existe membresía activa, completar la vinculación inicial atómica y entrar. Si no existe, mostrar acceso denegado y cerrar la sesión local de la app sin entregar datos ni llamar a IA. Supabase puede haber creado un usuario Auth; eso no lo convierte en participante autorizado.
 
-Después de validar la invitación, se pueden listar/seleccionar participantes de la mudanza. Cambiar de participante es explícito y actualiza la sesión. Los colaboradores tienen las mismas capacidades de inventario en v1; el presupuesto y configuración del proveedor se gestionan fuera de los flujos normales.
+Las sesiones y su renovación pertenecen a Supabase Auth; se elimina la sesión opaca propia y la expiración arbitraria de 30 días. T03 documenta la configuración real de sesión elegida. En esta arquitectura el navegador usa nuestra API, no un cliente Auth de Supabase: almacenar la sesión en cookies administradas por `@supabase/ssr`, `HttpOnly`, `Secure` en HTTPS, `SameSite=Lax`, sin compartirlas entre dominios. Validar este flujo íntegramente desde el servidor con la versión fijada del SDK; no mezclarlo con un cliente de navegador que necesite leer esas cookies.
 
-Una sesión recién invitada puede leer la información necesaria para elegir participante. Los comandos mutadores y el chat requieren completar esa selección. Las operaciones offline guardan el participante esperado: si la sesión cambió de nombre antes de sincronizar, pedir resolver la atribución en lugar de aceptar un actor arbitrario del cliente.
+Crear un cliente Auth por petición con la clave publicable y las cookies de esa petición. Renovar tokens en un handler/proxy de Next.js que pueda escribir cookies y propagar todos los `Set-Cookie` y encabezados de caché al navegador, también en redirects/errores. No usar un cliente autenticado mutable global. Respuestas de sesión, callback y datos personales usan `Cache-Control: private, no-store`; sin ISR ni caché compartida de respuestas autenticadas.
 
-La atribución es por nombre elegido y sesión; no constituye autenticación fuerte de identidad. Esto satisface el uso familiar solicitado y protege la API de escritura y gasto frente a peticiones sin invitación.
+Cada entrada protegida del backend valida al usuario con `supabase.auth.getUser()` y resuelve su membresía activa. No confiar únicamente en `getSession()`, cookies decodificadas o metadata editable enviada por el cliente. La identidad Google y el correo verificado usados para la vinculación provienen de Auth, no de un body o apodo. Si Auth está temporalmente caído, no aceptar identidades sin verificar: conservar pendientes y mostrar indisponibilidad.
+
+### Autorización, apodos y salida
+
+La lista de correos autorizados vive en `move_memberships`; los 3–5 colaboradores tienen las mismas capacidades de inventario. T03 entrega una herramienta administrativa idempotente para alta, consulta, desactivación y vinculación explícita con participantes restaurados. Documentar sus comandos en la [guía de configuración](../GUIA-CONFIGURACION.md). No necesita pantalla de administración familiar ni tokens de invitación; no guardar la lista real en Git ni enviarla en bootstrap.
+
+Resolver el actor desde `auth.users.id` → membresía activa → `participants.id`. El apodo propio se edita como perfil, nunca como selección de otra identidad. La revocación de membresía bloquea las siguientes solicitudes protegidas y nuevas mutaciones aun con token vigente; preservar todo el historial. La administración y los comandos deben coordinar locks/revalidación para no confirmar una mutación tras una revocación ya confirmada.
+
+Los comandos y mensajes capturan `expectedParticipantId` al crearse. El servidor lo compara con el actor autenticado antes de ejecutar o recuperar una operación; si no coincide, devuelve `409 ACTOR_MISMATCH` y conserva el pendiente. Es una precondición, no una forma de elegir actor. Cubre también una pestaña que conservó la cuenta anterior mientras otra cambió las cookies de login.
+
+Cerrar sesión llama a Supabase con `scope: 'local'`, limpia las cookies de ese navegador y oculta su copia local siguiendo 05-offline-ios; no cerrar automáticamente otras sesiones del mismo usuario. Cambiar de cuenta permite seleccionar otra cuenta en Google. Las operaciones pendientes quedan ligadas a la mudanza y participante originales: solo se reenvían bajo esa misma cuenta autorizada, nunca se reasignan por cambiar el apodo o aceptar una confirmación genérica.
 
 ## Acceso a PostgreSQL
 
-- Todas las lecturas y escrituras de aplicación pasan por el backend y una sesión válida.
-- RLS habilitado y permisos sin acceso público a tablas de inventario. No exponer una clave privilegiada al navegador.
-- Cliente de Supabase privilegiado exclusivamente en servidor. Dado que puede omitir RLS, cada operación comprueba obligatoriamente `move_id` obtenido de la sesión, incluidos búsquedas, exportaciones y UUID anidados.
+- Todas las lecturas y escrituras de aplicación pasan por el backend y una sesión válida con membresía activa.
+- RLS habilitado y sin acceso directo de roles `anon` o `authenticated` a tablas/RPC de inventario o membresías. Tener un JWT de Supabase Auth no habilita la Data API pública. No exponer una clave privilegiada al navegador.
+- Cliente de Supabase privilegiado exclusivamente en servidor y separado del cliente Auth por petición. Dado que puede omitir RLS, cada operación comprueba obligatoriamente `move_id` y participante obtenidos de la membresía validada, incluidos búsquedas, exportaciones y UUID anidados.
 - Revocar ejecución pública de las RPC privilegiadas. La función transaccional valida todas las relaciones; el backend entrega identidad ya validada.
 - Se puede usar una credencial de servidor admitida por el SDK vigente. Confirmar en T01 el nombre/formato disponible en Supabase; no confundir la clave publicable con una clave privilegiada.
-- No sumar login de Supabase o Realtime solamente para distribuir eventos; v1 sincroniza por backend y revisión.
+- Supabase Auth gestiona el login; Realtime sigue fuera de v1. La sincronización usa backend y revisión.
 
 ## Catálogo de comandos
 
@@ -58,6 +73,7 @@ Las fichas y el chat usan el mismo catálogo:
 
 | Comando | Efecto |
 | --- | --- |
+| `update_own_profile` | Editar solo el apodo del participante autenticado, con versión, idempotencia e historial; no modificar membresías. |
 | `create_unit` | Crear unidad con UUID del cliente y etiqueta asignada/reservada. |
 | `update_unit` | Cambiar campos permitidos: nombre, destino, notas, fragilidad, prioridad, tamaño. |
 | `append_content` | Agregar entrada conservando su texto de origen. |
@@ -83,10 +99,10 @@ Los nombres son el contrato inicial. Si se cambia una ruta, actualizar cliente, 
 
 | Método y ruta | Contrato |
 | --- | --- |
-| `POST /api/session` | Intercambiar invitación por sesión. No llamar a modelos. |
-| `PATCH /api/session/participant` | Seleccionar/crear participante y recordar la identidad. |
-| `DELETE /api/session` | Salir y limpiar los datos locales de esa sesión cuando corresponda. |
-| `GET /api/bootstrap` | Mudanza, ambientes, participantes disponibles y configuración pública de capacidades. |
+| `POST /api/auth/google` | Iniciar Google OAuth con PKCE y redirección; sin IA. |
+| `GET /auth/callback` | Canjear código, validar Google y resolver membresía; sin IA. |
+| `POST /api/auth/signout` | Cerrar sesión local de Supabase; el cliente gestiona sus pendientes antes de ocultar/limpiar la copia. |
+| `GET /api/bootstrap` | Solo para miembros activos: cuenta actual, participante, mudanza, ambientes, apodos/IDs de colaboradores y capacidades. No entregar lista de correos autorizados ni tokens. |
 | `GET /api/inventory/snapshot` | Inventario coherente completo, con revisión y fecha del servidor. |
 | `GET /api/sync?after=REV&limit=N` | Cambios ordenados por revisión, tombstones lógicos, siguiente cursor y `hasMore`. |
 | `GET /api/units` | Lista filtrada/paginada, sin IA. |
@@ -98,7 +114,7 @@ Los nombres son el contrato inicial. Si se cambia una ruta, actualizar cliente, 
 | `GET /api/commands/:operationId` | Recuperar recibo ante respuesta perdida. |
 | `POST /api/labels/reserve` | Reservar lote pequeño de etiquetas por dispositivo/prefijo, idempotentemente. |
 | `POST /api/chat/messages` | Procesar texto con contexto y UUID; devolver respuesta persistida o estado en proceso. |
-| `POST /api/conversations` | Crear idempotentemente una conversación con UUID del cliente y propiedad de sesión/dispositivo. |
+| `POST /api/conversations` | Crear idempotentemente una conversación con UUID del cliente y propiedad de participante/dispositivo. |
 | `PATCH /api/conversations/:id/context` | Cambiar explícitamente unidad activa con versión esperada del contexto. |
 | `GET /api/chat/messages/:messageId` | Recuperar estado/respuesta del mismo mensaje. |
 | `GET /api/conversations/:id/messages` | Historial de la conversación autorizada. |
@@ -108,13 +124,14 @@ Los nombres son el contrato inicial. Si se cambia una ruta, actualizar cliente, 
 | `GET /api/exports?format=json|csv` | Exportar con snapshot coherente y versión de esquema. |
 | `GET /api/usage` | Resumen de costo/reserva/límite sin secretos. |
 
-Las llamadas que consumen IA no se ejecutan por prefetch ni por un GET automático del navegador. Validar `Origin`/CSRF en operaciones mutadoras, límites de cuerpo y rate limits persistentes. Default propuesto: 10 solicitudes de IA por minuto por sesión y 30 por minuto por mudanza, además del presupuesto total. Ajustar con pruebas de uso real; no depender de memoria de una función serverless para imponer el límite.
+Las llamadas que consumen IA no se ejecutan por prefetch ni por un GET automático del navegador. Validar `Origin`/CSRF en operaciones mutadoras e inicio/salida de sesión; el callback GET usa el flujo PKCE del SDK y las URLs permitidas. Aplicar límites de cuerpo y rate limits persistentes. Default propuesto: 10 solicitudes de IA por minuto por participante y 30 por minuto por mudanza, además del presupuesto total. Renovar la sesión no reinicia estos contadores. Ajustar con pruebas de uso real; no depender de memoria de una función serverless para imponer el límite.
 
 ### Ejemplo de comando
 
 ```json
 {
   "operationId": "UUID-persistido-por-el-cliente",
+  "expectedParticipantId": "UUID-del-participante-al-crear-el-comando",
   "type": "close_unit",
   "payload": { "unitId": "UUID-de-C-024" },
   "expectedVersions": { "UUID-de-C-024": 7 }
@@ -125,7 +142,7 @@ Los UUID del ejemplo son marcadores explicativos; la implementación valida UUID
 
 ### Mensajes y propuestas
 
-Entrada: `messageId`, `conversationId`, `text`, `activeUnitId`, `contextVersion` e idioma opcional. El contexto del cliente se valida y se conserva como el que existía al enviar; no se reemplaza por “la última caja creada por cualquiera”.
+Entrada: `messageId`, `conversationId`, `expectedParticipantId`, `text`, `activeUnitId`, `contextVersion` e idioma opcional. Validar la cuenta esperada y propiedad de la conversación antes de llamar a modelos. El contexto del cliente se valida y se conserva como el que existía al enviar; no se reemplaza por “la última caja creada por cualquiera”.
 
 Estados de respuesta: `processing`, `answered`, `applied`, `needs_clarification`, `needs_confirmation`, `failed`. La respuesta diferencia `replyMode=template|generated` y guarda evidencia estructurada; la UI no necesita exponer esos detalles técnicos.
 
@@ -144,17 +161,17 @@ Leer cambios al iniciar, al volver al primer plano, después de escribir y cada 
 | Variable | Naturaleza y propósito |
 | --- | --- |
 | `SUPABASE_URL` | URL del proyecto, utilizada por servidor. |
+| `SUPABASE_PUBLISHABLE_KEY` | Clave publicable (o legacy `anon` compatible) para el cliente Auth por petición. No es privilegiada; en este diseño se usa desde servidor. |
 | `SUPABASE_SECRET_KEY` | Credencial privilegiada de servidor, o nombre equivalente documentado si el proyecto utiliza formato legacy. |
 | `AI_GATEWAY_API_KEY` | Secreto para Gateway cuando no se usa identidad OIDC compatible de Vercel. |
-| `INVITE_TOKEN_HASH` | Hash de invitación vigente; el enlace original se entrega al organizador fuera del repositorio. |
-| `APP_BASE_URL` | Origen autorizado y base de enlaces de fichas. |
+| `APP_BASE_URL` | Origen autorizado, base de enlaces de fichas y retorno OAuth de la aplicación (`/auth/callback`). |
 | `DECISION_MODEL` | Identificador de Jev verificado en Gateway. |
 | `GENERATION_MODEL` | Modelo de extracción elegido en T00. Ausente/deshabilitado implica aclaración/formulario; no una llamada oculta a otro proveedor. |
 | `AI_BUDGET_USD` | Default 5 para producción; menor para pruebas. |
 | `AI_ENABLED` / `GENERATION_ENABLED` | Interruptores independientes de operaciones de IA. |
 | `APP_ENV` | Desarrollo, preview o producción; controla datos y presupuestos separados. |
 
-Las claves jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivos de especificación. Crear `.env.example` con nombres y valores no secretos durante T01. Verificar bindings existentes antes de pedir credenciales nuevas. No configurar servicios reales durante una tarea que solo crea UI o pruebas con mocks.
+Las claves privilegiadas jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivos de especificación. Estas variables se usan en servidor; la clave publicable de Auth no sustituye a la privilegiada de datos. El Client ID y Client Secret de Google se configuran en el proveedor Google del dashboard de Supabase, no en variables de Vercel. No hay `INVITE_TOKEN_HASH` ni clave de Auth.js. Crear `.env.example` con nombres y valores no secretos durante T01. Verificar bindings existentes antes de pedir credenciales nuevas. No configurar servicios reales durante una tarea que solo crea UI o pruebas con mocks.
 
 ## GitHub y Vercel
 
@@ -162,6 +179,8 @@ Las claves jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivos de especific
 - Push a rama/PR: preview. Merge/push autorizado a `main`: producción.
 - CI requerida: tipos, lint, pruebas relevantes y build. Agregar integración de PostgreSQL y E2E a medida que existan.
 - Previews usan otro proyecto de Supabase o fixtures/modo demo aislado. Nunca heredan credenciales de producción para modificar el inventario real.
+- Google OAuth tiene clientes distintos para prod/test, vinculados al Supabase correspondiente. Usar URL estable de preview para probar login o registrar URLs exactas de despliegues de prueba controlados. No autorizar un comodín de todo `vercel.app` ni enviar callbacks de preview a producción. Si una preview no tiene OAuth configurado, señalar modo demo; no afirmar que prueba login real.
+- Iniciar y terminar OAuth en el mismo origen canónico. Si se entra por otro alias del deployment, llevar primero al origen configurado, antes de iniciar PKCE; así el callback recibe las cookies del contexto correcto.
 - Migraciones versionadas y revisadas. Ensayarlas en datos de prueba antes de producción. Priorizar cambios compatibles con clientes que todavía usan la versión anterior de la PWA.
 - No aplicar migraciones destructivas ni importar automáticamente por cada deploy. La carga de los 17 ambientes es idempotente; los muebles requieren revisión.
 - Un rollback de Vercel no revierte la base de datos. Documentar compatibilidad de esquema y recuperación.

@@ -7,21 +7,32 @@ Este es un modelo lógico. Las migraciones pueden adaptar nombres físicos conse
 | Entidad | Campos principales y restricciones |
 | --- | --- |
 | `moves` | `id`, nombre, origen, destino, `moving_date` nullable, zona horaria, `sync_revision`, fechas. Una mudanza activa inicialmente. |
-| `participants` | `id`, `move_id`, nombre visible, nombre normalizado único por mudanza, activo, fechas. No importar colaboradores anteriores como usuarios actuales sin selección. |
-| `sessions` | Sesión opaca y hash del token, mudanza, participante elegido, dispositivo, expiración. No exportar credenciales. |
+| `participants` | `id`, `move_id`, apodo visible, apodo normalizado único por mudanza, versión, fechas. Identidad de autor estable para inventario e historial; no es una credencial ni concede acceso. |
+| `move_memberships` | `id`, `move_id`, `participant_id`, `email_normalized`, `auth_user_id` nullable vinculado a `auth.users`, `active`, fechas de alta/vinculación/revocación. Únicos por mudanza: correo, participante y usuario Auth cuando no sea nulo. Lista de acceso administrada fuera de la API familiar; no exportar como inventario. |
+| Supabase Auth | Usuarios, identidades Google y sesiones gestionadas por Supabase; no crear una tabla propia de sesiones opacas ni guardar sus tokens en tablas de inventario. |
 | `rooms` | `id`, `move_id`, `key`, nombre, alias. Unicidad de `(move_id, key)`. Los 17 destinos se crean idempotentemente. |
 | `units` | `id`, `move_id`, código, tipo, categoría/subtipo, nombre, cantidad del lote, tamaño, destino previsto, origen textual opcional, estado de empaque/traslado/desempaque, habitación real en destino nullable, frágil, abrir primero, notas, versión, autores, fechas y archivo lógico. |
 | `content_entries` | `id`, `move_id`, `current_unit_id` nullable, `last_unit_id`, texto original, descripción, cantidad opcional y unidad de medida, estado, habitación actual explícita nullable, autor, mensaje de origen, versión, fechas. |
 | `item_links` | Relación de una entrada de contenido con una unidad suelta: accesorio, tornillos/piezas, parte de, otra. Referencias existentes dentro de la misma mudanza. |
-| `conversations` | `id`, mudanza, sesión/dispositivo propietario, participante, unidad activa nullable y versión del contexto. No existe una caja activa global. |
+| `conversations` | `id`, mudanza, participante propietario, dispositivo, unidad activa nullable y versión del contexto. La propiedad sobrevive al refresco/reingreso de la misma cuenta; no existe una caja activa global. |
 | `messages` | Mensaje UUID, conversación, participante, texto, idioma, contexto capturado, estado de procesamiento, respuesta persistida, referencias de evidencia y operación. |
 | `command_receipts` | `operation_id`, mudanza, hash canónico de solicitud, resultado persistido, versiones resultantes, revisión de sincronización. Unicidad por mudanza y operación. |
-| `events` | UUID, mudanza, revisión, tipo, actor, dispositivo, hora del servidor, hora cliente opcional, entidades afectadas, cambios antes/después, operación y evento compensado opcional. Inmutables. |
+| `events` | UUID, mudanza, revisión, tipo, `actor_participant_id`, apodo del actor al operar, dispositivo, hora del servidor, hora cliente opcional, entidades afectadas, cambios antes/después, operación y evento compensado opcional. Inmutables. |
 | `label_counters` / `label_reservations` | Contadores por mudanza y prefijo; reservas persistentes asignadas a un dispositivo con solicitud idempotente. Un código emitido nunca vuelve al contador libre. |
 | `import_sources` / `import_rows` | Archivo y SHA-256, hoja/fila, valores originales, decisión de revisión, destino elegido y unidades creadas. Una fila de la misma fuente no se importa dos veces en una mudanza. |
 | `ai_usage` | Solicitud, modelo y versión informada, propósito, tokens, latencia, resultado, precio aplicado, reserva y costo confirmado/estimado. Sin claves ni audio. |
 
 Las claves foráneas entre entidades incluyen validación de la misma `move_id`; no basta con que exista un UUID. Los índices deben cubrir código, mudanza/estado/destino, contenido buscable, eventos por revisión y las claves de idempotencia.
+
+## Cuentas y participantes
+
+El organizador registra el correo autorizado y el apodo en una operación administrativa que crea o vincula `participants` y `move_memberships`. Normalizar correo con trim y minúsculas, sin eliminar puntos ni sufijos `+`. No agregar participantes por un trigger genérico de alta en `auth.users`.
+
+En el primer login autorizado, vincular atómicamente la membresía pendiente al `auth.users.id` obtenido de Supabase Auth, con identidad Google y correo verificado. Usar restricciones y locks para que dos dispositivos no creen personas duplicadas. Una membresía ya vinculada no se reasigna a otra cuenta por coincidencia de apodo o de texto enviado por el cliente. Cambios de correo/vínculo requieren administración explícita.
+
+En cada petición protegida, resolver la membresía activa del usuario validado. Una cuenta autenticada sin membresía no puede acceder al inventario ni consumir IA. Desactivar la membresía bloquea nuevas solicitudes aunque queden tokens Auth vigentes; conservar participante e historial. Revalidar membresía dentro de la transacción mutadora antes del commit.
+
+Los apodos son presentación: una edición propia sincroniza el perfil sin modificar el ID del actor ni los apodos históricos de eventos. No borrar un participante al revocar acceso ni borrar inventario en cascada al eliminar un usuario Auth. La lista de acceso y sus vinculaciones no se restauran automáticamente desde un respaldo de inventario; ver [06-importacion](06-importacion.md).
 
 ## Tipos y códigos
 
@@ -91,11 +102,11 @@ Toda mutación pasa por un servicio de comandos y una función transaccional de 
 
 Orden de una operación:
 
-1. Resolver sesión y mudanza; validar forma y límites de la solicitud.
+1. Validar sesión con Supabase Auth y resolver membresía activa, participante y mudanza; validar forma y límites de la solicitud.
 2. Preparar el plan fuera de la transacción si necesita IA. No mantener locks durante llamadas a modelos.
 3. Iniciar transacción y bloquear primero la fila `moves` de esa mudanza. Cinco usuarios permiten este orden simple y predecible.
 4. Buscar recibo por `operation_id`. Si existe con el mismo hash, devolverlo. Si el hash difiere, rechazar la reutilización de clave.
-5. Releer registros, validar pertenencia, permisos, estado y versiones esperadas.
+5. Releer registros, revalidar membresía activa, pertenencia, permisos, estado y versiones esperadas.
 6. Ejecutar todos los cambios del comando o ninguno; incrementar versiones de entidades afectadas.
 7. Incrementar `sync_revision` de la mudanza, insertar un evento con todos los cambios y el recibo correspondiente.
 8. Confirmar transacción y devolver recibo. Solo entonces mostrar confirmación compartida.
@@ -112,6 +123,7 @@ La idempotencia cubre doble toque, reintentos, modo offline y comandos propuesto
 - Un conflicto devuelve `409`, la versión actual, el motivo y el texto original/propuesta conservado.
 - Un comando compuesto tiene una sola operación y una transacción. Si falla una parte, ninguna modificación del compuesto queda aplicada.
 - El servidor nunca acepta `closed_by`, `created_by` o `move_id` arbitrarios para atribuir una operación: los deriva de la sesión validada.
+- `expectedParticipantId` en el comando/mensaje es una precondición que debe coincidir con el participante resuelto por Auth y membresía; una discrepancia rechaza el envío, no cambia el actor.
 
 ## Historial y deshacer
 

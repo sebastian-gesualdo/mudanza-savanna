@@ -1,8 +1,8 @@
 # Guía para crear las cuentas y conectar Mudanza Savanna
 
-Guía para el organizador · 11 de octubre de 2026.
+Guía para el organizador · Alineada con SPEC v1.1 · 11 de octubre de 2026.
 
-La aplicación todavía no está implementada. Podés crear las cuentas y preparar los proyectos ahora; los pasos de migraciones, despliegue funcional e invitaciones se completan cuando existan las tareas indicadas. Crear una cuenta o guardar una clave no demuestra que la integración funcione.
+La aplicación todavía no está implementada. Podés crear las cuentas y preparar los proyectos ahora; los pasos de migraciones, despliegue funcional y autorización de participantes se completan cuando existan las tareas indicadas. Crear una cuenta o guardar una clave no demuestra que la integración funcione.
 
 Los nombres de algunas secciones de los paneles pueden cambiar. Esta guía indica qué configuración buscar y cómo comprobar el resultado. Los importes y cuotas de los proveedores se verifican al activarlos; no se presuponen créditos gratuitos ni una tarifa fija.
 
@@ -12,21 +12,22 @@ Los nombres de algunas secciones de los paneles pueden cambiar. Esta guía indic
 | --- | --- | --- |
 | GitHub | Código y despliegues automáticos al actualizar una rama. | La existente, con acceso a `sebastian-gesualdo/mudanza-savanna`. |
 | Vercel | Publicar la PWA, ejecutar su backend y administrar AI Gateway. | Una cuenta del organizador; comenzar evaluando el plan Hobby para este uso familiar. |
-| Supabase | Base de datos compartida. | Una cuenta del organizador y una organización; comenzar evaluando el plan Free. |
+| Supabase | Base de datos compartida y Google Login mediante Supabase Auth. | Una cuenta del organizador y una organización; comenzar evaluando el plan Free. |
+| Google Cloud / Google Auth Platform | Configurar el consentimiento y los clientes OAuth de Google. | Una cuenta Google del organizador con un proyecto Cloud; no hace falta dar acceso al panel a los familiares. |
 | Vercel AI Gateway | Acceder a Jev y al modelo generativo excepcional. | Se administra dentro de Vercel, en el mismo ámbito/cuenta que el proyecto. |
 
 Para la ruta definida no hace falta abrir una cuenta propia en OpenAI ni TypeSafe, ni obtener sus API keys directas. Tampoco hace falta cuenta de Apple Developer, publicación en App Store, dominio comprado o cuentas de Vercel/Supabase para cada familiar.
 
-Los colaboradores entrarán a la aplicación por invitación y elegirán su nombre. Solo quien administra el proyecto necesita acceder a estos paneles.
+Los colaboradores entrarán con su propia cuenta Google y un correo autorizado para esta mudanza. Puede ser una cuenta Google con correo que no sea Gmail. Su apodo familiar se puede editar, pero no cambia quién realiza las acciones. Solo quien administra el proyecto necesita acceder a los paneles de proveedores.
 
 ## 2. Qué podés hacer ahora y qué viene después
 
 | Momento | Acción | Dependencia |
 | --- | --- | --- |
-| Ahora | Crear Vercel y Supabase, elegir nombres y preparar proyectos de base de datos. | Ningún código de aplicación. |
+| Ahora | Crear Vercel, Supabase y proyecto Google Cloud; preparar clientes OAuth y guardar privadamente los correos de participantes. | Ningún código de aplicación; las URLs definitivas se completan después del deploy. |
 | Ahora / T00 | Habilitar acceso a AI Gateway y verificar que Jev esté disponible en esa cuenta. | Una llamada de prueba real para confirmar acceso; la aparición en un catálogo no basta. |
 | Después de T01 | Importar en Vercel una rama que ya tenga la aplicación y `package.json`. | Base Next.js implementada. |
-| Después de T02–T03 | Aplicar migraciones y generar invitación. | Esquema, sesiones y herramienta de invitación implementados. |
+| Después de T02–T03 | Aplicar migraciones, autorizar correos y probar Google Login. | Esquema, flujo OAuth y herramienta de membresías implementados. |
 | Después de T05 | Activar IA con presupuesto y comprobar Jev. | Adaptador, controles de gasto y registro de consumo. |
 | T10–T11 | Publicar, probar con dos dispositivos e instalar en los iPhone. | Flujos e integraciones terminados. |
 
@@ -64,7 +65,7 @@ Repetí los pasos para `mudanza-savanna-test`, con contraseña y claves propias.
 
 Si tu cuota gratuita no permite un segundo proyecto, las previews deberán usar un modo demo aislado o una base local de desarrollo hasta disponer de un entorno de prueba. No conectar las pruebas al inventario real como atajo. T01/T10 deben documentar cuál de esas opciones quedó disponible.
 
-No hace falta crear manualmente tablas desde el panel. Las tablas, permisos y ambientes se instalarán mediante migraciones del repositorio en el paso 8. Tampoco hace falta configurar proveedores de login, correo, buckets de fotos ni Realtime para v1.
+No hace falta crear manualmente tablas desde el panel. Las tablas, permisos y ambientes se instalarán mediante migraciones del repositorio en el paso 8. Configurar Google como proveedor de Auth según el paso 4.1; no se necesitan otros proveedores de login, envío de magic links, buckets de fotos ni Realtime para v1.
 
 ### Obtener los datos de conexión correctos
 
@@ -73,13 +74,50 @@ En cada proyecto, buscá las secciones **Connect**, **Project Settings**, **Data
 | Dato | Qué copiar / para qué sirve | Dónde se usará |
 | --- | --- | --- |
 | Project URL | URL HTTPS de la API del proyecto, habitualmente bajo `supabase.co`. | `SUPABASE_URL` del servidor. |
+| Publishable key | Clave publicable del proyecto, o legacy `anon` compatible. | `SUPABASE_PUBLISHABLE_KEY` del cliente Auth en servidor. |
 | Secret key | Clave privilegiada de servidor. El panel puede ofrecer claves nuevas o una clave legacy `service_role`. | `SUPABASE_SECRET_KEY`, según el formato compatible documentado por T01/T03. |
 | Project reference / ID | Identificador del proyecto, distinto del nombre visible. | Enlazar la CLI para migraciones; no es una contraseña. |
 | Database password | Contraseña elegida al crear PostgreSQL. | Migraciones/administración cuando la herramienta la solicite. |
 
-La clave publicable o `anon` no sustituye a la clave de servidor en esta arquitectura. La contraseña de la base de datos tampoco es una API key. La aplicación prevista usa la API de Supabase y RPC desde su backend; por eso la contraseña de PostgreSQL no necesita ir en Vercel como variable de la app.
+Se usan dos clientes separados: Auth con clave publicable y cookies del usuario; datos con clave privilegiada solo después de verificar sesión y membresía. La clave publicable o `anon` no sustituye a la privilegiada. La contraseña de la base de datos tampoco es una API key. La aplicación prevista usa la API de Supabase y RPC desde su backend; por eso la contraseña de PostgreSQL no necesita ir en Vercel como variable de la app.
 
-**Resultado esperado:** dos proyectos claramente identificados y sus datos guardados de forma privada. No pegues claves, contraseñas ni enlaces de invitación completos en el chat, GitHub o capturas que vayas a compartir.
+**Resultado esperado:** dos proyectos claramente identificados y sus datos guardados de forma privada. No pegues claves privilegiadas, contraseñas, Client Secrets ni tokens en el chat, GitHub o capturas que vayas a compartir.
+
+## 4.1. Preparar Google Login con Supabase Auth
+
+### Google Cloud y consentimiento
+
+1. Abrí [Google Cloud Console](https://console.cloud.google.com/) con la cuenta que administrará el proyecto. Creá o elegí un proyecto, por ejemplo `Mudanza Savanna`.
+2. Entrá a [Google Auth Platform](https://console.cloud.google.com/auth/overview). Completá Branding/Consent con nombre de la aplicación, correo de soporte y contacto del administrador.
+3. Para cuentas familiares personales, elegí audiencia **External**. Mientras el estado sea **Testing**, agregá en Test users los correos que van a probar. Esta lista de Google y la lista de participantes de la app son configuraciones distintas; deben incluir las cuentas necesarias.
+4. En Data Access/Scopes, limitá el acceso a `openid`, correo y perfil básico (`userinfo.email` y `userinfo.profile` en el panel). No solicitar Gmail, Drive ni contactos. Este uso de OAuth no necesita activar APIs de IA de Google.
+5. Antes del uso familiar definitivo, revisá el estado Testing/In production y los requisitos vigentes que muestre Google para publicarlo. No considerar publicada la configuración solo porque se haya creado el cliente. Los scopes básicos normalmente evitan la revisión de scopes sensibles, pero el estado efectivo se comprueba en el panel.
+
+### Clientes OAuth Web y proveedor de Supabase
+
+Crear dos clientes de tipo **Web application**, por ejemplo `Mudanza Savanna prod` y `Mudanza Savanna test`, dentro del proyecto Google. Cada uno corresponde a su propio proyecto Supabase.
+
+1. En Supabase, abrí **Authentication → Sign In / Providers → Google**, o la sección equivalente. Copiá la URL de callback que muestra el panel.
+2. En [Google Auth Platform → Clients](https://console.cloud.google.com/auth/clients), creá el cliente Web. En **Authorized redirect URIs**, pegá la URL de callback de ese Supabase, habitualmente `https://<project-ref>.supabase.co/auth/v1/callback`.
+3. En **Authorized JavaScript origins**, registrá el origen real de la app cuando esté disponible: esquema y dominio, sin `/auth/callback`. Para desarrollo con el Supabase test, agregar `http://localhost:3000` si ese es el puerto implementado.
+4. Guardá el Client ID y Client Secret en un gestor seguro; cargalos en el proveedor Google de **ese mismo Supabase** y habilitalo. No van en variables de Vercel ni en Git.
+5. Dejá Google como único método de ingreso de la aplicación; deshabilitá Email/password y acceso anónimo si estaban habilitados. El alta inicial por OAuth debe seguir permitida para que entren participantes nuevos. No confundir esa alta en Auth con autorización al inventario, que depende de `move_memberships`.
+6. Repetí con el otro cliente/proyecto. No copiar credenciales OAuth de prod al test.
+
+### Las dos direcciones de retorno
+
+| Dónde se configura | URL que corresponde |
+| --- | --- |
+| Google → Authorized redirect URIs | Callback de **Supabase**: `https://<project-ref>.supabase.co/auth/v1/callback`. |
+| Supabase → Authentication → URL Configuration → Site URL | Origen canónico de la **app**, el mismo que `APP_BASE_URL`. |
+| Supabase → Redirect URLs | Callback de la **app**: `https://<dominio-real-de-la-app>/auth/callback`. |
+| Supabase test → Redirect URLs para desarrollo | `http://localhost:3000/auth/callback`, si ese es el puerto usado. Google sigue retornando al Supabase test alojado. |
+
+Los valores entre `<...>` son marcadores, no URLs listas para pegar. Completá los dominios reales después del paso 7. Si se agrega un dominio propio, actualizar origen, Site URL y redirect de la app; el callback de Supabase registrado en Google sigue correspondiendo al proyecto Supabase.
+
+Para previews con OAuth, usar una URL estable de rama o registrar URLs exactas de despliegues de prueba controlados. Iniciar y terminar el login en el mismo origen; entrar siempre por la URL canónica configurada para esa prueba. No usar un comodín que autorice todo `vercel.app`. Las previews sin configuración OAuth usan demo claramente identificada, sin credenciales de producción.
+
+**Resultado esperado ahora:** proveedor Google habilitado en cada Supabase y clientes Web correctos. **Comprobación después de T03:** login real, retorno a la app y acceso solo con membresía activa. Configurar estos paneles todavía no crea participantes ni prueba la PWA.
 
 ## 5. Preparar AI Gateway y Jev
 
@@ -104,10 +142,10 @@ Vercel distingue **Production**, **Preview** y **Development**. El nombre de una
 | Variable | Producción | Pruebas / desarrollo |
 | --- | --- | --- |
 | `SUPABASE_URL` | URL de `mudanza-savanna-prod`. | URL de `mudanza-savanna-test`, o configuración demo documentada. |
+| `SUPABASE_PUBLISHABLE_KEY` | Clave publicable del proyecto prod, para Auth. | Clave publicable del proyecto test; nunca mezclar proyectos. |
 | `SUPABASE_SECRET_KEY` | Clave de servidor del proyecto prod. | Clave de servidor del proyecto test; nunca la de prod. |
 | `AI_GATEWAY_API_KEY` | Credencial elegida para producción, salvo OIDC. | Credencial de pruebas si se habilita IA; sino mantenerla desactivada. |
-| `INVITE_TOKEN_HASH` | Hash de la invitación de la mudanza real. | Hash diferente para el entorno de prueba. |
-| `APP_BASE_URL` | Origen estable HTTPS del proyecto publicado. | URL del entorno que se está probando o resolución segura de URL de preview implementada por T10. |
+| `APP_BASE_URL` | Origen estable HTTPS del proyecto publicado; determina el callback `/auth/callback`. | Origen canónico de test/desarrollo, registrado en Supabase, o resolución segura de preview implementada por T10. |
 | `APP_ENV` | `production`. | `preview` o `development`. |
 | `DECISION_MODEL` | `typesafe-ai/jev`, tras validación de T00. | El mismo modelo para pruebas reales, o adaptador mock identificado. |
 | `GENERATION_MODEL` | Identificador de Gateway elegido en T00. | Modelo de prueba elegido; puede quedar sin configurar con generación deshabilitada. |
@@ -117,9 +155,9 @@ Vercel distingue **Production**, **Preview** y **Development**. El nombre de una
 
 `AI_BUDGET_USD` corresponde al presupuesto total de la mudanza/entorno registrado por la aplicación, no a un tope mensual de la cuenta de Vercel. Los valores son defaults propuestos y editables. No constituyen un cobro automático ni aseguran igualdad instantánea con la factura del proveedor.
 
-Ninguna clave privilegiada lleva prefijo `NEXT_PUBLIC_`. Las variables se usan en servidor. `.env.example` tendrá solo nombres y ejemplos no secretos cuando se implemente T01.
+Ninguna clave privilegiada lleva prefijo `NEXT_PUBLIC_`. Las variables se usan en servidor. `.env.example` tendrá solo nombres y ejemplos no secretos cuando se implemente T01. No configurar `INVITE_TOKEN_HASH`: v1.1 usa Google Login. El Client Secret de Google vive en el proveedor de Supabase y la lista de correos autorizados vive en la base; ninguno requiere variable propia en Vercel.
 
-Las URLs de preview cambian según despliegue. T10 debe elegir y documentar la forma compatible de resolver su origen, por ejemplo a partir de metadatos confiables del deployment. No desactivar la comprobación de origen/CSRF para hacer funcionar una preview.
+Las URLs de preview cambian según despliegue. T10 debe elegir y documentar el origen canónico y su registro de callback, por ejemplo con un alias de rama estable o metadatos confiables del deployment y URLs exactas autorizadas. No desactivar la comprobación de origen/CSRF para hacer funcionar una preview.
 
 ## 7. Conectar GitHub y desplegar en Vercel
 
@@ -135,12 +173,13 @@ Las URLs de preview cambian según despliegue. T10 debe elegir y documentar la f
 8. Desplegá y revisá el resultado del build.
 9. Anotá la URL estable asignada por Vercel, por ejemplo el dominio `vercel.app` que el panel muestre. No asumir que un nombre propuesto estará libre.
 10. Guardá esa URL en `APP_BASE_URL` de producción cuando corresponda. Si cambiaste variables después de construir, generá un nuevo deployment/redeploy para que se apliquen.
+11. Completá los orígenes y retornos del paso 4.1 con esa URL. Para probar OAuth en preview, usar el proyecto Supabase test y su URL canónica registrada.
 
 La integración de GitHub publicará previews al actualizar ramas/PR y producción al actualizar `main`, según la configuración y los permisos de Vercel. La cuenta de GitHub del autor de los commits debe cumplir las reglas de colaboración del plan elegido; si Vercel bloquea el deploy por autor/permisos, revisar ese vínculo antes de cambiar de plan.
 
 Al principio pueden fallar funciones que esperan tablas si todavía no se completó el paso 8. Un build exitoso solo prueba que se construyó la app; no prueba conexión a base de datos ni IA.
 
-No hace falta dominio propio. Si después se agrega uno, mantener actualizados `APP_BASE_URL`, invitaciones y orígenes permitidos.
+No hace falta dominio propio. Si después se agrega uno, mantener actualizados `APP_BASE_URL`, orígenes y redirects de Google/Supabase según el paso 4.1.
 
 ## 8. Conectar la base de datos y aplicar migraciones
 
@@ -153,7 +192,7 @@ Primero, el implementador debe:
 3. Enlazar explícitamente el proyecto test y revisar las migraciones pendientes.
 4. Aplicarlas a test y verificar tablas, RPC, restricciones y permisos. No habilitar acceso público para resolver un error de conexión.
 5. Ejecutar el seed idempotente de los 17 ambientes. No importar automáticamente el inventario anterior.
-6. Probar una escritura y lectura desde la API de la aplicación con sesión válida.
+6. Autorizar cuentas según el paso 9 y probar una escritura y lectura desde la API con Google Login y membresía activa.
 7. Solo después, repetir el procedimiento revisado en producción. Si ya contiene datos, obtener respaldo antes de cambios de esquema.
 
 La documentación oficial usa esta familia de comandos, una vez instalada la CLI compatible y desde el checkout correcto:
@@ -169,18 +208,22 @@ Reemplazar `PROJECT_REF_DE_PRUEBA` por el identificador real. El último comando
 
 Las migraciones de producción no corren indiscriminadamente en cada preview. Una variable de Vercel apuntando a Supabase no crea tablas ni actualiza su esquema. El rollback de un deployment tampoco revierte migraciones de PostgreSQL.
 
-## 9. Preparar la invitación y sumar a la familia
+## 9. Autorizar participantes y sumar a la familia
 
-**Después de T03:** la implementación incluirá una herramienta para generar una invitación aleatoria de al menos 128 bits y calcular su hash SHA-256 hexadecimal. Su comando exacto se documentará junto con la herramienta; no existe todavía en este repositorio.
+**Después de T03:** la implementación incluirá una herramienta administrativa para dar de alta, consultar, desactivar y revincular membresías. Sus comandos exactos se documentarán junto con la herramienta; no existen todavía en este repositorio. Operará con credenciales de administración del entorno elegido, nunca desde la API familiar.
 
-1. Generar invitaciones distintas para test y producción.
-2. Guardar solamente el hash en `INVITE_TOKEN_HASH` del entorno correspondiente.
-3. Guardar de forma privada el enlace de invitación con el token original. La app lo intercambia por una sesión; el token no es el nombre del participante.
-4. Redeploy si se agregó/cambió el hash en Vercel después del deployment activo.
-5. Probar ingreso y selección de nombre desde un dispositivo distinto.
-6. Compartir el enlace de producción con los colaboradores cuando estén terminadas las verificaciones.
+1. Confirmar el correo de la cuenta Google que usará cada persona y su apodo. Guardar esta lista de forma privada; no en Git ni en fixtures reales.
+2. Ejecutar la herramienta contra test para crear participantes/membresías autorizadas. Si Google está en Testing, agregar esas mismas cuentas a sus Test users.
+3. Entrar con “Continuar con Google”. El primer login vincula la cuenta al participante ya autorizado; logins siguientes, incluso en otros teléfonos, reutilizan el participante.
+4. Probar dos cuentas autorizadas y otra no autorizada. Esta última no debe leer inventario ni consumir IA aunque figure como usuario en Supabase Auth.
+5. Repetir el alta de la lista familiar en producción después de comprobar el entorno. Compartir la URL normal de la app; el enlace no contiene un secreto ni concede acceso por sí solo.
+6. En cada iPhone, abrir en Safari e instalar con Compartir → Agregar a inicio. Probar también el ingreso desde la PWA instalada: puede pedir Google Login otra vez, porque no se debe asumir que comparte la sesión de Safari.
 
-Los familiares no necesitan tu cuenta de Vercel, Supabase ni GitHub. Entran al enlace, eligen su nombre y usan Safari → Compartir → Agregar a inicio. La guía de invitaciones de T03/T10 debe explicar cómo rotar el enlace y qué sucede con sesiones que ya estaban abiertas.
+La herramienta debe ser idempotente: repetir un alta no crea otra persona. Para un respaldo restaurado, permite elegir explícitamente el participante histórico que se vincula; no lo resuelve solo por similitud de apodo.
+
+Para quitar acceso, desactivar la membresía del entorno correcto. La próxima solicitud protegida se rechaza aunque la sesión siga abierta; el inventario e historial se conservan. El cambio de membresía no requiere redeploy. Cambiar una cuenta vinculada se hace mediante administración explícita, nunca editando el apodo.
+
+Los familiares no necesitan cuentas de Vercel, Supabase ni GitHub. Todos usan su propia cuenta Google. Antes de cambiar de cuenta o salir con trabajo pendiente, sincronizar, exportar o conservar esa cola bajo la cuenta original; otro participante no puede enviarla como propia.
 
 ## 10. Dar acceso a una tarea de Codex cuando haga falta
 
@@ -203,25 +246,27 @@ Realizar primero estas pruebas en el entorno test; luego hacer un smoke test peq
 | --- | --- |
 | GitHub → Vercel | Un cambio de rama genera preview y el deployment muestra el commit correcto. |
 | Separación de entornos | Un registro creado en test no aparece en producción. |
+| Google → Supabase → app | Cuenta autorizada completa el retorno OAuth; cuenta no autorizada no recibe inventario ni puede gastar IA. |
 | App → Supabase | Crear una caja, recargar y verla desde otro dispositivo con otro participante. |
-| Identidad | Cerrar la caja y comprobar quién y cuándo la cerró. |
+| Identidad | Cerrar la caja y comprobar cuenta/participante y hora; cambiar el apodo no reasigna el cierre. |
+| Revocación | Desactivar una membresía de prueba bloquea nuevas solicitudes de su sesión abierta sin borrar historial. |
 | Persistencia | Reabrir la app y recuperar contenido sin depender del chat anterior. |
 | App → Jev | Una consulta semántica genera una decisión real de Jev y aparece en el registro de uso; una lectura por código no consume IA. |
 | Presupuesto | Con un límite de prueba pequeño, la IA deja de iniciar llamadas al agotar saldo y los controles manuales siguen funcionando. |
-| Offline | Encolar una modificación sin señal, reabrir la PWA y sincronizar una sola vez al recuperar conexión. |
+| Offline | Encolar sin señal, reabrir y sincronizar una sola vez; si vence la sesión, reingresar con la misma cuenta, sin reasignar pendientes al cambiar de usuario. |
 | Backups | Exportar JSON y restaurarlo en una base de prueba vacía con conteos/relaciones iguales. |
-| iPhone | Instalación, dictado, teclado, bloqueo/desbloqueo y actualización de la PWA funcionan en equipo real. |
+| iPhone | Instalación, Google Login desde Safari y PWA, dictado, teclado, bloqueo/desbloqueo y actualización funcionan en equipo real. |
 
 Si se crea una caja de prueba en producción, identificarla claramente y archivarla al terminar; su código no se reutiliza. No borrar el inventario completo para limpiar una prueba.
 
 ## 12. Costos y preparación para el día de la mudanza
 
-Objetivo: Vercel Hobby y Supabase Free mientras sus condiciones y cuotas alcancen; IA por consumo con presupuesto bajo. No hay una promesa de costo cero por registrar una cuenta.
+Objetivo: Vercel Hobby y Supabase Free, incluidas sus cuotas de Auth, mientras sus condiciones y límites alcancen; IA por consumo con presupuesto bajo. Google Login básico no requiere contratar un proveedor adicional de autenticación. No hay una promesa de costo cero por registrar una cuenta.
 
 - Revisar consumo y facturación en cada proveedor, además del contador de la aplicación.
 - Confirmar que no se activaron complementos de pago que la app no necesita.
 - Si el plan de Supabase pausa proyectos por inactividad, reanudarlo y verificarlo antes del uso. No dar por disponible un proyecto solo porque exista en el dashboard.
-- Antes del día de la mudanza, abrir la app en todos los teléfonos y comprobar que se ve el mismo inventario actualizado.
+- Antes del día de la mudanza, abrir la PWA en todos los teléfonos, completar Google Login con las cuentas autorizadas y comprobar que se ve el mismo inventario actualizado. Verificar la configuración de audiencia/Test users de Google si todavía está en Testing.
 - Confirmar presupuesto disponible en Gateway y que Jev responde; las funciones manuales deben servir aunque falle IA.
 - Generar un export y comprobar que no quedan cambios pendientes de sincronizar antes de cerrar las apps.
 
@@ -232,14 +277,18 @@ Objetivo: Vercel Hobby y Supabase Free mientras sus condiciones y cuotas alcance
 | El repo no aparece en Vercel | Permisos de la GitHub App y cuenta/ámbito seleccionado. |
 | Vercel no detecta Next.js | La rama desplegada puede contener solo specs; comprobar `package.json` y Root Directory. |
 | Build falla por una variable faltante | Variables requeridas por la implementación y ámbito Production/Preview/Development. Guardar y redeploy. |
-| API de la app responde sin sesión/no autorizado | Invitación correcta, selección de participante y cookie del entorno visitado. |
+| API responde `401` | Sesión/renovación de Supabase, cookies del origen visitado; volver a Google Login sin borrar pendientes. |
+| Google funciona pero la app responde `403` | Correo autorizado, membresía activa y vinculación al participante del entorno correcto. No habilitar cualquier cuenta para resolverlo. |
+| Google muestra `redirect_uri_mismatch` | URI exacta del callback de Supabase registrada en el cliente Google; no confundirla con `/auth/callback` de la app. |
+| Google muestra acceso bloqueado en Testing | Cuenta incluida en Test users del proyecto Google, cliente/audiencia correctos. Esto no reemplaza la membresía de la app. |
+| OAuth vuelve a otro sitio o pierde PKCE | Site URL/Redirect URLs de Supabase, `APP_BASE_URL`, origen canónico y cookies del navegador/PWA donde se inició. |
 | Supabase rechaza solicitudes | URL y clave pertenecen al mismo proyecto; clave de servidor correcta; proyecto activo. No deshabilitar RLS como atajo. |
 | Tabla o RPC no existe | Migraciones pendientes o proyecto enlazado incorrectamente. |
 | La app guarda en otro entorno | Valores de Supabase en Vercel y commit/URL que se está usando. |
 | Jev no responde | Modelo/acceso de Gateway, credencial o OIDC, saldo, versión de SDK y estado del proveedor. |
 | IA deshabilitada aunque exista saldo en Vercel | Flags de la app y presupuesto/reservas de esa mudanza. Son controles separados. |
 | Preview falla por origen | Resolución de `APP_BASE_URL` de preview y validación de origen documentada en T10. |
-| Invitación dejó de funcionar | Hash vigente, token del enlace, entorno y redeploy posterior al cambio. |
+| Otra cuenta no ve los pendientes anteriores | Es el comportamiento esperado: volver a la cuenta original autorizada para recuperarlos. |
 | Un cambio de variables no tiene efecto | El deployment activo puede ser anterior al cambio. |
 | Vercel bloquea un deploy por autor | Vínculo de GitHub, autor del commit y reglas del plan/cuenta. |
 | iPhone muestra versión anterior | Estado de actualización del service worker. Resolver/exportar pendientes antes de borrar datos del sitio. |
@@ -256,6 +305,11 @@ Este registro admite información no secreta. No completar campos con claves, co
 | Rama de producción | `main`, cuando contenga la aplicación aprobada. |
 | Proyecto Supabase producción: nombre / ID / región | Pendiente. |
 | Proyecto Supabase test: nombre / ID / región, o modo demo | Pendiente. |
+| Proyecto Google Cloud: nombre / ID | Pendiente. |
+| Clientes OAuth Web: nombres de prod / test, sin secretos | Pendiente. |
+| Audiencia OAuth: Testing/In production y fecha de comprobación | Pendiente. |
+| Orígenes canónicos y callbacks de prod / test | Pendiente. |
+| Alta/revocación de participantes: comando documentado y fecha de verificación, sin lista de correos | Pendiente de T03/T10. |
 | Autenticación de Gateway | API key u OIDC; registrar solo el método. |
 | Jev: identificador / versión observada / fecha de prueba | Pendiente de T00. |
 | Modelo generativo elegido | Pendiente de T00. |
@@ -272,6 +326,10 @@ Este registro admite información no secreta. No completar campos con claves, co
 - [Vercel AI Gateway](https://vercel.com/docs/ai-gateway).
 - [AI SDK: decisiones y acceso a Jev por Gateway](https://github.com/vercel/ai/blob/main/content/docs/03-ai-sdk-core/32-decisions.mdx).
 - [Supabase: claves de API](https://supabase.com/docs/guides/api/api-keys).
+- [Supabase: Google Login](https://supabase.com/docs/guides/auth/social-login/auth-google).
+- [Supabase: clientes y sesiones SSR](https://supabase.com/docs/guides/auth/server-side/creating-a-client).
+- [Supabase: URLs de retorno](https://supabase.com/docs/guides/auth/redirect-urls).
+- [Google Auth Platform: clientes OAuth](https://console.cloud.google.com/auth/clients).
 - [Supabase: migraciones](https://supabase.com/docs/guides/deployment/database-migrations).
 
 Las instrucciones de esta guía deben actualizarse durante T10 para reflejar la implementación y paneles efectivamente usados. Haber escrito la guía no significa que se hayan creado cuentas, guardado secretos, aplicado migraciones o desplegado el producto.

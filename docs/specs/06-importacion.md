@@ -66,7 +66,7 @@ No copiar presupuestos, comentarios de compradores o importes a campos de invent
 
 ### JSON canónico
 
-Incluir `schema_version`, fecha UTC, mudanza, revisión consistente, ambientes, participantes, unidades, entradas, relaciones, historial, procedencia, contadores de etiquetas y reservas de códigos sin credenciales. Excluir sesiones, invitaciones, claves, reservas de gasto y tokens de proveedor. Los mensajes completos pueden ser un export opcional separado; el historial de cambios y texto de origen suficiente deben conservarse.
+Incluir `schema_version`, fecha UTC, mudanza, revisión consistente, ambientes, participantes (IDs y apodos), unidades, entradas, relaciones, historial, procedencia, contadores de etiquetas y reservas de códigos sin credenciales. Excluir `move_memberships`, correos autorizados, vínculos con `auth.users`, sesiones, claves, reservas de gasto y tokens de Supabase/Google/proveedor de IA. Los mensajes completos pueden ser un export opcional separado; el historial de cambios y texto de origen suficiente deben conservarse.
 
 Obtener una vista transaccional coherente: no mezclar unidades de antes de una transferencia con entradas de después. Preservar UUID y códigos para restauración.
 
@@ -77,6 +77,8 @@ Ofrecer archivos/tablas separados para unidades, contenido y eventos si resulta 
 ### Recuperación
 
 Validar un export JSON en una base de prueba vacía: mismo número de unidades/entradas/eventos, mismas relaciones y códigos, sin duplicación. Una restauración sobre una mudanza con datos exige modo explícito y revisión de conflictos; nunca reemplazo silencioso del inventario completo.
+
+Restaurar participantes con sus UUID y apodos conserva autores históricos, pero no concede acceso. Supabase Auth y la lista de acceso se configuran por separado en el destino. La herramienta administrativa debe permitir vincular explícitamente los correos autorizados a participantes restaurados sin duplicarlos; no copiar usuarios Auth ni asumir que sus UUID existen en otro proyecto. Probar login y un cierre nuevo después de esa vinculación, conservando la autoría anterior.
 
 Restaurar los contadores y códigos ya reservados para no reciclar etiquetas impresas/escritas que todavía no tengan una unidad sincronizada. Reconciliar el consumo de IA con su registro/proveedor antes de volver a habilitar llamadas: restaurar el inventario no debe reiniciar implícitamente el saldo gastado.
 
