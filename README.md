@@ -15,6 +15,8 @@ La especificación completa empieza en [SPEC.md](SPEC.md). El repositorio contie
 - [Criterios de aceptación y validación](docs/specs/07-aceptacion.md)
 - [Tareas de implementación con dependencias](docs/specs/08-plan-implementacion.md)
 
+Para preparar las cuentas y conectar los servicios, seguir la [guía de configuración de Vercel, Supabase y AI Gateway](docs/GUIA-CONFIGURACION.md). Distingue lo que se puede preparar ahora de los pasos que requieren la aplicación implementada.
+
 ## Para comenzar una tarea
 
 Leer `SPEC.md`, los documentos del área y la tarea correspondiente de `08-plan-implementacion.md`. Implementar el alcance de esa tarea y verificar sus criterios de aceptación. Registrar cualquier cambio de decisión en la especificación antes de crear contratos incompatibles.

@@ -79,6 +79,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 **Entregables:**
 
 - Invitación, sesión, selección/cambio de participante y middleware de ámbito.
+- Herramienta para generar invitación y hash SHA-256, con comando exacto documentado en la guía de configuración; no guardar tokens reales en el repositorio.
 - Catálogo transaccional completo de comandos y validación en servidor.
 - Lecturas de ficha/lista, snapshot consistente y feed de deltas con revisión.
 - Reservas de etiquetas por dispositivo, límites de solicitud y recibos recuperables.
@@ -183,6 +184,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 - Separación de secretos/datos/presupuesto por entorno; credenciales nunca en Git.
 - Migraciones y rollback documentados; métricas de errores, latencia y costo.
 - Guía para instalar PWA, invitar colaboradores, exportar respaldo y comprobar que todos sincronizan.
+- Completar y verificar la [guía de configuración de cuentas y servicios](../GUIA-CONFIGURACION.md) con rutas/comandos vigentes y datos no secretos del entorno elegido.
 - Registro de límites/precios vigentes y verificación de que el plan elegido sirve al uso familiar.
 
 **Validación:** A18, A20, A21 y smoke test de persistencia real. La creación de recursos o publicación se hace en una tarea autorizada para ello; esta especificación no publica ni crea cuentas.

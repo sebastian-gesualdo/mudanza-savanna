@@ -35,6 +35,8 @@ Una invitación aleatoria de al menos 128 bits permite incorporarse al grupo. El
 
 El servidor entrega una cookie opaca `HttpOnly`, `Secure`, `SameSite=Lax` con expiración propuesta de 30 días. Guardar hash del token de sesión. La invitación se configura por hash en servidor y se puede rotar; la rotación no debe borrar el inventario. No utilizar el nombre elegido como secreto.
 
+Para la invitación, usar SHA-256 hexadecimal del token aleatorio como `INVITE_TOKEN_HASH`. T03 debe entregar una herramienta de generación y documentar cómo obtener el enlace privado y guardar su hash. La guía operativa está en [Guía de configuración](../GUIA-CONFIGURACION.md).
+
 Después de validar la invitación, se pueden listar/seleccionar participantes de la mudanza. Cambiar de participante es explícito y actualiza la sesión. Los colaboradores tienen las mismas capacidades de inventario en v1; el presupuesto y configuración del proveedor se gestionan fuera de los flujos normales.
 
 Una sesión recién invitada puede leer la información necesaria para elegir participante. Los comandos mutadores y el chat requieren completar esa selección. Las operaciones offline guardan el participante esperado: si la sesión cambió de nombre antes de sincronizar, pedir resolver la atribución en lugar de aceptar un actor arbitrario del cliente.

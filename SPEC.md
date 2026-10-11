@@ -78,6 +78,7 @@ La persistencia compartida, la ausencia de duplicaciones y la veracidad de las c
 | [06-importacion](docs/specs/06-importacion.md) | Procedencia, reglas de importación y exportación. |
 | [07-aceptacion](docs/specs/07-aceptacion.md) | Escenarios verificables y requisitos de lanzamiento. |
 | [08-plan-implementacion](docs/specs/08-plan-implementacion.md) | Entregables por tarea, dependencias y orden sugerido. |
+| [Guía de configuración](docs/GUIA-CONFIGURACION.md) | Cuentas, credenciales, entornos, migraciones, publicación y comprobaciones de conexión. |
 
 Una nueva instrucción explícita del usuario prevalece. Dentro de esta versión, `SPEC.md` define alcance; cada documento especializado define su contrato. Si hay una contradicción, corregir los documentos afectados y dejar constancia de la decisión, sin implementar dos comportamientos incompatibles.
 
