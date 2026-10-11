@@ -1,0 +1,1467 @@
+{
+  "schema_version": 1,
+  "source_file": "Piece of cake.xlsx",
+  "source_sha256": "92d989ff89473cc47013c1e9b8047143ec418bfd3eb7e846e0139cbcfd8c81f7",
+  "sheet": "Inventory",
+  "historical_only": true,
+  "header": {
+    "row": 1,
+    "cells": {
+      "A": "(Area clarified)",
+      "B": "Area",
+      "C": "Item",
+      "D": "Qty",
+      "E": "Comments",
+      "F": "Action",
+      "G": "Cost"
+    }
+  },
+  "rows": [
+    {
+      "row": 2,
+      "cells": {
+        "B": "Containers / Boxes / Bins",
+        "C": "Box Assorted Packed & Supplied by Owner",
+        "D": 80.0,
+        "F": "OK",
+        "G": 15.0
+      }
+    },
+    {
+      "row": 3,
+      "cells": {
+        "B": "Patio",
+        "C": "Plant Pot empty",
+        "D": 2.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 4,
+      "cells": {
+        "B": "Patio",
+        "C": "Cleaner",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 5,
+      "cells": {
+        "B": "Patio",
+        "C": "Outdoor Wicker Love Seat",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 6,
+      "cells": {
+        "B": "Patio",
+        "C": "Stool/bar Stool",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 7,
+      "cells": {
+        "B": "Patio",
+        "C": "Bar/Tall Table",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 8,
+      "cells": {
+        "B": "Patio",
+        "C": "Car kids",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 9,
+      "cells": {
+        "B": "Patio",
+        "C": "Trampoline",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 150.0
+      }
+    },
+    {
+      "row": 10,
+      "cells": {
+        "B": "Patio",
+        "C": "Kids Table",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 11,
+      "cells": {
+        "B": "Patio",
+        "C": "Outdoor Wicker Coffee Table",
+        "D": 3.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 12,
+      "cells": {
+        "B": "Patio",
+        "C": "Sofa Sectional L Shape (4 seat) (Outdoor Sectional Couch)",
+        "D": 1.0,
+        "F": "OK",
+        "G": 450.0
+      }
+    },
+    {
+      "row": 13,
+      "cells": {
+        "B": "Patio",
+        "C": "BBQ Barbecue Gas",
+        "D": 1.0,
+        "F": "OK",
+        "G": 100.0
+      }
+    },
+    {
+      "row": 14,
+      "cells": {
+        "B": "Patio",
+        "C": "Grill Charcoal",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 15,
+      "cells": {
+        "B": "Patio",
+        "C": "Patio Chair",
+        "D": 8.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 16,
+      "cells": {
+        "B": "Patio",
+        "C": "Patio Table",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 17,
+      "cells": {
+        "A": "Driveway",
+        "B": "Garage",
+        "C": "Trunk / Chest",
+        "D": 1.0,
+        "E": "Plastic trunk in the garage",
+        "F": "Removed",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 18,
+      "cells": {
+        "A": "Driveway",
+        "B": "Garage",
+        "C": "Basket cart",
+        "D": 1.0,
+        "E": "Portable basket hoop",
+        "F": "Removed",
+        "G": 200.0
+      }
+    },
+    {
+      "row": 19,
+      "cells": {
+        "A": "Garage",
+        "B": "Garage",
+        "C": "Table Folding",
+        "D": 2.0,
+        "E": "Updated from 3 to 2",
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 20,
+      "cells": {
+        "A": "Garage",
+        "B": "Garage",
+        "C": "Chair Folding",
+        "D": 6.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 21,
+      "cells": {
+        "B": "Garage",
+        "C": "Tent",
+        "D": 1.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 22,
+      "cells": {
+        "B": "Garage",
+        "C": "Metal Shelving Unit Large",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 23,
+      "cells": {
+        "B": "Garage",
+        "C": "S cart",
+        "D": 1.0,
+        "E": "wagon",
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 24,
+      "cells": {
+        "B": "Garage",
+        "C": "Power Washer",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 25,
+      "cells": {
+        "B": "Garage",
+        "C": "Plastic Bin XL",
+        "D": 7.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 26,
+      "cells": {
+        "B": "Garage",
+        "C": "Umbrella (large)",
+        "D": 1.0,
+        "E": "traer del patio",
+        "F": "OK",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 27,
+      "cells": {
+        "B": "Garage",
+        "C": "Large Toy car",
+        "D": 1.0,
+        "E": "What is this? (Lamborgini?)",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 28,
+      "cells": {
+        "B": "Garage",
+        "C": "Shopping Cart",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 29,
+      "cells": {
+        "B": "Garage",
+        "C": "Changing Table",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 30,
+      "cells": {
+        "B": "Garage",
+        "C": "Shoe Rack Small",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 31,
+      "cells": {
+        "A": "Lavadero",
+        "B": "Kitchen",
+        "C": "Plastic Drawer Set",
+        "D": 2.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 32,
+      "cells": {
+        "A": "Lavadero",
+        "B": "Kitchen",
+        "C": "Drying Rack",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 33,
+      "cells": {
+        "A": "Lavadero",
+        "B": "Kitchen",
+        "C": "Shoe Rack Large",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 34,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Trash Can",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 35,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Stool/bar Stool",
+        "D": 2.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 36,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "High Chair",
+        "D": 2.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 37,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Beer fridge",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 38,
+      "cells": {
+        "A": "Lavadero",
+        "B": "Kitchen",
+        "C": "Vacuum Cleaner",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 39,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Dining Table (5+ seats) - Wooden",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 40,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Dresser Single",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 41,
+      "cells": {
+        "A": "Cocina",
+        "B": "Kitchen",
+        "C": "Wine Fridge (small)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 42,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Plant 4'",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 43,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Lamp Floor",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 44,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Coffee table",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 45,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Arm Chair",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 46,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Mini Fridge",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 47,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Mirror Floor",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 48,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Mirror",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 49,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Baby Crib + Mattress",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 50,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Dresser Double",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 51,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Lamp (table lamp)",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 52,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Nightstand",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 53,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "King Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 54,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Bench (2 seat)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 55,
+      "cells": {
+        "A": "Invitados",
+        "B": "Room 3",
+        "C": "TV Flat 65+ (packed by PoC team)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 56,
+      "cells": {
+        "A": "Invitados",
+        "B": "Room 3",
+        "C": "Full / Queen Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 57,
+      "cells": {
+        "A": "Chloe y Noah",
+        "B": "Room 2",
+        "C": "Bookcase (medium)",
+        "D": 1.0,
+        "F": "OK",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 58,
+      "cells": {
+        "A": "Chloe y Noah",
+        "B": "Room 2",
+        "C": "Cube Shelf (Small - 2-8 cubes)",
+        "D": 2.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 59,
+      "cells": {
+        "A": "Chloe y Noah",
+        "B": "Room 2",
+        "C": "Twin Bed (single) + Mattress - Disassembly/Reassembly by PoC Team",
+        "D": 2.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 60,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Picture Frame (small to medium)",
+        "D": 3.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 61,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Plastic Drawer Set",
+        "D": 1.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 62,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Large Toy",
+        "D": 2.0,
+        "E": "eran 3",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 63,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Lamp Floor",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 64,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Bunk Bed Twin + Mattresses",
+        "D": 1.0,
+        "E": "There's no bed, just the mattress and teepee tent",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 65,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Ottoman Small",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 66,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Arm Chair",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 67,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Dresser Single",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 68,
+      "cells": {
+        "A": "Theo",
+        "B": "Room 1 T",
+        "C": "Mirror",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 69,
+      "cells": {
+        "B": "Staircase",
+        "C": "Plant 4'",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 70,
+      "cells": {
+        "B": "Play room",
+        "C": "Play pad",
+        "D": 1.0,
+        "E": "Poner en una caja las que estén bien",
+        "F": "Removed",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 71,
+      "cells": {
+        "B": "Play room",
+        "C": "TV Flat 21-42 (packed by PoC team)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 72,
+      "cells": {
+        "B": "Play room",
+        "C": "Stroller",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 73,
+      "cells": {
+        "B": "Play room",
+        "C": "Easel",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 74,
+      "cells": {
+        "B": "Play room",
+        "C": "Kids Chair",
+        "D": 4.0,
+        "F": "OK",
+        "G": 10.0
+      }
+    },
+    {
+      "row": 75,
+      "cells": {
+        "B": "Play room",
+        "C": "Kids Table",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 76,
+      "cells": {
+        "B": "Play room",
+        "C": "Rug pad",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 77,
+      "cells": {
+        "B": "Play room",
+        "C": "Kids Play Kitchen",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 78,
+      "cells": {
+        "B": "Play room",
+        "C": "Toy Rack",
+        "D": 4.0,
+        "E": "35 each",
+        "F": "OK",
+        "G": 35.0
+      }
+    },
+    {
+      "row": 79,
+      "cells": {
+        "B": "Entryway",
+        "C": "Picture Frame Large",
+        "D": 1.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 80,
+      "cells": {
+        "B": "Entryway",
+        "C": "Mirror",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 81,
+      "cells": {
+        "B": "Entryway",
+        "C": "Entryway Table marble",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 82,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Mirror",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 83,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Entryway Table",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 84,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Club Chair",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 85,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Picture Frame (small to medium)",
+        "D": 4.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 86,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "TV Flat 65+ (packed by PoC team)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 87,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "TV Stand (small)",
+        "D": 2.0,
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 88,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Plant 6'",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 89,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Lamp (table lamp)",
+        "D": 2.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 90,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Ottoman Small",
+        "D": 2.0,
+        "E": "Updated from 4 to 2",
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 91,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Rug Large",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 92,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Coffee table - Wooden",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 93,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Sofa Sectional L Shape (4 seat)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 94,
+      "cells": {
+        "A": "Family room",
+        "B": "Living room",
+        "C": "Lamp Floor",
+        "D": 2.0,
+        "F": "Removed",
+        "G": 35.0
+      }
+    },
+    {
+      "row": 95,
+      "cells": {
+        "A": "Sala máquinas",
+        "B": "Basement closet 3",
+        "C": "Chaise Lounge",
+        "D": 4.0,
+        "E": "Reposeras",
+        "F": "OK",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 96,
+      "cells": {
+        "A": "Sala paneles",
+        "B": "Basement closet 2",
+        "C": "Chair Folding",
+        "D": 5.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 97,
+      "cells": {
+        "A": "Sala paneles",
+        "B": "Basement closet 2",
+        "C": "Rolling Cart",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 98,
+      "cells": {
+        "A": "Sala paneles",
+        "B": "Basement closet 2",
+        "C": "Water Cooler",
+        "D": 1.0,
+        "E": "Heladera carrito",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 99,
+      "cells": {
+        "A": "Sala paneles",
+        "B": "Basement closet 2",
+        "C": "Refrigerator Upright",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 200.0
+      }
+    },
+    {
+      "row": 100,
+      "cells": {
+        "A": "Baulera",
+        "B": "Basement closet",
+        "C": "Box Assorted Packed & Supplied by Owner",
+        "D": 15.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 101,
+      "cells": {
+        "A": "Baulera",
+        "B": "Basement closet",
+        "C": "Bed Folding",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 102,
+      "cells": {
+        "A": "Baulera",
+        "B": "Basement closet",
+        "C": "Bookcase (small)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 103,
+      "cells": {
+        "A": "Baulera",
+        "B": "Basement closet",
+        "C": "End/Sofa Side table",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 104,
+      "cells": {
+        "A": "Habitación au pair",
+        "B": "Basement",
+        "C": "TV Stand (small)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 105,
+      "cells": {
+        "A": "Habitación au pair",
+        "B": "Basement",
+        "C": "TV Flat 42-65 (packed by PoC team)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 106,
+      "cells": {
+        "A": "Habitación au pair",
+        "B": "Basement",
+        "C": "Sofa Bed (3 Seat)",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 107,
+      "cells": {
+        "A": "Habitación au pair",
+        "B": "Basement",
+        "C": "Water Cooler",
+        "D": 1.0,
+        "E": "Dispenser",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 108,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Plates ball",
+        "D": 1.0,
+        "F": "OK",
+        "G": 40.0
+      }
+    },
+    {
+      "row": 109,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Gym pads",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 100.0
+      }
+    },
+    {
+      "row": 110,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "TV Flat 21-42 (packed by PoC team)",
+        "D": 1.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 111,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Bars",
+        "D": 2.0,
+        "F": "OK",
+        "G": 100.0
+      }
+    },
+    {
+      "row": 112,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Bench",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 113,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Bench press",
+        "D": 1.0,
+        "F": "OK",
+        "G": 150.0
+      }
+    },
+    {
+      "row": 114,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Weight rack",
+        "D": 1.0,
+        "F": "OK",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 115,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Pull up bar",
+        "D": 1.0,
+        "F": "OK",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 116,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Gladiator machine (Client will disassemble)",
+        "D": 1.0,
+        "F": "OK",
+        "G": 250.0
+      }
+    },
+    {
+      "row": 117,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Peloton Bike",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 118,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Deadline",
+        "D": 1.0,
+        "E": "He said \"Deadlift bar\"",
+        "F": "OK",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 119,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Leg press",
+        "D": 1.0,
+        "F": "OK",
+        "G": 125.0
+      }
+    },
+    {
+      "row": 120,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Back bench",
+        "D": 1.0,
+        "F": "OK",
+        "G": 40.0
+      }
+    },
+    {
+      "row": 121,
+      "cells": {
+        "A": "Gym",
+        "B": "Basement",
+        "C": "Dumbbell set tower",
+        "D": 1.0,
+        "F": "OK",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 122,
+      "cells": {
+        "B": "Home Office",
+        "C": "Large Computer Monitor",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 123,
+      "cells": {
+        "B": "Home Office",
+        "C": "Picture Frame (small to medium)",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 124,
+      "cells": {
+        "B": "Home Office",
+        "C": "Liquor Cabinet",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 125,
+      "cells": {
+        "B": "Home Office",
+        "C": "Chair",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 126,
+      "cells": {
+        "B": "Home Office",
+        "C": "Lamp Floor",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 127,
+      "cells": {
+        "B": "Home Office",
+        "C": "Stereo Cabinet",
+        "D": 1.0,
+        "F": "OK",
+        "G": 75.0
+      }
+    },
+    {
+      "row": 128,
+      "cells": {
+        "B": "Home Office",
+        "C": "Plant 4' fake",
+        "D": 1.0,
+        "F": "Removed",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 129,
+      "cells": {
+        "B": "Home Office",
+        "C": "Desk Chair",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 130,
+      "cells": {
+        "B": "Home Office",
+        "C": "Desk",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 131,
+      "cells": {
+        "B": "Home Office",
+        "C": "Cabinet",
+        "D": 1.0,
+        "F": "OK",
+        "G": 50.0
+      }
+    },
+    {
+      "row": 132,
+      "cells": {
+        "B": "Home Office",
+        "C": "Bar Cart",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 133,
+      "cells": {
+        "A": "Patio",
+        "B": "Added",
+        "C": "Kids House",
+        "D": 1.0,
+        "E": "Added but we don not know the cost",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 134,
+      "cells": {
+        "A": "Patio",
+        "B": "Added",
+        "C": "Sectional Plantpot",
+        "D": 1.0,
+        "E": "Added but we don not know the cost",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 135,
+      "cells": {
+        "A": "Patio",
+        "B": "Added",
+        "C": "Plant Pot",
+        "D": 2.0,
+        "E": "Added but we don not know the cost",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 136,
+      "cells": {
+        "B": "Play room",
+        "C": "3pc Bookcase",
+        "D": 1.0,
+        "F": "OK",
+        "G": 100.0
+      }
+    },
+    {
+      "row": 137,
+      "cells": {
+        "B": "Play room",
+        "C": "Nugget sofa",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 138,
+      "cells": {
+        "B": "Containers / Boxes / Bins",
+        "C": "Plastic Bin - Packed by Owner",
+        "D": 8.0,
+        "E": "clear boxes",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 139,
+      "cells": {
+        "B": "Containers / Boxes / Bins",
+        "C": "Blue bag w/clothes",
+        "D": 10.0,
+        "F": "OK",
+        "G": 25.0
+      }
+    },
+    {
+      "row": 140,
+      "cells": {
+        "B": "Garage",
+        "C": "Vacuum Cleaner",
+        "D": 1.0,
+        "E": "Tineco rug",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 141,
+      "cells": {
+        "B": "Garage",
+        "C": "Tool box on wheels",
+        "D": 1.0,
+        "F": "OK"
+      }
+    },
+    {
+      "row": 142,
+      "cells": {
+        "A": "Baulera",
+        "B": "Basement closet",
+        "C": "X tree",
+        "D": 1.0,
+        "F": "Removed"
+      }
+    },
+    {
+      "row": 143,
+      "cells": {
+        "B": "Containers / Boxes / Bins",
+        "C": "Box (Vacuum)",
+        "D": 1.0,
+        "E": "Roborock Box (66) ",
+        "F": "OK"
+      }
+    },
+    {
+      "row": 144,
+      "cells": {
+        "B": "Containers / Boxes / Bins",
+        "C": "X tree (green bag)",
+        "D": 1.0,
+        "F": "Add",
+        "G": 60.0
+      }
+    },
+    {
+      "row": 145,
+      "cells": {
+        "B": "Primary Bedroom",
+        "C": "Table Lamp",
+        "D": 1.0,
+        "F": "Add"
+      }
+    },
+    {
+      "row": 146,
+      "cells": {
+        "B": "Garage",
+        "C": "Box (Backdrop)",
+        "D": 1.0,
+        "F": "Add"
+      }
+    }
+  ]
+}

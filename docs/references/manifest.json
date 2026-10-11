@@ -1,0 +1,94 @@
+{
+  "extracted_on": "2026-10-11",
+  "purpose": "Historical reference and import-review inputs; never automatically seed the new move with historical contents or locations.",
+  "sources": [
+    {
+      "id": "containers",
+      "filename": "Containers _ Boxes _ Bins.xlsx",
+      "sha256": "465ee9e01ef5b160f936cd054ee90bbe152aba724049bb73931c950c35e5de2c",
+      "sheets": [
+        {
+          "name": "Sheet1",
+          "visibility": "visible"
+        },
+        {
+          "name": "stats",
+          "visibility": "visible"
+        },
+        {
+          "name": "Día D",
+          "visibility": "hidden"
+        },
+        {
+          "name": "black bokex",
+          "visibility": "visible"
+        }
+      ],
+      "exports": [
+        {
+          "file": "legacy-containers.json",
+          "sheet": "Sheet1",
+          "rows": 99,
+          "sha256": "38ef21bb3c1befc49ab010b063e6dc281bc98fda634270a35c02e32faf587994"
+        }
+      ]
+    },
+    {
+      "id": "inventory",
+      "filename": "Piece of cake.xlsx",
+      "sha256": "92d989ff89473cc47013c1e9b8047143ec418bfd3eb7e846e0139cbcfd8c81f7",
+      "sheets": [
+        {
+          "name": "Inventory",
+          "visibility": "visible"
+        },
+        {
+          "name": "(DONE) to do",
+          "visibility": "visible"
+        },
+        {
+          "name": "Para el comprador",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Pivot Table 2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Inventory (OLD)",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Pivot Table (OLD)",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Estimate",
+          "visibility": "visible"
+        },
+        {
+          "name": "Boxes",
+          "visibility": "visible"
+        },
+        {
+          "name": "Comparación cotización 2026",
+          "visibility": "visible"
+        }
+      ],
+      "exports": [
+        {
+          "file": "legacy-inventory.json",
+          "sheet": "Inventory",
+          "rows": 145,
+          "sha256": "158d01436aa1984125bdf0bd61b0cf8f1ca0ad2d3770257efd5759253853f533"
+        },
+        {
+          "file": "legacy-quote-comparison.json",
+          "sheet": "Comparación cotización 2026",
+          "rows": 148,
+          "sha256": "515561bcbd9919f907a3dbd3986ef5dfb0460f14caa0478e5d14e2fc91a6ffae"
+        }
+      ]
+    }
+  ]
+}
