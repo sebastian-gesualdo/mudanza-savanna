@@ -49,7 +49,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 **Entregables:**
 
 - Next.js App Router, TypeScript, Node 24 LTS y versiones fijadas con lockfile.
-- Estructura propuesta, estilos accesibles, navegación Chat/Inventario/Mudanza y manifiesto/iconos básicos.
+- Estructura propuesta, estilos accesibles, chat como entrada principal y accesos secundarios a Inventario/Mudanza, con manifiesto/iconos básicos.
 - `.env.example` sin secretos, con claves Supabase publicable/servidor separadas, configuración de tests y CI. Preparar dependencias compatibles de Supabase Auth/SSR para T03.
 - Scripts documentados: `dev`, `build`, `lint`, `typecheck`, `test`; agregar `test:integration`, `test:e2e` y `eval:ai` cuando existan suites reales. No crear scripts de éxito vacío para simular validación.
 - README con instalación reproducible y arranque. Un modo demo explícito puede usar fixtures, visualmente diferenciado.
@@ -124,6 +124,7 @@ T00 y T01 pueden avanzar independientemente. T05 necesita los contratos de T03 a
 **Entregables:**
 
 - Chat individual, contexto visible, dictado del teclado y mensajes persistidos.
+- Abrir y reanudar en el chat, con contexto compacto y compositor predominante. Completar empaque, búsqueda, carga/llegada y desempaque dentro de la conversación; no exigir fichas o formularios para esos recorridos habituales.
 - Tarjetas de resultados/recibos, aclaraciones con botones y confirmaciones de propuestas.
 - Modo agregar contenido literal y cambio explícito de unidad activa.
 - Comandos compuestos, idioma de respuesta y tratamiento de referencias ambiguas.

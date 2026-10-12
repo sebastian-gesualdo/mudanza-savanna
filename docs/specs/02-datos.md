@@ -69,6 +69,7 @@ Una habitación de la planilla anterior queda en procedencia histórica, no se c
 
 `at_origin → in_transit → at_destination`.
 
+- La planificación inicial tiene retiro y entrega durante un mismo día; estos estados registran momentos de esa jornada. `moving_date` es la fecha prevista del traslado, no la fecha de empaque ni una condición para confirmar llegada. Mantener los instantes reales de cada evento, sin forzar una llegada automática o rechazar un registro tardío porque se hizo después de esa fecha.
 - V1 permite marcar llegada directamente desde origen para registrar un traslado que no se marcó al cargar; registrar el salto, sin fabricar hora de carga.
 - Cargar o llegar requiere destino previsto. Caja/bolsa abierta necesita cierre previo; se puede proponer un comando compuesto explícito de cerrar y cargar.
 - Al llegar, preguntar/ofrecer confirmar el ambiente real. Sin confirmación: Savanna, ambiente real pendiente.

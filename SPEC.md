@@ -1,16 +1,20 @@
-# Especificación de Mudanza Savanna
+# Especificación de Casa de los Gesualdo
 
 Versión 1.1 · 11 de octubre de 2026 · Estado: lista para iniciar implementación por tareas.
 
 Cambio acordado en v1.1: mantener Vercel + Supabase y usar Google Login mediante Supabase Auth, con correos autorizados y atribución por cuenta. Sustituye la invitación compartida y la selección libre de participante de v1.0.
 
+Decisión visual del 11 de octubre de 2026: el nombre visible es **Casa de los Gesualdo**. La interfaz es para uso de la familia, con textos cotidianos y funcionales, colores vivos e ilustraciones cálidas; evitar eslóganes, argumentos de venta y comentarios de producto. Savanna sigue identificando el destino geográfico en las referencias, sin usarse como marca de la app. La propuesta visual está en `docs/design/pantallas.html` y todavía se revisa antes de implementar.
+
 Este documento y sus documentos vinculados consolidan la conversación con el usuario. Describen el resultado esperado; no afirman que exista una aplicación, infraestructura desplegada o integración de IA probada. Las decisiones técnicas necesarias para completar el diseño se identifican como defaults de implementación.
 
 ## Objetivo
 
-Ayudar a 3–5 personas a empacar, trasladar y encontrar pertenencias durante una mudanza de Weston Hills a Savanna realizada en un solo día. La preparación y el desempaque pueden durar más días. Todos usarán iPhone. El chat y el dictado son la entrada principal; las fichas y botones permiten completar las mismas operaciones de forma directa.
+Ayudar a 3–5 personas a empacar, trasladar y encontrar pertenencias durante una mudanza de Weston Hills a Savanna. Las cajas se arman de a poco durante los días o semanas previos. La mudadora o la familia las retira y las entrega en la casa nueva el mismo día; el desempaque puede continuar durante los días posteriores. Todos usarán iPhone. El chat y el dictado son la entrada principal; las fichas y botones permiten completar las mismas operaciones de forma directa.
 
 La persistencia compartida, la ausencia de duplicaciones y la veracidad de las confirmaciones son requisitos centrales. Una respuesta de IA nunca prueba que un cambio se haya guardado.
+
+El chat es la interfaz principal y el destino al entrar o volver a la app. La mayoría de las sesiones debe poder completarse escribiendo o dictando en la conversación: crear unidades, agregar contenido, cerrar, buscar, registrar carga/llegada y desempacar. Aclaraciones, resultados y recibos aparecen dentro del chat. Inventario, fichas, resumen y ajustes son accesos secundarios; la navegación y las tarjetas no deben desplazar la conversación ni exigir abrir formularios para operaciones habituales.
 
 ## Decisiones consolidadas
 

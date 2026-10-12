@@ -51,6 +51,16 @@ Un grupo de ocho sillas puede registrarse como un lote de cantidad 8. Si hay que
 
 ## Pantallas
 
+### Prioridad del chat
+
+- Entrar y reanudar en el chat propio, conservando borrador y unidad activa. La mayoría de las sesiones se completa por texto o dictado de iOS sin cambiar de pantalla.
+- Reservar el espacio principal para conversación y compositor. La unidad activa se muestra en una franja compacta; evitar un panel grande de caja y una barra de pestañas con igual jerarquía que el chat.
+- Inventario, mudanza, historial, importación y ajustes se abren desde un menú secundario, con regreso directo al chat. Las fichas siguen disponibles para detalle y corrección manual.
+- Crear unidades, agregar contenido, cerrar/reabrir, buscar, cargar, confirmar habitación de llegada, retirar contenido y consultar pendientes tienen un recorrido dentro de la conversación. Las aclaraciones y confirmaciones necesarias se resuelven con respuestas o botones dentro del chat, sin exigir formularios separados.
+- Las tarjetas de resultado y recibo son compactas. Ofrecer “Ver detalle” cuando haga falta, sin abrir fichas automáticamente ni cambiar la unidad activa al consultar otra caja.
+- Mantener accesibles las acciones manuales desde el compositor o su menú, especialmente sin conexión o cuando la IA esté indisponible. Un mensaje libre pendiente de interpretar no se presenta como una modificación del inventario.
+- La voz inicial se usa desde el teclado de iOS: un campo de texto normal, revisión de la transcripción antes de enviar y ningún botón propio de grabación que simule una capacidad fuera de v1.
+
 ### Chat
 
 - Entrada de texto compatible con dictado de iOS, botón Enviar y participante actual visible.
@@ -110,6 +120,10 @@ Para cerrar se necesita destino y contenido registrado, o una declaración expl�
 
 ### Trasladar y desempacar
 
+El empaque es gradual, sin exigir que todas las cajas se armen o cierren el mismo día. El día del traslado, la mudadora o la familia retira y entrega las unidades en la casa nueva durante esa misma jornada. “Cargado” y “Llegó” son momentos de ese día, no etapas que requieran días distintos. El desempaque puede continuar después.
+
+Mantener los dos estados para distinguir lo que falta retirar, lo que está en camino y lo que ya llegó. No marcar llegada automáticamente al registrar carga ni al terminar el día. Si no se registró la carga, permitir registrar la llegada directamente sin inventar una hora de retiro. El autor del evento es la persona de la familia que lo registra en la app, aunque el traslado físico lo haga la mudadora; no requiere dar acceso a sus empleados.
+
 Registrar carga y llegada desde ficha, lista o chat. La llegada sin confirmación de habitación significa “Savanna · habitación sin confirmar”. Mantener el destino previsto visible.
 
 Durante el desempaque se puede marcar una entrada como retirada, indicar dónde quedó o moverla a otro contenedor. Si toda una caja se marca como desempacada, sus entradas dejan de afirmarse como físicamente dentro; su contenido histórico sigue consultable. Si no se registró nueva ubicación, decir “estaba en C-024; ya se retiró y no se registró dónde quedó”.
@@ -123,6 +137,8 @@ Durante el desempaque se puede marcar una entrada como retirada, indicar dónde 
 - Deshacer: generar una operación compensatoria. Si hubo cambios posteriores incompatibles, mostrar el conflicto y ofrecer una corrección actual, sin restaurar una foto antigua de todo el inventario.
 
 ## Presentación
+
+Nombre visible: **Casa de los Gesualdo**. Es una herramienta privada de la familia: usar títulos directos como “Nueva caja”, “Nuestras cosas”, “Nuestra mudanza” y “Ajustes”, sin lenguaje de venta ni promesas de producto. Usar una paleta viva de turquesa, coral, amarillo y lila, con texto oscuro y contraste suficiente. Una ilustración de casa puede acompañar el ingreso y los estados vacíos; cualquier movimiento decorativo debe ser suave, poder pausarse y respetar la preferencia de movimiento reducido. Las ilustraciones son decorativas y no representan fotos del hogar real ni objetos del inventario.
 
 Priorizar uso con una mano: objetivos táctiles de al menos 44×44 puntos CSS, texto de formulario de 16 px o mayor, contraste suficiente y soporte para safe areas y teclado. Diferenciar estados con texto e iconos además del color. Mantener búsqueda y código de la caja fáciles de leer bajo luz exterior.
 

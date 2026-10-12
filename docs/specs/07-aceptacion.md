@@ -20,6 +20,8 @@ Dos usuarios crean cajas simultáneamente y reciben códigos diferentes. Caja y 
 
 Crear caja, agregar contenido, cambiar destino y cerrar. Se muestran contenido y cierre con actor/hora del servidor. Falta de destino o contenido exige completar el dato o declarar vacío. Agregar luego del cierre requiere reapertura explícita.
 
+Completar este recorrido íntegramente dentro del chat, incluyendo aclaraciones y recibos, sin abrir fichas o formularios. Al entrar y reanudar, el chat es la pantalla principal con compositor y unidad activa visibles.
+
 ### A05 · Concurrencia
 
 Dos adiciones concurrentes sobre caja abierta conservan ambas entradas. Si cierre y adición compiten, el resultado corresponde a un orden válido de transacciones; la adición rechazada conserva su texto para revisión. Un destino obsoleto no sobrescribe una edición nueva sin conflicto.
@@ -44,6 +46,8 @@ Los botones y consultas por código funcionan con cero llamadas de IA. El modo e
 
 En fixtures controlados, “hervidor” recupera “pava eléctrica”; zapatillas eléctricas y calzado no se confunden. Una caja que solo dice “varios de cocina” se presenta como pista, sin afirmar un objeto específico. Si no hay coincidencias, decirlo. Cada respuesta de ubicación incluye evidencia y distingue destino previsto de ubicación confirmada.
 
+La consulta y sus resultados se resuelven en la conversación; abrir una ficha es opcional y no cambia la caja activa.
+
 ### A11 · Texto libre y cantidades
 
 Descripciones largas como las de las cajas 7, 10 y 73 históricas no se truncan silenciosamente ni pierden aclaraciones. “Cosas del mueble azul” no se convierte en objetos inventados. Cantidad desconocida no es cero ni uno. Al dividir una entrada o lote, se preservan texto de origen, relaciones y cantidades conocidas.
@@ -59,6 +63,8 @@ Mientras un dispositivo está offline, otro cierra/edita la misma caja. Al recon
 ### A14 · Traslado parcial
 
 Registrar carga y llegada. Llegada sin habitación real conserva “sin confirmar”, aunque exista destino previsto. “Llegaron tres de las ocho sillas” divide el lote o pide hacerlo; nunca marca ocho como llegadas. Los conteos por estado usan cantidades y registros correctamente.
+
+Completar carga y llegada desde el chat. La confirmación del ambiente real admite respuesta escrita/dictada u opciones dentro de la conversación, sin exigir una pantalla de llegada separada.
 
 ### A15 · Desempaque
 

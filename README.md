@@ -1,4 +1,4 @@
-# Mudanza Savanna
+# Casa de los Gesualdo
 
 PWA familiar para organizar el empaque, traslado y desempaque de una mudanza de Weston Hills a Savanna. Pensada para 3–5 colaboradores con iPhone, interacción por chat o dictado y costo de uso muy bajo.
 
@@ -7,6 +7,8 @@ Arquitectura acordada: Next.js en Vercel, PostgreSQL y Google Login mediante Sup
 ## Punto de partida
 
 La especificación completa empieza en [SPEC.md](SPEC.md). El repositorio contiene especificaciones y referencias históricas; la aplicación todavía no está implementada.
+
+La [propuesta visual de pantallas](docs/design/pantallas.html) se puede abrir directamente en un navegador, sin instalar dependencias. Incluye una galería de 37 pantallas y un prototipo navegable con 16 estados adicionales. El [PDF para revisión](docs/design/pantallas-gesualdo.pdf) reúne todas las vistas. Usa datos ficticios y no ejecuta operaciones reales; el diseño todavía está pendiente de revisión. La dirección visual acordada es familiar, con colores vivos, ilustración de casa y textos para uso propio. El prototipo abre en el chat; empaque, búsqueda, traslado y desempaque tienen recorridos dentro de la conversación, con dictado del teclado de iPhone y vistas manuales secundarias.
 
 - [Producto y experiencia de uso](docs/specs/01-producto.md)
 - [Datos, estados e integridad](docs/specs/02-datos.md)
