@@ -1,6 +1,6 @@
 # 08 · Tareas de implementación
 
-Cada tarea debe comenzar leyendo [SPEC.md](../../SPEC.md) y los contratos vinculados. Los IDs permiten abrir tareas futuras con un alcance concreto. Las dependencias indican contratos que deben existir, no obligación de esperar trabajo ajeno para hacer un prototipo aislado con mocks.
+El [AGENTS.md de la raíz](../../AGENTS.md) proporciona contexto automático a las tareas de Codex y dirige a [SPEC.md](../../SPEC.md) y los contratos vinculados. Los IDs permiten abrir tareas futuras con un alcance concreto. Las dependencias indican contratos que deben existir, no obligación de esperar trabajo ajeno para hacer un prototipo aislado con mocks.
 
 ## Orden y dependencias
 

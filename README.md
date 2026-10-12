@@ -23,7 +23,9 @@ Para preparar las cuentas y conectar los servicios, seguir la [guía de configur
 
 ## Para comenzar una tarea
 
-Leer `SPEC.md`, los documentos del área y la tarea correspondiente de `08-plan-implementacion.md`. Implementar el alcance de esa tarea y verificar sus criterios de aceptación. Registrar cualquier cambio de decisión en la especificación antes de crear contratos incompatibles.
+Codex carga automáticamente [AGENTS.md](AGENTS.md) al trabajar en este repositorio. Ese archivo contiene el contexto esencial y dirige a `SPEC.md`, los documentos del área y la tarea correspondiente de `08-plan-implementacion.md`. Implementar el alcance de esa tarea y verificar sus criterios de aceptación. Registrar cualquier cambio de decisión en la especificación antes de crear contratos incompatibles.
+
+Las tareas deben partir de una rama/commit que incluya `AGENTS.md` y los specs. Hasta integrar estos documentos en `main`, usar `docs/mudanza-savanna-specs` como base. El archivo aporta contexto; el pedido de la tarea indica qué trabajo realizar, por ejemplo: “Implementá T01”.
 
 Usar el checkout existente. No hace falta crear un worktree: cada tarea cloud ya corre en un entorno aislado. No crear worktrees salvo que el usuario lo pida.
 
