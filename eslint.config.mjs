@@ -6,6 +6,7 @@ export default defineConfig([
   ...ts,
   globalIgnores([
     ".next/**",
+    ".local/**",
     "public/sw.js",
     "docs/design/**",
     "next-env.d.ts",

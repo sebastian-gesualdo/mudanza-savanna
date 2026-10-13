@@ -7,3 +7,4 @@ test-results/
 playwright-report/
 *.tsbuildinfo
 .local/
+public/initial-setup-status.json

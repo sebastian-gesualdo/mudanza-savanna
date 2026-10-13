@@ -9,7 +9,7 @@
   "packageManager": "npm@11.9.0",
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "next build",
+    "build": "tsx scripts/initial-production-setup.ts && next build",
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

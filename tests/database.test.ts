@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import EmbeddedPostgres from "embedded-postgres";
 import { Pool } from "pg";
 import { readFile } from "node:fs/promises";
@@ -15,6 +15,11 @@ import {
 import { reserveBudget } from "../src/ai/services";
 import { exportInventory } from "../src/server/backup";
 import { restoreEmpty } from "../src/server/restore";
+import {
+  applyInitialSetup,
+  loadAuthorizedOrganizer,
+  validateProductionTarget,
+} from "../src/server/initial-setup";
 
 const pg = new EmbeddedPostgres({
   databaseDir: `/tmp/gesualdo-test-${process.pid}`,
@@ -103,6 +108,143 @@ afterAll(async () => {
   await pg.stop();
 });
 describe("PostgreSQL real: transacciones, aislamiento y permisos", () => {
+  it("el acceso inicial usa únicamente el autor del commit inmutable confirmado", async () => {
+    const response = {
+      sha: "7e11abd8f9e3c849b0a9b85336645f4a6ec0b25f",
+      author: { login: "sebastian-gesualdo" },
+      commit: { author: { email: "organizer@example.invalid" } },
+    };
+    const fetch = vi.spyOn(globalThis, "fetch");
+    try {
+      fetch.mockResolvedValueOnce(new Response(JSON.stringify(response)));
+      expect(await loadAuthorizedOrganizer()).toEqual({
+        email: "organizer@example.invalid",
+        nickname: "Sebas",
+      });
+      fetch.mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({ ...response, author: { login: "someone-else" } }),
+        ),
+      );
+      await expect(loadAuthorizedOrganizer()).rejects.toThrow(
+        "ORGANIZER_MISMATCH",
+      );
+      fetch.mockResolvedValueOnce(
+        new Response(JSON.stringify({ ...response, sha: "another-commit" })),
+      );
+      await expect(loadAuthorizedOrganizer()).rejects.toThrow(
+        "ORGANIZER_MISMATCH",
+      );
+    } finally {
+      fetch.mockRestore();
+    }
+  });
+  it("inicialización autorizada concurrente conserva datos y no reactiva accesos al repetirse", async () => {
+    await pool.query("create database initial_setup_test");
+    const initial = new Pool({
+      host: "127.0.0.1",
+      port: 16432,
+      user: "postgres",
+      password: "local-test-only",
+      database: "initial_setup_test",
+      max: 2,
+    });
+    try {
+      await initial.query(
+        "create schema auth; create table auth.users(id uuid primary key)",
+      );
+      const plan = {
+        projectRef: "test-project",
+        moveId: crypto.randomUUID(),
+        participantId: crypto.randomUUID(),
+        membershipId: crypto.randomUUID(),
+      };
+      const schema = await readFile(
+        "supabase/migrations/202610130001_initial.sql",
+        "utf8",
+      );
+      let resolutions = 0;
+      const organizer = async () => {
+        resolutions++;
+        return { email: "organizer@example.invalid", nickname: "Organizador" };
+      };
+      const results = await Promise.all([
+        applyInitialSetup(initial, plan, schema, organizer),
+        applyInitialSetup(initial, plan, schema, organizer),
+      ]);
+      expect(results.sort()).toEqual(["already_applied", "applied"]);
+      expect(resolutions).toBe(1);
+      expect(
+        Number((await initial.query("select count(*) n from rooms")).rows[0].n),
+      ).toBe(17);
+      expect(
+        Number(
+          (await initial.query("select count(*) n from move_memberships"))
+            .rows[0].n,
+        ),
+      ).toBe(1);
+      await initial.query(
+        "update moves set revision=7,ai_budget=2; update move_memberships set active=false",
+      );
+      expect(
+        await applyInitialSetup(initial, plan, schema, async () => {
+          throw new Error("Must not resolve organizer again");
+        }),
+      ).toBe("already_applied");
+      const saved = (
+        await initial.query("select revision,ai_budget from moves")
+      ).rows[0];
+      expect(Number(saved.revision)).toBe(7);
+      expect(Number(saved.ai_budget)).toBe(2);
+      expect(
+        (await initial.query("select active from move_memberships")).rows[0]
+          .active,
+      ).toBe(false);
+      const second = { ...plan, moveId: crypto.randomUUID() };
+      await expect(
+        applyInitialSetup(initial, second, schema, organizer),
+      ).rejects.toThrow("EXISTING_MOVE");
+      expect(
+        Number((await initial.query("select count(*) n from moves")).rows[0].n),
+      ).toBe(1);
+      expect(
+        Number(
+          (await initial.query("select count(*) n from app_migrations")).rows[0]
+            .n,
+        ),
+      ).toBe(2);
+    } finally {
+      await closePool(initial);
+    }
+  });
+  it("rechaza una conexión de otro proyecto o sin TLS antes de inicializar producción", () => {
+    const env = {
+      SUPABASE_URL: "https://jncnmxsiylhqeycqhhya.supabase.co",
+      DATABASE_URL:
+        "postgresql://postgres.jncnmxsiylhqeycqhhya:fixture@aws-0-us-east-1.pooler.supabase.com:6543/postgres",
+      APP_BASE_URL: "https://mudanza-savanna.vercel.app",
+      SUPABASE_PUBLISHABLE_KEY: "fixture-only",
+    };
+    expect(() => validateProductionTarget(env)).not.toThrow();
+    expect(() =>
+      validateProductionTarget({
+        ...env,
+        DATABASE_URL: env.DATABASE_URL.replace(
+          "postgres.jncnmxsiylhqeycqhhya",
+          "postgres.other-project",
+        ),
+      }),
+    ).toThrow("TARGET_MISMATCH");
+    expect(() =>
+      validateProductionTarget({ ...env, DATABASE_SSL: "false" }),
+    ).toThrow("TARGET_MISMATCH");
+    expect(() =>
+      validateProductionTarget({
+        ...env,
+        APP_BASE_URL: "https://another-app.vercel.app",
+      }),
+    ).toThrow("TARGET_MISMATCH");
+  });
   it("seed idempotente y acceso directo de anon/authenticated denegado", async () => {
     await transaction(pool, (client) => seedMove(client, moveId));
     expect(
