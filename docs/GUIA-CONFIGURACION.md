@@ -2,7 +2,7 @@
 
 Guía para el organizador · Alineada con SPEC v1.1 · 11 de octubre de 2026.
 
-La aplicación todavía no está implementada. Podés crear las cuentas y preparar los proyectos ahora; los pasos de migraciones, despliegue funcional y autorización de participantes se completan cuando existan las tareas indicadas. Crear una cuenta o guardar una clave no demuestra que la integración funcione.
+Existe una primera aplicación y herramientas de migración, membresías y restauración. Podés preparar y conectar los proyectos siguiendo los comandos de implementación al final de esta guía. La conexión real y los criterios de lanzamiento siguen pendientes; el estado comprobado está en [IMPLEMENTACION.md](IMPLEMENTACION.md). Crear una cuenta o guardar una clave no demuestra que la integración funcione.
 
 Los nombres de algunas secciones de los paneles pueden cambiar. Esta guía indica qué configuración buscar y cómo comprobar el resultado. Los importes y cuotas de los proveedores se verifican al activarlos; no se presuponen créditos gratuitos ni una tarifa fija.
 
@@ -79,7 +79,7 @@ En cada proyecto, buscá las secciones **Connect**, **Project Settings**, **Data
 | Project reference / ID | Identificador del proyecto, distinto del nombre visible. | Enlazar la CLI para migraciones; no es una contraseña. |
 | Database password | Contraseña elegida al crear PostgreSQL. | Migraciones/administración cuando la herramienta la solicite. |
 
-Se usan dos clientes separados: Auth con clave publicable y cookies del usuario; datos con clave privilegiada solo después de verificar sesión y membresía. La clave publicable o `anon` no sustituye a la privilegiada. La contraseña de la base de datos tampoco es una API key. La aplicación prevista usa la API de Supabase y RPC desde su backend; por eso la contraseña de PostgreSQL no necesita ir en Vercel como variable de la app.
+Se usan dos clientes separados: Auth con clave publicable y cookies del usuario; datos con clave privilegiada solo después de verificar sesión y membresía. La clave publicable o `anon` no sustituye a la privilegiada. La contraseña de la base de datos tampoco es una API key. La primera implementación usa `node-postgres` para transacciones directas contra PostgreSQL de Supabase, como equivalente a RPC. `DATABASE_URL` es la credencial privilegiada del servidor y necesita configurarse también en Vercel. `SUPABASE_SECRET_KEY` queda reservada para un futuro adaptador Data API; no es requerida por el adaptador actual. Auth sigue usando la clave publicable y cookies del usuario. Nunca exponer `DATABASE_URL` al navegador.
 
 **Resultado esperado:** dos proyectos claramente identificados y sus datos guardados de forma privada. No pegues claves privilegiadas, contraseñas, Client Secrets ni tokens en el chat, GitHub o capturas que vayas a compartir.
 
@@ -210,7 +210,7 @@ Las migraciones de producción no corren indiscriminadamente en cada preview. Un
 
 ## 9. Autorizar participantes y sumar a la familia
 
-**Después de T03:** la implementación incluirá una herramienta administrativa para dar de alta, consultar, desactivar y revincular membresías. Sus comandos exactos se documentarán junto con la herramienta; no existen todavía en este repositorio. Operará con credenciales de administración del entorno elegido, nunca desde la API familiar.
+**Después de T03:** la implementación incluirá una herramienta administrativa para dar de alta, consultar, desactivar y revincular membresías. Los comandos exactos ya existen y están documentados al final de esta guía. Su ejecución real sobre los proyectos alojados sigue pendiente. Operará con credenciales de administración del entorno elegido, nunca desde la API familiar.
 
 1. Confirmar el correo de la cuenta Google que usará cada persona y su apodo. Guardar esta lista de forma privada; no en Git ni en fixtures reales.
 2. Ejecutar la herramienta contra test para crear participantes/membresías autorizadas. Si Google está en Testing, agregar esas mismas cuentas a sus Test users.
@@ -333,3 +333,41 @@ Este registro admite información no secreta. No completar campos con claves, co
 - [Supabase: migraciones](https://supabase.com/docs/guides/deployment/database-migrations).
 
 Las instrucciones de esta guía deben actualizarse durante T10 para reflejar la implementación y paneles efectivamente usados. Haber escrito la guía no significa que se hayan creado cuentas, guardado secretos, aplicado migraciones o desplegado el producto.
+
+## Comandos de la implementación inicial
+
+Los scripts requieren Node 24 y leen `.env.local` o `.env`. Configurar `APP_ENV=development` o `preview` y la URL de **PostgreSQL de prueba** antes de ensayar. Mantener TLS (`DATABASE_SSL=true`) para Supabase; `false` solo para PostgreSQL local de prueba. La política de red de una tarea cloud puede requerir habilitar el host/puerto PostgreSQL concreto; no quitar el proxy ni desactivar verificación TLS para evitar una denegación.
+
+1. Elegir un UUID estable de mudanza. Aplicar el esquema y seed idempotente de los 17 ambientes:
+
+```bash
+npm run db:migrate -- --move=UUID_DE_MUDANZA
+```
+
+2. Autorizar cada correo y apodo fuera del repositorio:
+
+```bash
+npm run members -- add --move=UUID_DE_MUDANZA --email=CORREO --nickname=APODO
+npm run members -- list --move=UUID_DE_MUDANZA
+npm run members -- revoke --move=UUID_DE_MUDANZA --email=CORREO
+npm run members -- link --move=UUID_DE_MUDANZA --email=CORREO --auth-user=UUID_DE_AUTH
+```
+
+La lista se guarda solo en la base. Repetir `add` reactiva la membresía existente; no crea otra persona. Para un respaldo restaurado, agregar `--participant=UUID_HISTORICO` al alta: vincula explícitamente ese participante y conserva sus autores. La vinculación inicial con Google exige identidad Google verificada y el mismo correo de Auth; no depende de metadata del cliente.
+
+3. Configurar Google en Supabase y las dos URLs de callback según 4.1. En `.env.local`/Vercel configurar `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `DATABASE_URL`, `DATABASE_SSL`, `APP_BASE_URL` y `APP_ENV`. Poner `APP_DEMO=false` para acceso familiar. Producción requiere origen canónico HTTPS. La página redirige al host canónico antes de iniciar PKCE; las mutaciones validan `Origin` contra ese origen. La renovación ocurre en handlers con `@supabase/ssr`; las respuestas de datos/Auth usan `private, no-store`. Las cookies son HttpOnly, SameSite=Lax y Secure en HTTPS. No hay cliente Auth de navegador.
+
+4. Exportar JSON desde Ajustes. Ensayar restauración solamente en una segunda base de prueba vacía, con el esquema ya migrado y **sin seed de mudanza**:
+
+```bash
+npm run db:migrate
+npm run backup:restore -- respaldo.json --empty-test-database
+```
+
+Después autorizar explícitamente los correos con `--participant`. Se conservan eventos, recibos y códigos; no se restauran membresías ni credenciales. La restauración fija presupuesto de IA en cero hasta reconciliar gasto. CSV contiene unidades para consulta y no sustituye el JSON canónico. Los archivos de copia local incluyen pendientes y no se aceptan como respaldo confirmado.
+
+5. Mantener `AI_ENABLED=false` y `GENERATION_ENABLED=false` hasta completar T00/T05. La API de selección de Jev está compilada con `ai@7.0.139` y `experimental_decide`; acceso, modelo efectivo y precios no están verificados live. Para activar una prueba de selección hacen falta tarifas verificadas `AI_INPUT_USD_PER_MILLION`, `AI_OUTPUT_USD_PER_MILLION`, una reserva conservadora `AI_REQUEST_RESERVE_USD` y presupuesto en `moves.ai_budget`. Las reservas y rate limits son persistentes; un timeout no libera el gasto reservado. El pipeline libre de intención/extracción generativa todavía requiere completar T05: no basta con habilitar un flag. Nunca colocar una clave de OpenAI como sustituto oculto de Gateway.
+
+No se crearon proyectos, publicaron deployments ni aplicaron migraciones a Supabase alojado durante esta implementación. Estas acciones necesitan el entorno elegido y las autorizaciones de publicación correspondientes.
+
+`AI_BUDGET_USD` se aplica al crear la mudanza con el seed; una mudanza existente conserva su presupuesto en `moves.ai_budget`, especialmente tras restaurar. Cambiar una variable no reinicia gasto ni presupuesto guardado. Si se eliminó un usuario Auth ya vinculado, el login no reasigna automáticamente la membresía por email: el organizador debe revisar el vínculo y usar `members link` con el UUID Auth correcto. Este comando administrativo mantiene el participante histórico y no reactiva una membresía revocada.

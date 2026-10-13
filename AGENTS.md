@@ -49,3 +49,13 @@ El prototipo usa datos ficticios; no demuestra login, IA, guardado ni sincroniza
 - Para UI y lógica aislada, avanzá con adaptadores simulados cuando corresponda. Para integraciones, reutilizá bindings existentes y entornos de prueba; no imprimas secretos ni los guardes en Git.
 - Al terminar, indicá qué cambió, qué se verificó y qué falta. Documentá cambios de contrato y evidencia de avance en el repo o PR; no dejes decisiones necesarias solo en la conversación.
 - Mantené este archivo breve y estable. El estado de implementación se comprueba en el código y la evidencia de cada tarea; no dupliques aquí los specs completos ni una lista de tareas completadas que pueda quedar desactualizada.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -62,7 +62,7 @@ Cerrar sesión llama a Supabase con `scope: 'local'`, limpia las cookies de ese 
 
 - Todas las lecturas y escrituras de aplicación pasan por el backend y una sesión válida con membresía activa.
 - RLS habilitado y sin acceso directo de roles `anon` o `authenticated` a tablas/RPC de inventario o membresías. Tener un JWT de Supabase Auth no habilita la Data API pública. No exponer una clave privilegiada al navegador.
-- Cliente de Supabase privilegiado exclusivamente en servidor y separado del cliente Auth por petición. Dado que puede omitir RLS, cada operación comprueba obligatoriamente `move_id` y participante obtenidos de la membresía validada, incluidos búsquedas, exportaciones y UUID anidados.
+- Acceso de datos privilegiado exclusivamente en servidor y separado del cliente Auth por petición. La implementación inicial usa `node-postgres` contra PostgreSQL de Supabase para transacciones directas equivalentes a RPC; necesita `DATABASE_URL` y TLS. El cliente Data API con `SUPABASE_SECRET_KEY` no está activo. Dado que puede omitir RLS, cada operación comprueba obligatoriamente `move_id` y participante obtenidos de la membresía validada, incluidos búsquedas, exportaciones y UUID anidados.
 - Revocar ejecución pública de las RPC privilegiadas. La función transaccional valida todas las relaciones; el backend entrega identidad ya validada.
 - Se puede usar una credencial de servidor admitida por el SDK vigente. Confirmar en T01 el nombre/formato disponible en Supabase; no confundir la clave publicable con una clave privilegiada.
 - Supabase Auth gestiona el login; Realtime sigue fuera de v1. La sincronización usa backend y revisión.
@@ -132,13 +132,12 @@ Las llamadas que consumen IA no se ejecutan por prefetch ni por un GET automáti
 {
   "operationId": "UUID-persistido-por-el-cliente",
   "expectedParticipantId": "UUID-del-participante-al-crear-el-comando",
-  "type": "close_unit",
-  "payload": { "unitId": "UUID-de-C-024" },
+  "action": { "type": "close_unit", "payload": { "unitId": "UUID-de-C-024" } },
   "expectedVersions": { "UUID-de-C-024": 7 }
 }
 ```
 
-Los UUID del ejemplo son marcadores explicativos; la implementación valida UUID reales. El servidor deriva actor y mudanza. La respuesta incluye `status`, `operationId`, `revision`, entidades actualizadas, `eventId` y recibo. Un segundo envío idéntico devuelve el recibo original.
+Los UUID del ejemplo son marcadores explicativos; la implementación valida UUID reales. El servidor deriva actor y mudanza. El handler actual recibe `{ "command": COMANDO, "deviceId": "UUID-del-dispositivo" }`, con el comando anterior dentro de `command`. La respuesta incluye `status`, `operationId`, `revision`, entidades actualizadas, `eventId` y recibo. Un segundo envío idéntico devuelve el recibo original.
 
 ### Mensajes y propuestas
 
@@ -162,7 +161,8 @@ Leer cambios al iniciar, al volver al primer plano, después de escribir y cada 
 | --- | --- |
 | `SUPABASE_URL` | URL del proyecto, utilizada por servidor. |
 | `SUPABASE_PUBLISHABLE_KEY` | Clave publicable (o legacy `anon` compatible) para el cliente Auth por petición. No es privilegiada; en este diseño se usa desde servidor. |
-| `SUPABASE_SECRET_KEY` | Credencial privilegiada de servidor, o nombre equivalente documentado si el proyecto utiliza formato legacy. |
+| `SUPABASE_SECRET_KEY` | Reservada para un adaptador Data API futuro; la implementación inicial no la usa. |
+| `DATABASE_URL` / `DATABASE_SSL` | Conexión privilegiada a PostgreSQL/Supabase exclusivamente en servidor; TLS verificado por defecto. |
 | `AI_GATEWAY_API_KEY` | Secreto para Gateway cuando no se usa identidad OIDC compatible de Vercel. |
 | `APP_BASE_URL` | Origen autorizado, base de enlaces de fichas y retorno OAuth de la aplicación (`/auth/callback`). |
 | `DECISION_MODEL` | Identificador de Jev verificado en Gateway. |
@@ -191,3 +191,11 @@ Las claves privilegiadas jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivo
 Registrar errores, latencia, revisiones y códigos de operación sin transcripciones completas en logs de infraestructura. Los mensajes necesarios para el historial viven en tablas con acceso de sesión, no en trazas públicas.
 
 La aplicación debe indicar indisponibilidad de base de datos frente a indisponibilidad de IA. La primera impide confirmar guardado compartido; la segunda permite continuar con controles manuales. Preparar una exportación antes del día de mudanza y repetir el smoke test multiusuario en iPhone.
+
+## Estado del contrato implementado · 13/10/2026
+
+La API de comandos usa `action: {type,payload}` y el wrapper `command`/`deviceId`; `src/domain/commands.ts` es el esquema ejecutable. Comandos, eventos y recibos se confirman juntos mediante una transacción `node-postgres` y lock de `moves`; no se encadenan escrituras independientes por Data API. Los campos de cada entidad están en JSONB, con claves foráneas e índices sobre columnas generadas; no hay un único blob mutable de todo el inventario.
+
+El chat acepta también `deviceId` y un `structuredCommand` opcional ya capturado en la cola local, con `operationId=messageId`. Es el mismo comando autorizado y versionado usado por las fichas. Un mensaje no estructurado que al revalidar implicaría una escritura presenta propuesta; no cambia el inventario al interpretar un pendiente de lectura. Las propuestas actuales se ejecutan por `/api/commands`; el endpoint dedicado `/resolve` sigue pendiente.
+
+La revisión histórica inicial confirma una fila por vez mediante `create_unit` con procedencia y unicidad fuente/fila. Las sesiones y lotes de `/api/imports/:id/commit`, generación excepcional, clasificación libre con Jev y ampliación semántica por bloques siguen pendientes; consultar [evidencia y límites](../IMPLEMENTACION.md). El cliente usa snapshots coherentes para refrescar su copia; el feed de deltas existe, pero su consumo incremental aún no sustituye al snapshot. No considerar esta nota una validación de lanzamiento de todos los endpoints propuestos.
