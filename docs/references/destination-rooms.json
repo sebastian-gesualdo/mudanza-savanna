@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "source": "Destination rooms supplied by the user on 2026-10-11; aliases are implementation defaults subject to review.",
+  "rooms": [
+    {
+      "key": "garage",
+      "name": "Garage",
+      "aliases": [
+        "garage",
+        "garaje"
+      ]
+    },
+    {
+      "key": "lavadero",
+      "name": "Lavadero",
+      "aliases": [
+        "lavadero",
+        "laundry room",
+        "laundry"
+      ]
+    },
+    {
+      "key": "dining-room",
+      "name": "Dining Room",
+      "aliases": [
+        "dining room",
+        "dinning room",
+        "comedor"
+      ]
+    },
+    {
+      "key": "play-room",
+      "name": "Play Room",
+      "aliases": [
+        "play room",
+        "playroom",
+        "cuarto de juegos",
+        "sala de juegos"
+      ]
+    },
+    {
+      "key": "living-room",
+      "name": "Living Room",
+      "aliases": [
+        "living room",
+        "living"
+      ]
+    },
+    {
+      "key": "kitchen",
+      "name": "Kitchen",
+      "aliases": [
+        "kitchen",
+        "cocina"
+      ]
+    },
+    {
+      "key": "patio",
+      "name": "Patio",
+      "aliases": [
+        "patio"
+      ]
+    },
+    {
+      "key": "master-bedroom",
+      "name": "Master Bedroom",
+      "aliases": [
+        "master bedroom",
+        "primary bedroom",
+        "habitación principal",
+        "dormitorio principal"
+      ]
+    },
+    {
+      "key": "guest-bedroom",
+      "name": "Guest Bedroom",
+      "aliases": [
+        "guest bedroom",
+        "cuarto de invitados",
+        "dormitorio de invitados"
+      ]
+    },
+    {
+      "key": "office",
+      "name": "Office",
+      "aliases": [
+        "office",
+        "home office",
+        "oficina"
+      ]
+    },
+    {
+      "key": "boys-room",
+      "name": "Boys Room",
+      "aliases": [
+        "boys room",
+        "cuarto de los varones",
+        "habitación de los varones"
+      ]
+    },
+    {
+      "key": "chloes-room",
+      "name": "Chloe's Room",
+      "aliases": [
+        "chloe's room",
+        "chloes room",
+        "cuarto de Chloe",
+        "habitación de Chloe"
+      ]
+    },
+    {
+      "key": "master-bathroom",
+      "name": "Master Bathroom",
+      "aliases": [
+        "master bathroom",
+        "primary bathroom",
+        "baño principal"
+      ]
+    },
+    {
+      "key": "kids-bathroom",
+      "name": "Kids Bathroom",
+      "aliases": [
+        "kids bathroom",
+        "baño de los chicos"
+      ]
+    },
+    {
+      "key": "chloes-bathroom",
+      "name": "Chloe's Bathroom",
+      "aliases": [
+        "chloe's bathroom",
+        "chloes bathroom",
+        "baño de Chloe"
+      ]
+    },
+    {
+      "key": "guest-bathroom",
+      "name": "Guest Bathroom",
+      "aliases": [
+        "guest bathroom",
+        "guest's bathroom",
+        "baño de invitados"
+      ]
+    },
+    {
+      "key": "downstairs-bathroom",
+      "name": "Downstairs Bathroom",
+      "aliases": [
+        "downstairs bathroom",
+        "downstatins bathroom",
+        "baño de abajo"
+      ]
+    }
+  ]
+}

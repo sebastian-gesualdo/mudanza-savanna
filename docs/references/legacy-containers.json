@@ -1,0 +1,1302 @@
+{
+  "schema_version": 1,
+  "source_file": "Containers _ Boxes _ Bins.xlsx",
+  "source_sha256": "465ee9e01ef5b160f936cd054ee90bbe152aba724049bb73931c950c35e5de2c",
+  "sheet": "Sheet1",
+  "historical_only": true,
+  "header": {
+    "row": 1,
+    "cells": {
+      "A": "Tipo",
+      "B": "Id",
+      "C": "Ambiente",
+      "D": "Iniciada por",
+      "E": "Tamaño",
+      "F": "Frágil",
+      "G": "Cerrada",
+      "H": "Ítems / Contenido"
+    }
+  },
+  "rows": [
+    {
+      "row": 2,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 1.0,
+        "C": "Living Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Libros decorativos, Velas falsas, Manteles"
+      }
+    },
+    {
+      "row": 3,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 2.0,
+        "C": "Dining Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Decoración Dining Room"
+      }
+    },
+    {
+      "row": 4,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 3.0,
+        "C": "Dining Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Deco"
+      }
+    },
+    {
+      "row": 5,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 4.0,
+        "C": "Dining Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Deco"
+      }
+    },
+    {
+      "row": 6,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 5.0,
+        "C": "Living Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Rumi, Cajas de anteojos, Florero, Platos de plástico, Cosas del mueble de cuero"
+      }
+    },
+    {
+      "row": 7,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 6.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cajas con dibujos de los chicos, Retratos del pasillo de la oficina"
+      }
+    },
+    {
+      "row": 8,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 7.0,
+        "C": "Oficina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cámaras Ring (3 outdoor 1 indoor), Caja de cables de oficina, 2 Echo Dot, 2 Nest Thermostats, Smoke CO Listener Ring, Flood & Freeze Sensor Ring, Mario Kart, Reproductor Blu‑ray, Organizador de cables, 6 Smart Lamps, Facebook Portal TV, Cable NANIT, Juego de té Winnie Pooh, Números de atletismo, Family Game, Carpetas recuerdos / atletismo, Libro IAAF, la tercer batería ring está en la caja de cables"
+      }
+    },
+    {
+      "row": 9,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 8.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Tostadora, Cartucheras, Moldes de goma, Adaptadores para juntar strollers, Canastas, Hand mixer, Paraguas"
+      }
+    },
+    {
+      "row": 10,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 9.0,
+        "C": "Playroom",
+        "D": "Chloe",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Peluches"
+      }
+    },
+    {
+      "row": 11,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 10.0,
+        "C": "Oficina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Libros de oficina, Álbum tarjetas NBA, Portarretratos, Soporte laptop, Apple Mouse, Apple Keyboard, Portal Desktop, Echo Dot oficina, Luz de videollamadas, Webcam, Caja de medallas, Fotos / videos / boda (dispositivo), Cover tablet, Cables varios, Cajita verde correspondencia, Dispositivo anti‑choking, Cables y zapatillas TV rack, Philips Hue, USB / Ethernet, Cables mueble azul, Mapamundi, Wristband Apple Watch, AirTag “Hicham”"
+      }
+    },
+    {
+      "row": 12,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 11.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Fondue, Utensilios de cocina, Platos plásticos, Fuente de chapa, Cuchillos de parrilla"
+      }
+    },
+    {
+      "row": 13,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 12.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Tuppers chicos, Termos chicos, Plásticos varios"
+      }
+    },
+    {
+      "row": 14,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 13.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Termos Stanley, Botellas, Tablas, Jarra Brita, Cubiertos chicos"
+      }
+    },
+    {
+      "row": 15,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 14.0,
+        "C": "Oficina",
+        "D": "Seba",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Documentos de mueble azul"
+      }
+    },
+    {
+      "row": 16,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 15.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Vajilla diaria, Wafflera / sanguchera"
+      }
+    },
+    {
+      "row": 17,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 16.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Varios de cocina"
+      }
+    },
+    {
+      "row": 18,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 17.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Varios de cocina"
+      }
+    },
+    {
+      "row": 19,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 18.0,
+        "C": "Oficina",
+        "D": "Seba",
+        "E": "Large",
+        "F": true,
+        "G": true,
+        "H": "Lámpara de pie, Almohadón New York, Smart Plug, Cuadros Living Room, Cuadros Oficina, Impresora, especias tragos, elfo, almohadón \"Noah\", soporte pie debajo de escritorio, echo show cocina, smart plugs smart lamps, zapatillas (electricidad), echo del gym, cargador, patas TVs, soporte nintendo switch"
+      }
+    },
+    {
+      "row": 20,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 19.0,
+        "C": "Cocina / Dining",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "*** MUY FRÁGIL *** Platos de Anthropologie, Copas"
+      }
+    },
+    {
+      "row": 21,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 20.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Small",
+        "F": true,
+        "G": true,
+        "H": "Crockpot, Cosas de cocina"
+      }
+    },
+    {
+      "row": 22,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 21.0,
+        "C": "Cocina",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Wok, Limonera, Escurridor de lechuga, Termo de café"
+      }
+    },
+    {
+      "row": 23,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 22.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Comida de la alacena"
+      }
+    },
+    {
+      "row": 24,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 23.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Vajilla"
+      }
+    },
+    {
+      "row": 25,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 24.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Vajilla, Bebidas del carrito"
+      }
+    },
+    {
+      "row": 26,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 25.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "KitchenAid, Tuppers varios"
+      }
+    },
+    {
+      "row": 27,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 26.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Bandejas"
+      }
+    },
+    {
+      "row": 28,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 27.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Comida de la alacena"
+      }
+    },
+    {
+      "row": 29,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 28.0,
+        "C": "Lavadero",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Streamer, Burbujero, Cosas varias de lavadero"
+      }
+    },
+    {
+      "row": 30,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 29.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cuadros, Individuales, Cosas varias de cocina"
+      }
+    },
+    {
+      "row": 31,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 30.0,
+        "C": "Cocina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Máquina de hielo, Cacerolas, tuppers comida, cubiertos, lechera"
+      }
+    },
+    {
+      "row": 32,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 31.0,
+        "C": "Lavadero",
+        "D": "Seba",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Steamer, Bowls / dispensers de cereales y snacks, Luz de sombrilla, Palangana rosa"
+      }
+    },
+    {
+      "row": 33,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 32.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Pepi",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Alfombras, Veladores, Cámara Nanit, Decoración cuarto chicos, Animales de Teo"
+      }
+    },
+    {
+      "row": 34,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 33.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Pepi",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Libros chicos"
+      }
+    },
+    {
+      "row": 35,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 34.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Pepi",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Cuadros chicos"
+      }
+    },
+    {
+      "row": 36,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 35.0,
+        "C": "Master Bedroom",
+        "D": "Noah",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Perchas"
+      }
+    },
+    {
+      "row": 37,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 36.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Libros, Fotos, Vestido de novia de Lu, Joyas de Lu, Camitas de avión, Guardarropa de crucero (chicos), Portanani"
+      }
+    },
+    {
+      "row": 38,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 37.0,
+        "C": "Hall pasillo",
+        "D": "Pepi",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Cuadros, Retratos"
+      }
+    },
+    {
+      "row": 39,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 38.0,
+        "C": "Hall pasillo",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Sábanas, Cosas del mueble pasillo arriba"
+      }
+    },
+    {
+      "row": 40,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 39.0,
+        "C": "Hall pasillo",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Toallas, Cosas del mueble pasillo arriba, Cubrecama cama queen"
+      }
+    },
+    {
+      "row": 41,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 40.0,
+        "C": "Living Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Pantallas veladores, canasto negro"
+      }
+    },
+    {
+      "row": 42,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 41.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "bolsa blanca con contenido de cajones de mesa de luz seba, cartera lu, botas tobi, rack blanco desarmado, canastos chicos blancos, bolsa blanca cosas de baño seba"
+      }
+    },
+    {
+      "row": 43,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 42.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Caja de recuerdos de Theo, Caja de recuerdos de Noah, Caja de recuerdos de Chloe, Velas, Florero Master"
+      }
+    },
+    {
+      "row": 44,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 43.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas del Walking Closet de Seba"
+      }
+    },
+    {
+      "row": 45,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 44.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Camperas de Seba, Ropa de Seba"
+      }
+    },
+    {
+      "row": 46,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 45.0,
+        "C": "Living Room",
+        "D": "Pepi",
+        "E": "Large",
+        "F": true,
+        "G": true,
+        "H": "Veladores, Almohadones, Flores, Jarra del recibidor, Canastos del recibidor"
+      }
+    },
+    {
+      "row": 47,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 46.0,
+        "C": "Lavadero",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Calzados, Zapatillas, Otros artículos de calzado"
+      }
+    },
+    {
+      "row": 48,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 47.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Ropa de Seba, Cosas del Walking Closet de Seba, Gorras de Seba, Pantuflas de Seba, Burlete para puerta"
+      }
+    },
+    {
+      "row": 49,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 48.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Ropa de Seba, Cosas del Walking Closet de Seba"
+      }
+    },
+    {
+      "row": 50,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 49.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas de equilibrio, Softball, Alfombra para bailar"
+      }
+    },
+    {
+      "row": 51,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 50.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Autos, Pelotas, Animales, Aro y flecha, Cosas de bebés"
+      }
+    },
+    {
+      "row": 52,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 51.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas de bichos, Nonos, Juguetes"
+      }
+    },
+    {
+      "row": 53,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 52.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Libros (Playroom)"
+      }
+    },
+    {
+      "row": 54,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 53.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Juegos"
+      }
+    },
+    {
+      "row": 55,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 54.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Carteras, Abrigos"
+      }
+    },
+    {
+      "row": 56,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 55.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Juguetes que estaban en la bablera"
+      }
+    },
+    {
+      "row": 57,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 56.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Juguetes que estaban en la bablera"
+      }
+    },
+    {
+      "row": 58,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 57.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Juguetes que estaban en la bablera"
+      }
+    },
+    {
+      "row": 59,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 58.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas de cumpleaños que estaban en el mueble del basement"
+      }
+    },
+    {
+      "row": 60,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 59.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Castillo inflable"
+      }
+    },
+    {
+      "row": 61,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 60.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "Small",
+        "F": false,
+        "G": true,
+        "H": "Cosas de cumpleaños que estaban en el mueble del basement"
+      }
+    },
+    {
+      "row": 62,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 61.0,
+        "C": "Bathroom 2",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas del baño"
+      }
+    },
+    {
+      "row": 63,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 62.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cortinas"
+      }
+    },
+    {
+      "row": 64,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 63.0,
+        "C": "Primary Bathroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas baño Lu y Seba"
+      }
+    },
+    {
+      "row": 65,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 64.0,
+        "C": "Toilette",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cosas baño de abajo"
+      }
+    },
+    {
+      "row": 66,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 65.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Juguetes varios"
+      }
+    },
+    {
+      "row": 67,
+      "cells": {
+        "A": "Caja Custom",
+        "C": "Kitchen",
+        "D": "Seba",
+        "E": "N/A",
+        "F": true,
+        "G": true,
+        "H": "Roborock"
+      }
+    },
+    {
+      "row": 68,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 66.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Juguetes varios"
+      }
+    },
+    {
+      "row": 69,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 67.0,
+        "C": "Living Room",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Almohadones Living / Family room"
+      }
+    },
+    {
+      "row": 70,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 68.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "Large",
+        "F": true,
+        "G": true,
+        "H": "Roomba 1, Roomba 2, Proyector"
+      }
+    },
+    {
+      "row": 71,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 69.0,
+        "C": "Playroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Jueguetes playroom"
+      }
+    },
+    {
+      "row": 72,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 1.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "disfraces chicos"
+      }
+    },
+    {
+      "row": 73,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 2.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "Ropa Lu"
+      }
+    },
+    {
+      "row": 74,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 3.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "Ropa Lu"
+      }
+    },
+    {
+      "row": 75,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 4.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "Ropa Lu"
+      }
+    },
+    {
+      "row": 76,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 5.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "Ropa Lu"
+      }
+    },
+    {
+      "row": 77,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 6.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "F": false,
+        "G": true,
+        "H": "Ropa Lu"
+      }
+    },
+    {
+      "row": 78,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 7.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Ropa Seba"
+      }
+    },
+    {
+      "row": 79,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 70.0,
+        "C": "Garage",
+        "D": "Seba",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "varios gimnasio, elasticos, ganchos, agarres, todo lo que estaba en la caja negra"
+      }
+    },
+    {
+      "row": 80,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 71.0,
+        "C": "Kitchen",
+        "D": "Lu",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Thermomix, plataforma saltos chicos, alfombra entrada"
+      }
+    },
+    {
+      "row": 81,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 72.0,
+        "C": "Kitchen",
+        "D": "Seba",
+        "E": "Medium",
+        "F": true,
+        "G": true,
+        "H": "Ninja, pava eléctrica, macbook vieja Lu, 4 vasos de cenar, perchas"
+      }
+    },
+    {
+      "row": 82,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 73.0,
+        "C": "Oficina",
+        "D": "Seba",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Parlantes roca, Echo Family Room, Macbook Seba vieja GLobant, caja negra pileta, smart plug, eero pileta, zapatilla, alargues exteriores, caja relife tiene piezas / tornillos adicionales de máquinas de gimnasio y gomas, Dos soportes de cámaras, Dos Nanit, Echo Dot (Alexa), Smart Lamps, hatch, master bedroom echo, eero, master bedroom echo show"
+      }
+    },
+    {
+      "row": 83,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 74.0,
+        "C": "Playroom",
+        "D": "Seba",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Castillo Disney, carrito verde, patines bluey, pelota basket, balde, cochecito bebé plegable, balde unicornio, máquia de sacar premios, varios playroom,"
+      }
+    },
+    {
+      "row": 84,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 75.0,
+        "C": "Habitación Chloe y Noah",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Recuerdos caja Chloe, plancha, tacho baño master bedroom, sabana lu y sebas"
+      }
+    },
+    {
+      "row": 85,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 76.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Almohadores y sábanas"
+      }
+    },
+    {
+      "row": 86,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 77.0,
+        "C": "Master Bedroom",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Almohadones"
+      }
+    },
+    {
+      "row": 87,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 78.0,
+        "C": "Kitchen",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Comida, últimas cosas de cocina"
+      }
+    },
+    {
+      "row": 88,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 1.0,
+        "C": "Living Room",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Recuerdos Lu"
+      }
+    },
+    {
+      "row": 89,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 2.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": " Cajas adentro de cajas"
+      }
+    },
+    {
+      "row": 90,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 3.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": " Cajas adentro de cajas"
+      }
+    },
+    {
+      "row": 91,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 4.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Zapatos"
+      }
+    },
+    {
+      "row": 92,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 8.0,
+        "C": "Garage",
+        "D": "Seba",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Ropa bebé"
+      }
+    },
+    {
+      "row": 93,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 9.0,
+        "C": "Garage",
+        "D": "Seba",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Ropa bebé"
+      }
+    },
+    {
+      "row": 94,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 5.0,
+        "C": "Garage",
+        "D": "Seba",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Recuerdos Seba"
+      }
+    },
+    {
+      "row": 95,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 6.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Cosas cumpleaños que estaban en mueble de basement"
+      }
+    },
+    {
+      "row": 96,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 7.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Cosas cumpleaños que estaban en mueble de basement"
+      }
+    },
+    {
+      "row": 97,
+      "cells": {
+        "A": "Caja Plástica",
+        "B": 8.0,
+        "C": "Garage",
+        "D": "Lu",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Cosas cumpleaños que estaban en mueble de basement"
+      }
+    },
+    {
+      "row": 98,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 79.0,
+        "C": "Kitchen",
+        "D": "Lu",
+        "E": "Medium",
+        "F": false,
+        "G": true,
+        "H": "Cafetera, comida Hana, aparato comida Hana, manta pelos"
+      }
+    },
+    {
+      "row": 99,
+      "cells": {
+        "A": "Caja Piece of Cake",
+        "B": 80.0,
+        "C": "Garage",
+        "D": "Seba",
+        "E": "Large",
+        "F": false,
+        "G": true,
+        "H": "Cargador Tesla, olla, paraguas, caja plástica con vasos, cartel puerta habitación Chloe, lámparas playroom, 2 eeros, echo dot, cargador de iphone/airpods de escritorio de la oficina, hub usb de mueble azul, destornilladores ring, cubrecolchón cuna"
+      }
+    },
+    {
+      "row": 100,
+      "cells": {
+        "A": "Bolsa Azul",
+        "B": 10.0,
+        "C": "Master Bedroom",
+        "D": "Seba",
+        "E": "N/A",
+        "F": false,
+        "G": true,
+        "H": "Ropa, creo que trajes de baño, toallas"
+      }
+    }
+  ]
+}

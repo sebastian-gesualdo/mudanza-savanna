@@ -1,0 +1,2542 @@
+{
+  "schema_version": 1,
+  "source_file": "Piece of cake.xlsx",
+  "source_sha256": "92d989ff89473cc47013c1e9b8047143ec418bfd3eb7e846e0139cbcfd8c81f7",
+  "sheet": "Comparación cotización 2026",
+  "historical_only": true,
+  "header": {
+    "row": 10,
+    "cells": {
+      "A": "Estado",
+      "B": "Artículo anterior",
+      "C": "Qty esperada",
+      "D": "Artículo cotizado",
+      "E": "Qty cotizada",
+      "F": "Δ qty",
+      "G": "Observación / acción sugerida",
+      "H": "Área anterior",
+      "I": "Área cotizada",
+      "J": "Qty histórica",
+      "K": "Acción anterior",
+      "L": "Referencia anterior"
+    }
+  },
+  "rows": [
+    {
+      "row": 11,
+      "cells": {
+        "A": "FALTA EN COTIZACIÓN",
+        "B": "Chair Folding",
+        "C": 6,
+        "D": "",
+        "E": 0.0,
+        "F": -6,
+        "G": "Faltan 6 Chair Folding. Posible error de nombre: el correo tiene una línea adicional de 6 Table Folding. Confirmar que son sillas y corregir la categoría.",
+        "H": "Garage / Garage",
+        "I": "",
+        "J": 6.0,
+        "K": "OK",
+        "L": "Inventory!C20:F20"
+      }
+    },
+    {
+      "row": 12,
+      "cells": {
+        "A": "FALTA EN COTIZACIÓN",
+        "B": "TV Flat 42-65 (packed by PoC team)",
+        "C": 1,
+        "D": "",
+        "E": 0.0,
+        "F": -1,
+        "G": "Falta la TV de 42–65 pulgadas de la habitación au pair. La TV de 21–42 del gym sí figura; no alcanza para cubrir ambas.",
+        "H": "Habitación au pair / Basement",
+        "I": "",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C105:F105"
+      }
+    },
+    {
+      "row": 13,
+      "cells": {
+        "A": "FALTA EN COTIZACIÓN",
+        "B": "Table Lamp",
+        "C": 1,
+        "D": "",
+        "E": 0.0,
+        "F": -1,
+        "G": "La lámpara agregada (Add) no figura. Hay 2 Lamp (table lamp) de la fila 51, pero se esperaban 3 en total incluyendo esta.",
+        "H": "Primary Bedroom",
+        "I": "",
+        "J": 1.0,
+        "K": "Add",
+        "L": "Inventory!C145:F145"
+      }
+    },
+    {
+      "row": 14,
+      "cells": {
+        "A": "FALTA EN COTIZACIÓN",
+        "B": "Box (Backdrop)",
+        "C": 1,
+        "D": "",
+        "E": 0.0,
+        "F": -1,
+        "G": "Box (Backdrop) marcada Add no figura en el correo.",
+        "H": "Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Add",
+        "L": "Inventory!C146:F146"
+      }
+    },
+    {
+      "row": 15,
+      "cells": {
+        "A": "DIFERENCIA DE CANTIDAD",
+        "B": "TV Stand (small)",
+        "C": 1,
+        "D": "TV Stand (small) + TV Stand (small)",
+        "E": 2.0,
+        "F": 1,
+        "G": "El correo repite TV Stand (small) en dos líneas de 1; la planilla activa tiene 1. Revisar si sobra una unidad. Los 2 de Living room (fila 87) estaban Removed.",
+        "H": "Habitación au pair / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C104:F104"
+      }
+    },
+    {
+      "row": 16,
+      "cells": {
+        "A": "EXTRA EN COTIZACIÓN",
+        "B": "",
+        "C": 0,
+        "D": "Table Foldingxxx",
+        "E": 6.0,
+        "F": 6,
+        "G": "6 mesas adicionales sin correspondencia literal. Probablemente sean las 6 Chair Folding de Inventory!C20. No asumir que sobran físicamente; confirmar y corregir nombre/categoría.",
+        "H": "",
+        "I": "Garage",
+        "J": 0.0,
+        "K": "SIN FILA",
+        "L": "Inventory!C20"
+      }
+    },
+    {
+      "row": 17,
+      "cells": {
+        "A": "EXTRA EN COTIZACIÓN",
+        "B": "",
+        "C": 0,
+        "D": "Dining Chair",
+        "E": 8.0,
+        "F": 8,
+        "G": "8 sillas de comedor no aparecen en Inventory. Confirmar si son nuevas o si no corresponden a esta mudanza.",
+        "H": "",
+        "I": "Added",
+        "J": 0.0,
+        "K": "SIN FILA",
+        "L": "—"
+      }
+    },
+    {
+      "row": 18,
+      "cells": {
+        "A": "EXTRA EN COTIZACIÓN",
+        "B": "",
+        "C": 0,
+        "D": "Dining Table (6+ seats) - Wooden",
+        "E": 1.0,
+        "F": 1,
+        "G": "Mesa de 6+ plazas sin match activo. Inventory!C39 tiene una mesa de 5+ plazas marcada Removed; confirmar si es la misma o una nueva.",
+        "H": "",
+        "I": "Added",
+        "J": 0.0,
+        "K": "SIN FILA",
+        "L": "Inventory!C39"
+      }
+    },
+    {
+      "row": 19,
+      "cells": {
+        "A": "REVISAR DESCRIPCIÓN",
+        "B": "Box Assorted Packed & Supplied by Owner",
+        "C": 80,
+        "D": "*Box Assorted Packed by owner / Supplied by poc",
+        "E": 80.0,
+        "F": 0,
+        "G": "80 cajas coinciden. Antes: packed & supplied by owner; ahora: packed by owner / supplied by PoC. Confirmar quién suministra las cajas y si tiene cargo.",
+        "H": "Containers / Boxes / Bins",
+        "I": "Containers / Boxes / Bins",
+        "J": 80.0,
+        "K": "OK",
+        "L": "Inventory!C2:F2"
+      }
+    },
+    {
+      "row": 20,
+      "cells": {
+        "A": "REVISAR DESCRIPCIÓN",
+        "B": "Bunk Bed Twin + Mattresses",
+        "C": 1,
+        "D": "Bunk Bed Twin + Mattresses",
+        "E": 1.0,
+        "F": 0,
+        "G": "La categoría coincide, pero el comentario anterior dice que no hay cama: solo colchón y tienda teepee. El correo sigue cotizando Bunk Bed Twin + Mattresses; confirmar categoría y volumen.",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C64:F64"
+      }
+    },
+    {
+      "row": 21,
+      "cells": {
+        "A": "REVISAR EQUIVALENCIA",
+        "B": "Plates ball",
+        "C": 1,
+        "D": "Pilates ballxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Probable mismo artículo: Plates ball → Pilates ball. Confirmar que sea la pelota de pilates.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C108:F108"
+      }
+    },
+    {
+      "row": 22,
+      "cells": {
+        "A": "REVISAR EQUIVALENCIA",
+        "B": "Pull up bar",
+        "C": 1,
+        "D": "Pull up m xxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Probable mismo equipo: Pull up bar → Pull up m. Cantidad 1; confirmar que sea la misma barra/máquina.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C115:F115"
+      }
+    },
+    {
+      "row": 23,
+      "cells": {
+        "A": "REVISAR DESCRIPCIÓN",
+        "B": "Deadline",
+        "C": 1,
+        "D": "Deadlinexxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "El comentario anterior aclara Deadlift bar; el correo mantiene Deadline. Confirmar que el volumen y manejo correspondan a una barra, no a otra máquina.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C118:F118"
+      }
+    },
+    {
+      "row": 24,
+      "cells": {
+        "A": "REVISAR EQUIVALENCIA",
+        "B": "X tree (green bag)",
+        "C": 1,
+        "D": "Christmas Tree",
+        "E": 1.0,
+        "F": 0,
+        "G": "Probable árbol navideño en bolsa verde. En la planilla X tree de la baulera (fila 142) estaba Removed; este es Add. Confirmar que Christmas Tree sea el de bolsa verde.",
+        "H": "Containers / Boxes / Bins",
+        "I": "Items added on the day of the move",
+        "J": 1.0,
+        "K": "Add",
+        "L": "Inventory!C144:F144"
+      }
+    },
+    {
+      "row": 25,
+      "cells": {
+        "A": "OK · CAMBIO DE ÁREA",
+        "B": "Chaise Lounge",
+        "C": 4,
+        "D": "Chaise Lounge",
+        "E": 4.0,
+        "F": 0,
+        "G": "4 reposeras coinciden; antes Basement closet 3 (Sala máquinas), ahora Bathroom 2. Confirmar ubicación actual.",
+        "H": "Sala máquinas / Basement closet 3",
+        "I": "Bathroom 2",
+        "J": 4.0,
+        "K": "OK",
+        "L": "Inventory!C95:F95"
+      }
+    },
+    {
+      "row": 26,
+      "cells": {
+        "A": "OK",
+        "B": "Cleaner",
+        "C": 1,
+        "D": "Cleaner",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C4:F4"
+      }
+    },
+    {
+      "row": 27,
+      "cells": {
+        "A": "OK",
+        "B": "Outdoor Wicker Love Seat",
+        "C": 1,
+        "D": "Outdoor Wicker Love Seat",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C5:F5"
+      }
+    },
+    {
+      "row": 28,
+      "cells": {
+        "A": "OK",
+        "B": "Stool/bar Stool",
+        "C": 2,
+        "D": "Stool/bar Stool",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C6:F6"
+      }
+    },
+    {
+      "row": 29,
+      "cells": {
+        "A": "OK",
+        "B": "Bar/Tall Table",
+        "C": 1,
+        "D": "Bar/Tall Table",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C7:F7"
+      }
+    },
+    {
+      "row": 30,
+      "cells": {
+        "A": "OK",
+        "B": "Kids Table",
+        "C": 1,
+        "D": "Kids Table",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C10:F10"
+      }
+    },
+    {
+      "row": 31,
+      "cells": {
+        "A": "OK",
+        "B": "Outdoor Wicker Coffee Table",
+        "C": 3,
+        "D": "Outdoor Wicker Coffee Table xxx",
+        "E": 3.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 3.0,
+        "K": "OK",
+        "L": "Inventory!C11:F11"
+      }
+    },
+    {
+      "row": 32,
+      "cells": {
+        "A": "OK",
+        "B": "Sofa Sectional L Shape (4 seat) (Outdoor Sectional Couch)",
+        "C": 1,
+        "D": "Sofa Sectional L Shape (4 seat) xxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C12:F12"
+      }
+    },
+    {
+      "row": 33,
+      "cells": {
+        "A": "OK",
+        "B": "BBQ Barbecue Gas",
+        "C": 1,
+        "D": "BBQ Barbecue Gas",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C13:F13"
+      }
+    },
+    {
+      "row": 34,
+      "cells": {
+        "A": "OK",
+        "B": "Grill Charcoal",
+        "C": 1,
+        "D": "Grill charcoal",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C14:F14"
+      }
+    },
+    {
+      "row": 35,
+      "cells": {
+        "A": "OK",
+        "B": "Patio Chair",
+        "C": 8,
+        "D": "Patio Chair",
+        "E": 8.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 8.0,
+        "K": "OK",
+        "L": "Inventory!C15:F15"
+      }
+    },
+    {
+      "row": 36,
+      "cells": {
+        "A": "OK",
+        "B": "Patio Table",
+        "C": 1,
+        "D": "Patio Table",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Patio",
+        "I": "Patio",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C16:F16"
+      }
+    },
+    {
+      "row": 37,
+      "cells": {
+        "A": "OK",
+        "B": "Table Folding",
+        "C": 2,
+        "D": "Table Foldingxxx",
+        "E": 2.0,
+        "F": 0,
+        "G": "La línea de 2 mesas coincide. Hay otra línea de 6 mesas en el correo; ver fila EXTRA vinculada a las 6 sillas de Inventory!C20.",
+        "H": "Garage / Garage",
+        "I": "Garage",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C19:F19"
+      }
+    },
+    {
+      "row": 38,
+      "cells": {
+        "A": "OK",
+        "B": "Tent",
+        "C": 1,
+        "D": "Tent xxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C21:F21"
+      }
+    },
+    {
+      "row": 39,
+      "cells": {
+        "A": "OK",
+        "B": "Metal Shelving Unit Large",
+        "C": 1,
+        "D": "Metal Shelving Unit Large",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C22:F22"
+      }
+    },
+    {
+      "row": 40,
+      "cells": {
+        "A": "OK",
+        "B": "Power Washer",
+        "C": 1,
+        "D": "Power Washer",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C24:F24"
+      }
+    },
+    {
+      "row": 41,
+      "cells": {
+        "A": "OK",
+        "B": "Plastic Bin XL",
+        "C": 7,
+        "D": "Plastic Bin XL",
+        "E": 7.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 7.0,
+        "K": "OK",
+        "L": "Inventory!C25:F25"
+      }
+    },
+    {
+      "row": 42,
+      "cells": {
+        "A": "OK",
+        "B": "Umbrella (large)",
+        "C": 1,
+        "D": "Umbrella (large)xxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: traer del patio",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C26:F26"
+      }
+    },
+    {
+      "row": 43,
+      "cells": {
+        "A": "OK",
+        "B": "Large Toy car",
+        "C": 1,
+        "D": "Large Toy car",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: What is this? (Lamborgini?)",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C27:F27"
+      }
+    },
+    {
+      "row": 44,
+      "cells": {
+        "A": "OK",
+        "B": "Plastic Drawer Set",
+        "C": 2,
+        "D": "Plastic Drawer Setxxx",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Lavadero / Kitchen",
+        "I": "Kitchen",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C31:F31"
+      }
+    },
+    {
+      "row": 45,
+      "cells": {
+        "A": "OK",
+        "B": "Trash Can",
+        "C": 1,
+        "D": "Trash Can",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Cocina / Kitchen",
+        "I": "Kitchen",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C34:F34"
+      }
+    },
+    {
+      "row": 46,
+      "cells": {
+        "A": "OK",
+        "B": "Beer fridge",
+        "C": 1,
+        "D": "Beer fridge",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Cocina / Kitchen",
+        "I": "Kitchen",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C37:F37"
+      }
+    },
+    {
+      "row": 47,
+      "cells": {
+        "A": "OK",
+        "B": "Vacuum Cleaner",
+        "C": 2,
+        "D": "Vacuum Cleaner",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Lavadero / Kitchen",
+        "I": "Kitchen",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C38:F38"
+      }
+    },
+    {
+      "row": 48,
+      "cells": {
+        "A": "OK",
+        "B": "Wine Fridge (small)",
+        "C": 1,
+        "D": "Wine Fridge (small)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Cocina / Kitchen",
+        "I": "Kitchen",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C41:F41"
+      }
+    },
+    {
+      "row": 49,
+      "cells": {
+        "A": "OK",
+        "B": "Lamp Floor",
+        "C": 1,
+        "D": "Lamp Floor",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C43:F43"
+      }
+    },
+    {
+      "row": 50,
+      "cells": {
+        "A": "OK",
+        "B": "Arm Chair",
+        "C": 2,
+        "D": "Arm Chair",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C45:F45"
+      }
+    },
+    {
+      "row": 51,
+      "cells": {
+        "A": "OK",
+        "B": "Mirror Floor",
+        "C": 1,
+        "D": "Mirror Floor",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C47:F47"
+      }
+    },
+    {
+      "row": 52,
+      "cells": {
+        "A": "OK",
+        "B": "Baby Crib + Mattress",
+        "C": 1,
+        "D": "Baby Crib + Mattress",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C49:F49"
+      }
+    },
+    {
+      "row": 53,
+      "cells": {
+        "A": "OK",
+        "B": "Dresser Double",
+        "C": 1,
+        "D": "Dresser Double",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C50:F50"
+      }
+    },
+    {
+      "row": 54,
+      "cells": {
+        "A": "OK",
+        "B": "Lamp (table lamp)",
+        "C": 2,
+        "D": "Lamp (table lamp)",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C51:F51"
+      }
+    },
+    {
+      "row": 55,
+      "cells": {
+        "A": "OK",
+        "B": "Nightstand",
+        "C": 2,
+        "D": "Nightstand",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C52:F52"
+      }
+    },
+    {
+      "row": 56,
+      "cells": {
+        "A": "OK",
+        "B": "King Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "C": 1,
+        "D": "King Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C53:F53"
+      }
+    },
+    {
+      "row": 57,
+      "cells": {
+        "A": "OK",
+        "B": "Bench (2 seat)",
+        "C": 1,
+        "D": "Bench (2 seat)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Primary Bedroom",
+        "I": "Primary Bedroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C54:F54"
+      }
+    },
+    {
+      "row": 58,
+      "cells": {
+        "A": "OK",
+        "B": "TV Flat 65+ (packed by PoC team)",
+        "C": 1,
+        "D": "TV Flat 65\"+ (packed by PoC team)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Invitados / Room 3",
+        "I": "Room 3",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C55:F55"
+      }
+    },
+    {
+      "row": 59,
+      "cells": {
+        "A": "OK",
+        "B": "Full / Queen Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "C": 1,
+        "D": "Full, Queen Bed Frame + Mattress - Disassembly/Reassembly by PoC Team",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Invitados / Room 3",
+        "I": "Room 3",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C56:F56"
+      }
+    },
+    {
+      "row": 60,
+      "cells": {
+        "A": "OK",
+        "B": "Bookcase (medium)",
+        "C": 1,
+        "D": "Bookcase (medium)xxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Chloe y Noah / Room 2",
+        "I": "Room 2 N",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C57:F57"
+      }
+    },
+    {
+      "row": 61,
+      "cells": {
+        "A": "OK",
+        "B": "Twin Bed (single) + Mattress - Disassembly/Reassembly by PoC Team",
+        "C": 2,
+        "D": "Twin Bed (single) + Mattress - Disassembly/Reassembly by PoC Team",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Chloe y Noah / Room 2",
+        "I": "Room 2 N",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C59:F59"
+      }
+    },
+    {
+      "row": 62,
+      "cells": {
+        "A": "OK",
+        "B": "Plastic Drawer Set",
+        "C": 1,
+        "D": "Plastic Drawer Setxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C61:F61"
+      }
+    },
+    {
+      "row": 63,
+      "cells": {
+        "A": "OK",
+        "B": "Large Toy",
+        "C": 2,
+        "D": "Large Toy",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: eran 3",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C62:F62"
+      }
+    },
+    {
+      "row": 64,
+      "cells": {
+        "A": "OK",
+        "B": "Lamp Floor",
+        "C": 1,
+        "D": "Lamp Floor",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C63:F63"
+      }
+    },
+    {
+      "row": 65,
+      "cells": {
+        "A": "OK",
+        "B": "Dresser Single",
+        "C": 1,
+        "D": "Dresser Single",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C67:F67"
+      }
+    },
+    {
+      "row": 66,
+      "cells": {
+        "A": "OK",
+        "B": "Mirror",
+        "C": 1,
+        "D": "Mirror",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Theo / Room 1 T",
+        "I": "Room 1 T",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C68:F68"
+      }
+    },
+    {
+      "row": 67,
+      "cells": {
+        "A": "OK",
+        "B": "TV Flat 21-42 (packed by PoC team)",
+        "C": 1,
+        "D": "TV Flat 21\"-42 (packed by PoC team)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C71:F71"
+      }
+    },
+    {
+      "row": 68,
+      "cells": {
+        "A": "OK",
+        "B": "Stroller",
+        "C": 1,
+        "D": "Stroller",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C72:F72"
+      }
+    },
+    {
+      "row": 69,
+      "cells": {
+        "A": "OK",
+        "B": "Kids Chair",
+        "C": 4,
+        "D": "Kids Chairxxx",
+        "E": 4.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 4.0,
+        "K": "OK",
+        "L": "Inventory!C74:F74"
+      }
+    },
+    {
+      "row": 70,
+      "cells": {
+        "A": "OK",
+        "B": "Kids Play Kitchen",
+        "C": 1,
+        "D": "Kids Play Kitchen",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C77:F77"
+      }
+    },
+    {
+      "row": 71,
+      "cells": {
+        "A": "OK",
+        "B": "Toy Rack",
+        "C": 4,
+        "D": "Toy Rack",
+        "E": 4.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: 35 each",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 4.0,
+        "K": "OK",
+        "L": "Inventory!C78:F78"
+      }
+    },
+    {
+      "row": 72,
+      "cells": {
+        "A": "OK",
+        "B": "Picture Frame Large",
+        "C": 1,
+        "D": "Picture Frame Largexxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Entryway",
+        "I": "Entryway",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C79:F79"
+      }
+    },
+    {
+      "row": 73,
+      "cells": {
+        "A": "OK",
+        "B": "Mirror",
+        "C": 1,
+        "D": "Mirror",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C82:F82"
+      }
+    },
+    {
+      "row": 74,
+      "cells": {
+        "A": "OK",
+        "B": "Entryway Table",
+        "C": 1,
+        "D": "Entryway Table",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C83:F83"
+      }
+    },
+    {
+      "row": 75,
+      "cells": {
+        "A": "OK",
+        "B": "TV Flat 65+ (packed by PoC team)",
+        "C": 1,
+        "D": "TV Flat 65\"+ (packed by PoC team)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C86:F86"
+      }
+    },
+    {
+      "row": 76,
+      "cells": {
+        "A": "OK",
+        "B": "Plant 6'",
+        "C": 1,
+        "D": "Plant 6'",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C88:F88"
+      }
+    },
+    {
+      "row": 77,
+      "cells": {
+        "A": "OK",
+        "B": "Ottoman Small",
+        "C": 2,
+        "D": "Ottoman Smallxxx",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Updated from 4 to 2",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C90:F90"
+      }
+    },
+    {
+      "row": 78,
+      "cells": {
+        "A": "OK",
+        "B": "Rug Large",
+        "C": 1,
+        "D": "Rug Large",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C91:F91"
+      }
+    },
+    {
+      "row": 79,
+      "cells": {
+        "A": "OK",
+        "B": "Coffee table - Wooden",
+        "C": 1,
+        "D": "Coffee table - Wooden",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C92:F92"
+      }
+    },
+    {
+      "row": 80,
+      "cells": {
+        "A": "OK",
+        "B": "Sofa Sectional L Shape (4 seat)",
+        "C": 1,
+        "D": "Sofa Sectional L Shape (4 seat)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Family room / Living room",
+        "I": "Living room",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C93:F93"
+      }
+    },
+    {
+      "row": 81,
+      "cells": {
+        "A": "OK",
+        "B": "Water Cooler",
+        "C": 1,
+        "D": "Water Cooler",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Heladera carrito",
+        "H": "Sala paneles / Basement closet 2",
+        "I": "Basment closet 2",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C98:F98"
+      }
+    },
+    {
+      "row": 82,
+      "cells": {
+        "A": "OK",
+        "B": "Bookcase (small)",
+        "C": 1,
+        "D": "Bookcase (small)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Baulera / Basement closet",
+        "I": "Basment closet",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C102:F102"
+      }
+    },
+    {
+      "row": 83,
+      "cells": {
+        "A": "OK",
+        "B": "Sofa Bed (3 Seat)",
+        "C": 1,
+        "D": "Sofa Bed (3 Seat)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Habitación au pair / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C106:F106"
+      }
+    },
+    {
+      "row": 84,
+      "cells": {
+        "A": "OK",
+        "B": "Water Cooler",
+        "C": 1,
+        "D": "Water Cooler",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Dispenser",
+        "H": "Habitación au pair / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C107:F107"
+      }
+    },
+    {
+      "row": 85,
+      "cells": {
+        "A": "OK",
+        "B": "TV Flat 21-42 (packed by PoC team)",
+        "C": 1,
+        "D": "TV Flat 21\"-42 (packed by PoC team)xxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C110:F110"
+      }
+    },
+    {
+      "row": 86,
+      "cells": {
+        "A": "OK",
+        "B": "Bars",
+        "C": 2,
+        "D": "Barsxxx",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C111:F111"
+      }
+    },
+    {
+      "row": 87,
+      "cells": {
+        "A": "OK",
+        "B": "Bench press",
+        "C": 1,
+        "D": "Bench pressxxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C113:F113"
+      }
+    },
+    {
+      "row": 88,
+      "cells": {
+        "A": "OK",
+        "B": "Weight rack",
+        "C": 1,
+        "D": "Weight rackxxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C114:F114"
+      }
+    },
+    {
+      "row": 89,
+      "cells": {
+        "A": "OK",
+        "B": "Gladiator machine (Client will disassemble)",
+        "C": 1,
+        "D": "Gladiator machine xxxx( Client will disassemble)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Mismo equipo y condición: el cliente lo desarma; solo cambia el texto.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C116:F116"
+      }
+    },
+    {
+      "row": 90,
+      "cells": {
+        "A": "OK",
+        "B": "Peloton Bike",
+        "C": 1,
+        "D": "Peloton Bike",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C117:F117"
+      }
+    },
+    {
+      "row": 91,
+      "cells": {
+        "A": "OK",
+        "B": "Leg press",
+        "C": 1,
+        "D": "Leg pressxxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C119:F119"
+      }
+    },
+    {
+      "row": 92,
+      "cells": {
+        "A": "OK",
+        "B": "Back bench",
+        "C": 1,
+        "D": "Back benchxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C120:F120"
+      }
+    },
+    {
+      "row": 93,
+      "cells": {
+        "A": "OK",
+        "B": "Dumbbell set tower",
+        "C": 1,
+        "D": "Dumbbell Set towerxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Gym / Basement",
+        "I": "Basement",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C121:F121"
+      }
+    },
+    {
+      "row": 94,
+      "cells": {
+        "A": "OK",
+        "B": "Large Computer Monitor",
+        "C": 1,
+        "D": "Large Computer Monitor",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C122:F122"
+      }
+    },
+    {
+      "row": 95,
+      "cells": {
+        "A": "OK",
+        "B": "Liquor Cabinet",
+        "C": 1,
+        "D": "Liquor Cabinet",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C124:F124"
+      }
+    },
+    {
+      "row": 96,
+      "cells": {
+        "A": "OK",
+        "B": "Chair",
+        "C": 1,
+        "D": "Chair",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C125:F125"
+      }
+    },
+    {
+      "row": 97,
+      "cells": {
+        "A": "OK",
+        "B": "Lamp Floor",
+        "C": 1,
+        "D": "Lamp Floor",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C126:F126"
+      }
+    },
+    {
+      "row": 98,
+      "cells": {
+        "A": "OK",
+        "B": "Stereo Cabinet",
+        "C": 1,
+        "D": "Stereo Cabinetxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C127:F127"
+      }
+    },
+    {
+      "row": 99,
+      "cells": {
+        "A": "OK",
+        "B": "Desk",
+        "C": 1,
+        "D": "Desk",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C130:F130"
+      }
+    },
+    {
+      "row": 100,
+      "cells": {
+        "A": "OK",
+        "B": "Cabinet",
+        "C": 1,
+        "D": "Cabinetxxx",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C131:F131"
+      }
+    },
+    {
+      "row": 101,
+      "cells": {
+        "A": "OK",
+        "B": "Bar Cart",
+        "C": 1,
+        "D": "Bar Cart",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Home Office",
+        "I": "Home Office",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C132:F132"
+      }
+    },
+    {
+      "row": 102,
+      "cells": {
+        "A": "OK",
+        "B": "Kids House",
+        "C": 1,
+        "D": "Kids house",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Added but we don not know the cost",
+        "H": "Patio / Added",
+        "I": "ADDED",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C133:F133"
+      }
+    },
+    {
+      "row": 103,
+      "cells": {
+        "A": "OK",
+        "B": "Sectional Plantpot",
+        "C": 1,
+        "D": "Sectional plant pot",
+        "E": 1.0,
+        "F": 0,
+        "G": "Sectional Plantpot / Sectional plant pot: variante de escritura.",
+        "H": "Patio / Added",
+        "I": "ADDED",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C134:F134"
+      }
+    },
+    {
+      "row": 104,
+      "cells": {
+        "A": "OK",
+        "B": "Plant Pot",
+        "C": 2,
+        "D": "Plant Pot",
+        "E": 2.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Added but we don not know the cost",
+        "H": "Patio / Added",
+        "I": "ADDED",
+        "J": 2.0,
+        "K": "OK",
+        "L": "Inventory!C135:F135"
+      }
+    },
+    {
+      "row": 105,
+      "cells": {
+        "A": "OK",
+        "B": "3pc Bookcase",
+        "C": 1,
+        "D": "3pc Bookcase",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C136:F136"
+      }
+    },
+    {
+      "row": 106,
+      "cells": {
+        "A": "OK",
+        "B": "Nugget sofa",
+        "C": 1,
+        "D": "Nugget Sofa",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Play room",
+        "I": "Playroom",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C137:F137"
+      }
+    },
+    {
+      "row": 107,
+      "cells": {
+        "A": "OK",
+        "B": "Plastic Bin - Packed by Owner",
+        "C": 8,
+        "D": "Plastic Bin - Packed by Owner",
+        "E": 8.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: clear boxes",
+        "H": "Containers / Boxes / Bins",
+        "I": "Containers / Boxes / Bins",
+        "J": 8.0,
+        "K": "OK",
+        "L": "Inventory!C138:F138"
+      }
+    },
+    {
+      "row": 108,
+      "cells": {
+        "A": "OK",
+        "B": "Blue bag w/clothes",
+        "C": 10,
+        "D": "Blue bag w/clothes",
+        "E": 10.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Containers / Boxes / Bins",
+        "I": "Containers / Boxes / Bins",
+        "J": 10.0,
+        "K": "OK",
+        "L": "Inventory!C139:F139"
+      }
+    },
+    {
+      "row": 109,
+      "cells": {
+        "A": "OK",
+        "B": "Vacuum Cleaner",
+        "C": 1,
+        "D": "Vacuum Cleaner",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Tineco rug",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C140:F140"
+      }
+    },
+    {
+      "row": 110,
+      "cells": {
+        "A": "OK",
+        "B": "Tool box on wheels",
+        "C": 1,
+        "D": "Tool box on wheels",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad; se ignoraron mayúsculas, xxx y variantes de puntuación.",
+        "H": "Garage",
+        "I": "Garage",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C141:F141"
+      }
+    },
+    {
+      "row": 111,
+      "cells": {
+        "A": "OK",
+        "B": "Box (Vacuum)",
+        "C": 1,
+        "D": "Box (Vacuum)",
+        "E": 1.0,
+        "F": 0,
+        "G": "Coincide artículo y cantidad. Ver comentario anterior: Roborock Box (66) ",
+        "H": "Containers / Boxes / Bins",
+        "I": "Containers / Boxes / Bins",
+        "J": 1.0,
+        "K": "OK",
+        "L": "Inventory!C143:F143"
+      }
+    },
+    {
+      "row": 112,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Plant Pot empty",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "2 Plant Pot empty marcados Removed; los 2 Plant Pot activos de Added (fila 135) sí coinciden. No sumar estos removidos como faltantes.",
+        "H": "Patio",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C3:F3"
+      }
+    },
+    {
+      "row": 113,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Car kids",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Patio",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C8:F8"
+      }
+    },
+    {
+      "row": 114,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Trampoline",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Patio",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C9:F9"
+      }
+    },
+    {
+      "row": 115,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Trunk / Chest",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Driveway / Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C17:F17"
+      }
+    },
+    {
+      "row": 116,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Basket cart",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Driveway / Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C18:F18"
+      }
+    },
+    {
+      "row": 117,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "S cart",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C23:F23"
+      }
+    },
+    {
+      "row": 118,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Shopping Cart",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C28:F28"
+      }
+    },
+    {
+      "row": 119,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Changing Table",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C29:F29"
+      }
+    },
+    {
+      "row": 120,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Shoe Rack Small",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Garage",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C30:F30"
+      }
+    },
+    {
+      "row": 121,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Drying Rack",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Lavadero / Kitchen",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C32:F32"
+      }
+    },
+    {
+      "row": 122,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Shoe Rack Large",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Lavadero / Kitchen",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C33:F33"
+      }
+    },
+    {
+      "row": 123,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Stool/bar Stool",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Cocina / Kitchen",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C35:F35"
+      }
+    },
+    {
+      "row": 124,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "High Chair",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Cocina / Kitchen",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C36:F36"
+      }
+    },
+    {
+      "row": 125,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Dining Table (5+ seats) - Wooden",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Mesa de 5+ plazas marcada Removed. El correo añade una mesa de 6+ plazas; podría ser otra mesa o una reincorporación. Confirmar identidad antes de eliminarla.",
+        "H": "Cocina / Kitchen",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C39:F39"
+      }
+    },
+    {
+      "row": 126,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Dresser Single",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Cocina / Kitchen",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C40:F40"
+      }
+    },
+    {
+      "row": 127,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Plant 4'",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Primary Bedroom",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C42:F42"
+      }
+    },
+    {
+      "row": 128,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Coffee table",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Primary Bedroom",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C44:F44"
+      }
+    },
+    {
+      "row": 129,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Mini Fridge",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Primary Bedroom",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C46:F46"
+      }
+    },
+    {
+      "row": 130,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Mirror",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Primary Bedroom",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C48:F48"
+      }
+    },
+    {
+      "row": 131,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Cube Shelf (Small - 2-8 cubes)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Chloe y Noah / Room 2",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C58:F58"
+      }
+    },
+    {
+      "row": 132,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Picture Frame (small to medium)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Theo / Room 1 T",
+        "I": "",
+        "J": 3.0,
+        "K": "Removed",
+        "L": "Inventory!C60:F60"
+      }
+    },
+    {
+      "row": 133,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Ottoman Small",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Theo / Room 1 T",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C65:F65"
+      }
+    },
+    {
+      "row": 134,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Arm Chair",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Theo / Room 1 T",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C66:F66"
+      }
+    },
+    {
+      "row": 135,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Plant 4'",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Staircase",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C69:F69"
+      }
+    },
+    {
+      "row": 136,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Play pad",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Play room",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C70:F70"
+      }
+    },
+    {
+      "row": 137,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Easel",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Play room",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C73:F73"
+      }
+    },
+    {
+      "row": 138,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Kids Table",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Play room",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C75:F75"
+      }
+    },
+    {
+      "row": 139,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Rug pad",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Play room",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C76:F76"
+      }
+    },
+    {
+      "row": 140,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Mirror",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Entryway",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C80:F80"
+      }
+    },
+    {
+      "row": 141,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Entryway Table marble",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Entryway",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C81:F81"
+      }
+    },
+    {
+      "row": 142,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Club Chair",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Family room / Living room",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C84:F84"
+      }
+    },
+    {
+      "row": 143,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Picture Frame (small to medium)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Family room / Living room",
+        "I": "",
+        "J": 4.0,
+        "K": "Removed",
+        "L": "Inventory!C85:F85"
+      }
+    },
+    {
+      "row": 144,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "TV Stand (small)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Los 2 soportes de Living room estaban Removed. El correo tiene 2 TV Stand en Basement frente a 1 activo (fila 104); confirmar si uno fue reintroducido o duplicado.",
+        "H": "Family room / Living room",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C87:F87"
+      }
+    },
+    {
+      "row": 145,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Lamp (table lamp)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Family room / Living room",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C89:F89"
+      }
+    },
+    {
+      "row": 146,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Lamp Floor",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Family room / Living room",
+        "I": "",
+        "J": 2.0,
+        "K": "Removed",
+        "L": "Inventory!C94:F94"
+      }
+    },
+    {
+      "row": 147,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Chair Folding",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Sala paneles / Basement closet 2",
+        "I": "",
+        "J": 5.0,
+        "K": "Removed",
+        "L": "Inventory!C96:F96"
+      }
+    },
+    {
+      "row": 148,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Rolling Cart",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Sala paneles / Basement closet 2",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C97:F97"
+      }
+    },
+    {
+      "row": 149,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Refrigerator Upright",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Sala paneles / Basement closet 2",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C99:F99"
+      }
+    },
+    {
+      "row": 150,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Box Assorted Packed & Supplied by Owner",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Baulera / Basement closet",
+        "I": "",
+        "J": 15.0,
+        "K": "Removed",
+        "L": "Inventory!C100:F100"
+      }
+    },
+    {
+      "row": 151,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Bed Folding",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Baulera / Basement closet",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C101:F101"
+      }
+    },
+    {
+      "row": 152,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "End/Sofa Side table",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Baulera / Basement closet",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C103:F103"
+      }
+    },
+    {
+      "row": 153,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Gym pads",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Gym / Basement",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C109:F109"
+      }
+    },
+    {
+      "row": 154,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Bench",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Gym / Basement",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C112:F112"
+      }
+    },
+    {
+      "row": 155,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Picture Frame (small to medium)",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Home Office",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C123:F123"
+      }
+    },
+    {
+      "row": 156,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Plant 4' fake",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Home Office",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C128:F128"
+      }
+    },
+    {
+      "row": 157,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "Desk Chair",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "Excluido del inventario anterior; no se asignó una línea actual a este artículo.",
+        "H": "Home Office",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C129:F129"
+      }
+    },
+    {
+      "row": 158,
+      "cells": {
+        "A": "OK · REMOVIDO",
+        "B": "X tree",
+        "C": 0,
+        "D": "",
+        "E": 0.0,
+        "F": 0,
+        "G": "X tree de baulera marcado Removed. Se mapeó Christmas Tree al X tree (green bag), Add de fila 144, como equivalencia pendiente de confirmar.",
+        "H": "Baulera / Basement closet",
+        "I": "",
+        "J": 1.0,
+        "K": "Removed",
+        "L": "Inventory!C142:F142"
+      }
+    }
+  ]
+}
