@@ -301,7 +301,7 @@ Este registro admite información no secreta. No completar campos con claves, co
 | --- | --- |
 | Cuenta/ámbito de Vercel | `sebagesualdo`, observado en el estado del deployment de GitHub el 13/10/2026. |
 | Nombre del proyecto Vercel | `mudanza-savanna`, confirmado por el organizador y por la integración GitHub/Vercel. |
-| URL estable de producción | Pendiente. |
+| URL estable de producción | [mudanza-savanna.vercel.app](https://mudanza-savanna.vercel.app), indicada por el organizador. Falta comprobar que APP_BASE_URL y el deployment activo usen este origen. |
 | Preview de la implementación | [Rama feat/casa-gesualdo-app](https://mudanza-savanna-git-feat-casa-gesualdo-app-sebagesualdo.vercel.app), estado Ready informado por Vercel el 13/10/2026. Configuración de servicios todavía sin verificar. |
 | Rama de producción | `main`, cuando contenga la aplicación aprobada. |
 | Proyecto Supabase producción: nombre / ID / región | `mudanza-savanna-prod`, referencia `jncnmxsiylhqeycqhhya`, [dashboard](https://supabase.com/dashboard/project/jncnmxsiylhqeycqhhya) informado por el organizador. URL API esperada: `https://jncnmxsiylhqeycqhhya.supabase.co`. Región, configuración y conexión todavía sin verificar. |
