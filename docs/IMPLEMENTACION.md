@@ -29,7 +29,7 @@ Se revisaron AGENTS, SPEC, los ocho specs, guía, README, manifest y ambientes; 
 | Navegador | 6 recorridos en Chromium escritorio y viewport/touch de iPhone: chat completo, controles manuales y recarga offline de PWA conservando unidad/borrador. Build de producción, demo local. |
 | Referencias | Cadenas únicas de datos históricos ausentes de los chunks públicos del cliente. |
 
-WebKit no se ejecutó: su descarga desde `cdn.playwright.dev` recibió `403 Domain forbidden` por política de red. Playwright incluye el proyecto WebKit para un entorno con acceso; Chromium se ejecutó con `CHROMIUM_EXECUTABLE=/usr/bin/chromium`. Viewport móvil no equivale a Safari ni a un iPhone físico.
+La descarga local de WebKit desde `cdn.playwright.dev` recibió `403 Domain forbidden` por política de red; Chromium local usa `CHROMIUM_EXECUTABLE=/usr/bin/chromium`. GitHub Actions sí ejecutó WebKit: los dos flujos de chat/inventario pasaron y la recarga offline falló con `WebKit encountered an internal error` en Playwright 1.58.2. El fallo coincide con [Playwright #42775](https://github.com/microsoft/playwright/issues/42775), corregido por [#42894](https://github.com/microsoft/playwright/pull/42894). Se actualizó Playwright a la versión estable 1.64.0 conservando la prueba de red offline y exigiendo respuesta 200 desde el service worker; los seis recorridos Chromium volvieron a pasar. CI ejecuta los nueve recorridos para verificar también WebKit. Viewport móvil y WebKit de escritorio no equivalen a un iPhone físico.
 
 Los comandos reproducibles están en README/package.json y CI. La prueba PostgreSQL espera el cierre de sockets del pool antes de terminar el proceso temporal; un build no se usa como evidencia de persistencia.
 
@@ -73,4 +73,4 @@ La salida estática está en `out/`. Para actualizar el sitio publicado, conserv
 
 Las referencias históricas quedan intactas y no se cargan automáticamente. La aprobación de los candidatos y la fecha de mudanza siguen correspondiendo a la familia.
 
-El organizador confirmó los nombres `mudanza-savanna` en Vercel y `mudanza-savanna-prod` en Supabase. Se reutilizan esos proyectos: la conexión GitHub/Vercel está comprobada; URL/ID de Supabase, configuración de Google, variables de los deployments y migraciones alojadas todavía requieren verificación. El entorno cloud no tiene bindings de esos servicios. Ver el registro no secreto en la guía de configuración.
+El organizador confirmó los nombres `mudanza-savanna` en Vercel y `mudanza-savanna-prod` en Supabase y proporcionó el dashboard del proyecto Supabase `jncnmxsiylhqeycqhhya`. También confirmó las variables de Vercel Production y Google habilitado. Se reutilizan esos proyectos: la conexión GitHub/Vercel está comprobada; el login, las migraciones alojadas y el guardado compartido todavía requieren verificación independiente. El entorno cloud no tiene bindings de esos servicios. Ver el registro no secreto en la guía de configuración.

@@ -49,7 +49,9 @@ test("PWA: recarga completa sin señal conserva unidad y borrador", async ({
     )
     .toBe(draft);
   await context.setOffline(true);
-  await page.reload();
+  const response = await page.reload();
+  expect(response?.status()).toBe(200);
+  expect(response?.fromServiceWorker()).toBe(true);
   await expect(page.locator(".chat-context")).toContainText("C-001");
   await expect(input).toHaveValue(draft);
   await expect(page.locator(".demo-banner")).toBeVisible();

@@ -304,8 +304,9 @@ Este registro admite información no secreta. No completar campos con claves, co
 | URL estable de producción | Pendiente. |
 | Preview de la implementación | [Rama feat/casa-gesualdo-app](https://mudanza-savanna-git-feat-casa-gesualdo-app-sebagesualdo.vercel.app), estado Ready informado por Vercel el 13/10/2026. Configuración de servicios todavía sin verificar. |
 | Rama de producción | `main`, cuando contenga la aplicación aprobada. |
-| Proyecto Supabase producción: nombre / ID / región | Nombre informado: `mudanza-savanna-prod`. URL/ID, región y conexión todavía sin verificar. |
+| Proyecto Supabase producción: nombre / ID / región | `mudanza-savanna-prod`, referencia `jncnmxsiylhqeycqhhya`, [dashboard](https://supabase.com/dashboard/project/jncnmxsiylhqeycqhhya) informado por el organizador. URL API esperada: `https://jncnmxsiylhqeycqhhya.supabase.co`. Región, configuración y conexión todavía sin verificar. |
 | Proyecto Supabase test: nombre / ID / región, o modo demo | Sin proyecto test identificado. Preview debe usar demo aislada hasta confirmar uno. |
+| Variables Vercel Production y proveedor Google | El organizador confirmó SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, DATABASE_URL y APP_BASE_URL configurados y Google habilitado. Confirmación del panel por el organizador; smoke test independiente todavía pendiente. |
 | Proyecto Google Cloud: nombre / ID | Pendiente. |
 | Clientes OAuth Web: nombres de prod / test, sin secretos | Pendiente. |
 | Audiencia OAuth: Testing/In production y fecha de comprobación | Pendiente. |
