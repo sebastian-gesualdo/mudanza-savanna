@@ -299,12 +299,13 @@ Este registro admite información no secreta. No completar campos con claves, co
 
 | Dato | Valor a completar |
 | --- | --- |
-| Cuenta/ámbito de Vercel | Pendiente. |
-| Nombre del proyecto Vercel | Pendiente. |
+| Cuenta/ámbito de Vercel | `sebagesualdo`, observado en el estado del deployment de GitHub el 13/10/2026. |
+| Nombre del proyecto Vercel | `mudanza-savanna`, confirmado por el organizador y por la integración GitHub/Vercel. |
 | URL estable de producción | Pendiente. |
+| Preview de la implementación | [Rama feat/casa-gesualdo-app](https://mudanza-savanna-git-feat-casa-gesualdo-app-sebagesualdo.vercel.app), estado Ready informado por Vercel el 13/10/2026. Configuración de servicios todavía sin verificar. |
 | Rama de producción | `main`, cuando contenga la aplicación aprobada. |
-| Proyecto Supabase producción: nombre / ID / región | Pendiente. |
-| Proyecto Supabase test: nombre / ID / región, o modo demo | Pendiente. |
+| Proyecto Supabase producción: nombre / ID / región | Nombre informado: `mudanza-savanna-prod`. URL/ID, región y conexión todavía sin verificar. |
+| Proyecto Supabase test: nombre / ID / región, o modo demo | Sin proyecto test identificado. Preview debe usar demo aislada hasta confirmar uno. |
 | Proyecto Google Cloud: nombre / ID | Pendiente. |
 | Clientes OAuth Web: nombres de prod / test, sin secretos | Pendiente. |
 | Audiencia OAuth: Testing/In production y fecha de comprobación | Pendiente. |
@@ -368,6 +369,6 @@ Después autorizar explícitamente los correos con `--participant`. Se conservan
 
 5. Mantener `AI_ENABLED=false` y `GENERATION_ENABLED=false` hasta completar T00/T05. La API de selección de Jev está compilada con `ai@7.0.139` y `experimental_decide`; acceso, modelo efectivo y precios no están verificados live. Para activar una prueba de selección hacen falta tarifas verificadas `AI_INPUT_USD_PER_MILLION`, `AI_OUTPUT_USD_PER_MILLION`, una reserva conservadora `AI_REQUEST_RESERVE_USD` y presupuesto en `moves.ai_budget`. Las reservas y rate limits son persistentes; un timeout no libera el gasto reservado. El pipeline libre de intención/extracción generativa todavía requiere completar T05: no basta con habilitar un flag. Nunca colocar una clave de OpenAI como sustituto oculto de Gateway.
 
-No se crearon proyectos, publicaron deployments ni aplicaron migraciones a Supabase alojado durante esta implementación. Estas acciones necesitan el entorno elegido y las autorizaciones de publicación correspondientes.
+No se aplicaron migraciones a Supabase alojado durante esta implementación. La demo privada de Sites se publicó y la integración existente de Vercel generó una preview exitosa de la rama `feat/casa-gesualdo-app`. Esto confirma la publicación de la aplicación, pero no las variables, Google Login ni persistencia compartida. La producción familiar sigue pendiente.
 
 `AI_BUDGET_USD` se aplica al crear la mudanza con el seed; una mudanza existente conserva su presupuesto en `moves.ai_budget`, especialmente tras restaurar. Cambiar una variable no reinicia gasto ni presupuesto guardado. Si se eliminó un usuario Auth ya vinculado, el login no reasigna automáticamente la membresía por email: el organizador debe revisar el vínculo y usar `members link` con el UUID Auth correcto. Este comando administrativo mantiene el participante histórico y no reactiva una membresía revocada.
