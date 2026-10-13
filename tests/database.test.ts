@@ -229,6 +229,15 @@ describe("PostgreSQL real: transacciones, aislamiento y permisos", () => {
     expect(() =>
       validateProductionTarget({
         ...env,
+        DATABASE_URL: "invalid-private-value",
+      }),
+    ).toThrow("INITIAL_SETUP_INVALID_DATABASE_URL");
+    expect(() =>
+      validateProductionTarget({ ...env, APP_BASE_URL: "" }),
+    ).toThrow("INITIAL_SETUP_MISSING_APP_BASE_URL");
+    expect(() =>
+      validateProductionTarget({
+        ...env,
         DATABASE_URL: env.DATABASE_URL.replace(
           "postgres.jncnmxsiylhqeycqhhya",
           "postgres.other-project",

@@ -21,24 +21,35 @@ const migration = "202610130001_initial.sql";
 export function validateProductionTarget(
   env: Readonly<Record<string, string | undefined>>,
 ) {
-  const api = new URL(env.SUPABASE_URL ?? "");
-  const db = new URL(env.DATABASE_URL ?? "");
-  const app = new URL(env.APP_BASE_URL ?? "");
+  const parse = (name: string) => {
+    if (!env[name]) throw new Error(`INITIAL_SETUP_MISSING_${name}`);
+    try {
+      return new URL(env[name]);
+    } catch {
+      throw new Error(`INITIAL_SETUP_INVALID_${name}`);
+    }
+  };
+  const api = parse("SUPABASE_URL");
+  const db = parse("DATABASE_URL");
+  const app = parse("APP_BASE_URL");
   const ref = productionSetup.projectRef;
   const direct = db.hostname === `db.${ref}.supabase.co`;
   const pooled =
     db.hostname.endsWith(".pooler.supabase.com") &&
     decodeURIComponent(db.username) === `postgres.${ref}`;
+  if (api.protocol !== "https:" || api.hostname !== `${ref}.supabase.co`)
+    throw new Error("INITIAL_SETUP_TARGET_MISMATCH_SUPABASE_URL");
   if (
-    api.protocol !== "https:" ||
-    api.hostname !== `${ref}.supabase.co` ||
     !["postgres:", "postgresql:"].includes(db.protocol) ||
-    (!direct && !pooled) ||
-    env.DATABASE_SSL === "false" ||
-    app.origin !== "https://mudanza-savanna.vercel.app" ||
-    !env.SUPABASE_PUBLISHABLE_KEY
+    (!direct && !pooled)
   )
-    throw new Error("INITIAL_SETUP_TARGET_MISMATCH");
+    throw new Error("INITIAL_SETUP_TARGET_MISMATCH_DATABASE_URL");
+  if (env.DATABASE_SSL === "false")
+    throw new Error("INITIAL_SETUP_TARGET_MISMATCH_TLS");
+  if (app.origin !== "https://mudanza-savanna.vercel.app")
+    throw new Error("INITIAL_SETUP_TARGET_MISMATCH_APP_BASE_URL");
+  if (!env.SUPABASE_PUBLISHABLE_KEY)
+    throw new Error("INITIAL_SETUP_MISSING_SUPABASE_PUBLISHABLE_KEY");
 }
 
 // The organizer confirmed that this immutable commit's author email is their Google account.
