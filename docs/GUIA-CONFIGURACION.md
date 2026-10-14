@@ -283,6 +283,7 @@ Objetivo: Vercel Hobby y Supabase Free, incluidas sus cuotas de Auth, mientras s
 | Google muestra acceso bloqueado en Testing | Cuenta incluida en Test users del proyecto Google, cliente/audiencia correctos. Esto no reemplaza la membresía de la app. |
 | OAuth vuelve a otro sitio o pierde PKCE | Site URL/Redirect URLs de Supabase, `APP_BASE_URL`, origen canónico y cookies del navegador/PWA donde se inició. |
 | Supabase rechaza solicitudes | URL y clave pertenecen al mismo proyecto; clave de servidor correcta; proyecto activo. No deshabilitar RLS como atajo. |
+| `SELF_SIGNED_CERT_IN_CHAIN` al inicializar | Usar una versión que incluya las CA públicas oficiales de Supabase en `src/server/supabase-ca.ts`. Se verifican cadena y hostname; no desactivar TLS ni su verificación. |
 | Tabla o RPC no existe | Migraciones pendientes o proyecto enlazado incorrectamente. |
 | La app guarda en otro entorno | Valores de Supabase en Vercel y commit/URL que se está usando. |
 | Jev no responde | Modelo/acceso de Gateway, credencial o OIDC, saldo, versión de SDK y estado del proveedor. |
@@ -306,7 +307,7 @@ Este registro admite información no secreta. No completar campos con claves, co
 | Rama de producción | `main`, cuando contenga la aplicación aprobada. |
 | Proyecto Supabase producción: nombre / ID / región | `mudanza-savanna-prod`, referencia `jncnmxsiylhqeycqhhya`, [dashboard](https://supabase.com/dashboard/project/jncnmxsiylhqeycqhhya) informado por el organizador. URL API esperada: `https://jncnmxsiylhqeycqhhya.supabase.co`. Región, configuración y conexión todavía sin verificar. |
 | Proyecto Supabase test: nombre / ID / región, o modo demo | Sin proyecto test identificado. Preview debe usar demo aislada hasta confirmar uno. |
-| Variables Vercel Production y proveedor Google | El organizador confirmó SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, DATABASE_URL y APP_BASE_URL configurados y Google habilitado. Confirmación del panel por el organizador; smoke test independiente todavía pendiente. |
+| Variables Vercel Production y proveedor Google | El organizador confirmó las variables y Google habilitado. El primer build de `4c7fae0` carecía de DATABASE_URL. Tras configurarla, el redeploy supera `target_validation` y falla en `database_initialization` con `SELF_SIGNED_CERT_IN_CHAIN`. Google Login y persistencia compartida todavía no se verificaron. |
 | Proyecto Google Cloud: nombre / ID | Pendiente. |
 | Clientes OAuth Web: nombres de prod / test, sin secretos | Pendiente. |
 | Audiencia OAuth: Testing/In production y fecha de comprobación | Pendiente. |
@@ -338,7 +339,7 @@ Las instrucciones de esta guía deben actualizarse durante T10 para reflejar la 
 
 ## Comandos de la implementación inicial
 
-Los scripts requieren Node 24 y leen `.env.local` o `.env`. Configurar `APP_ENV=development` o `preview` y la URL de **PostgreSQL de prueba** antes de ensayar. Mantener TLS (`DATABASE_SSL=true`) para Supabase; `false` solo para PostgreSQL local de prueba. La política de red de una tarea cloud puede requerir habilitar el host/puerto PostgreSQL concreto; no quitar el proxy ni desactivar verificación TLS para evitar una denegación.
+Los scripts requieren Node 24 y leen `.env.local` o `.env`. Configurar `APP_ENV=development` o `preview` y la URL de **PostgreSQL de prueba** antes de ensayar. Mantener TLS (`DATABASE_SSL=true`) para Supabase; el cliente incluye sus dos CA públicas de producción del CLI oficial, junto con las CA predeterminadas de Node. No se necesita una variable ni descarga de certificados durante el deployment. Las opciones TLS de la URI no sustituyen esa configuración. `DATABASE_SSL=false` solo para PostgreSQL local de prueba. La política de red de una tarea cloud puede requerir habilitar el host/puerto PostgreSQL concreto; no quitar el proxy ni desactivar verificación TLS para evitar una denegación.
 
 1. Elegir un UUID estable de mudanza. Aplicar el esquema y seed idempotente de los 17 ambientes:
 
@@ -371,6 +372,8 @@ Después autorizar explícitamente los correos con `--participant`. Se conservan
 5. Mantener `AI_ENABLED=false` y `GENERATION_ENABLED=false` hasta completar T00/T05. La API de selección de Jev está compilada con `ai@7.0.139` y `experimental_decide`; acceso, modelo efectivo y precios no están verificados live. Para activar una prueba de selección hacen falta tarifas verificadas `AI_INPUT_USD_PER_MILLION`, `AI_OUTPUT_USD_PER_MILLION`, una reserva conservadora `AI_REQUEST_RESERVE_USD` y presupuesto en `moves.ai_budget`. Las reservas y rate limits son persistentes; un timeout no libera el gasto reservado. El pipeline libre de intención/extracción generativa todavía requiere completar T05: no basta con habilitar un flag. Nunca colocar una clave de OpenAI como sustituto oculto de Gateway.
 
 No se aplicaron migraciones a Supabase alojado durante esta implementación. La demo privada de Sites se publicó y la integración existente de Vercel generó una preview exitosa de la rama `feat/casa-gesualdo-app`. Esto confirma la publicación de la aplicación, pero no las variables, Google Login ni persistencia compartida. La producción familiar sigue pendiente.
+
+Si el build informa `INITIAL_SETUP_MISSING_DATABASE_URL`, falta la conexión PostgreSQL en el entorno de ese deployment. En el proyecto Supabase existente, abrir **Connect → Transaction pooler** y copiar la URI PostgreSQL, completando el marcador de contraseña con la contraseña real de la base. Guardarla como variable secreta `DATABASE_URL` en **Vercel → mudanza-savanna → Settings → Environment Variables**, seleccionando **Production**, y generar un nuevo deployment/redeploy. No usar la URL HTTPS de Supabase ni una API key como valor de esta variable; no copiar la URI con contraseña al chat o al repositorio. El inicializador ejecutará la transacción una vez que la conexión supere TLS y autenticación.
 
 Para inicializar desde el panel sin compartir credenciales, se preparó el archivo privado `.local/bootstrap-prod.sql`. Abrir **SQL Editor → New query** en el proyecto `jncnmxsiylhqeycqhhya`, revisar y ejecutar el archivo completo. Incluye la migración, el seed y la membresía inicial del organizador en una transacción. Su consulta final debe mostrar `ambientes=17`, `acceso_inicial=true` y `migracion_aplicada=true`. Si informa tablas anteriores sin registro de migraciones o una mudanza distinta, conservar los datos y revisar esa instalación antes de modificar el archivo. Registrar el resultado; preparar el SQL y verificarlo en PostgreSQL temporal no demuestra que ya esté aplicado en Supabase.
 

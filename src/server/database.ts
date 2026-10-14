@@ -1,25 +1,12 @@
 import { Pool, PoolClient } from "pg";
 import { Command, execute } from "../domain/commands";
 import { DomainError, emptyState, Entity, rooms, State } from "../domain/model";
+import { databasePoolConfig } from "./database-config";
 
 const globalPg = globalThis as unknown as { gesualdoPool?: Pool };
 export function database() {
-  if (!process.env.DATABASE_URL)
-    throw new DomainError(
-      "SETUP_REQUIRED",
-      "Falta configurar la conexión de la mudanza.",
-      503,
-    );
   if (!globalPg.gesualdoPool) {
-    globalPg.gesualdoPool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      max: 5,
-      ssl:
-        process.env.DATABASE_SSL === "false"
-          ? false
-          : { rejectUnauthorized: true },
-      connectionTimeoutMillis: 10000,
-    });
+    globalPg.gesualdoPool = new Pool(databasePoolConfig());
     globalPg.gesualdoPool.on("error", (error) =>
       console.error("database_idle_error", { name: error.name }),
     );
