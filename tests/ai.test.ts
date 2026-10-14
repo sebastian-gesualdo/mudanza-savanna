@@ -143,9 +143,39 @@ it("variables vacías usan tarifas y modelo conocidos; no fingen un precio cero"
   vi.stubEnv("GENERATION_INPUT_USD_PER_MILLION", "");
   vi.stubEnv("GENERATION_OUTPUT_USD_PER_MILLION", "");
   expect(modelConfig("extraction")).toMatchObject({
-    model: "google/gemini-2.5-flash-lite",
-    input: 0.1,
-    output: 0.4,
+    model: "anthropic/claude-sonnet-5.5",
+    input: 2,
+    output: 10,
+    maxOutputTokens: 4096,
+  });
+});
+
+it.each([
+  "google/gemini-2.5-flash-lite",
+  "google/gemini-2.5-pro",
+  "openai/gpt-5.4-nano",
+  "openai/gpt-5.4",
+])(
+  "retira %s aunque Vercel conserve el modelo y sus tarifas antiguos",
+  (model) => {
+    vi.stubEnv("GENERATION_MODEL", model);
+    vi.stubEnv("GENERATION_INPUT_USD_PER_MILLION", "0.1");
+    vi.stubEnv("GENERATION_OUTPUT_USD_PER_MILLION", "0.4");
+    expect(modelConfig("extraction")).toMatchObject({
+      model: "anthropic/claude-sonnet-5.5",
+      input: 2,
+      output: 10,
+    });
+  },
+);
+it("Opus usa su tarifa verificada aunque tenga overrides obsoletos más baratos", () => {
+  vi.stubEnv("GENERATION_MODEL", "anthropic/claude-opus-5.5");
+  vi.stubEnv("GENERATION_INPUT_USD_PER_MILLION", "0.1");
+  vi.stubEnv("GENERATION_OUTPUT_USD_PER_MILLION", "0.4");
+  expect(modelConfig("extraction")).toMatchObject({
+    model: "anthropic/claude-opus-5.5",
+    input: 4,
+    output: 20,
   });
 });
 

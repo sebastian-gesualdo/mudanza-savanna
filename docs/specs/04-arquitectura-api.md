@@ -166,7 +166,7 @@ Leer cambios al iniciar, al volver al primer plano, después de escribir y cada 
 | `AI_GATEWAY_API_KEY` | Secreto para Gateway cuando no se usa identidad OIDC compatible de Vercel. |
 | `APP_BASE_URL` | Origen autorizado, base de enlaces de fichas y retorno OAuth de la aplicación (`/auth/callback`). |
 | `DECISION_MODEL` | Identificador de Jev verificado en Gateway. |
-| `GENERATION_MODEL` | Modelo de extracción en Gateway; por defecto `google/gemini-2.5-flash-lite`, candidato económico con tarifas oficiales verificadas. `GENERATION_ENABLED=false` desactiva la extracción. Siempre se confirma la propuesta; la calibración live sigue siendo una prueba independiente. |
+| `GENERATION_MODEL` | Modelo de extracción en Gateway; por defecto `anthropic/claude-sonnet-5.5`; alternativa `anthropic/claude-opus-5.5`. Valores heredados de Gemini 2.5/GPT 5.4 se sustituyen por Sonnet con sus propias tarifas. `GENERATION_DISABLED=true` desactiva la extracción. Siempre se confirma la propuesta; la calibración live sigue siendo una prueba independiente. |
 | `AI_BUDGET_USD` | Default 5 para producción; menor para pruebas. |
 | `AI_ENABLED` / `GENERATION_ENABLED` | Opt-in de preview/desarrollo con recursos de prueba; producción activa ambos modelos aunque conserve false de instalación. |
 | `AI_DISABLED` / `GENERATION_DISABLED` | Interruptores operativos: true apaga ambos modelos o solo extracción, respectivamente. |

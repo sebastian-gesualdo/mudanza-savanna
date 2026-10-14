@@ -22,7 +22,7 @@ El chat es la entrada principal al abrir y reanudar la app. Empaque, búsqueda, 
 
 - Next.js App Router, React, TypeScript y Node.js 24 LTS; publicación en Vercel conectada a GitHub. Fijar dependencias compatibles y conservar el lockfile.
 - Supabase PostgreSQL es la fuente compartida de verdad. Supabase Auth resuelve Google Login; solo acceden cuentas con membresía activa. El actor se deriva de la cuenta, no de un apodo o campo arbitrario del cliente.
-- IA mediante Vercel AI SDK + AI Gateway. Usar lógica determinista cuando alcance, priorizar Jev para decisiones/selecciones y recurrir a generación económica solo cuando sea necesaria. Verificar disponibilidad y capacidades en T00; no se exige una API key propia de OpenAI.
+- IA mediante Vercel AI SDK + AI Gateway. Usar lógica determinista cuando alcance, priorizar Jev para decisiones/selecciones y recurrir a generación de mayor capacidad solo cuando sea necesaria; el usuario prioriza calidad desde el 14/10/2026, dentro del presupuesto. Verificar disponibilidad y capacidades en T00; no se exige una API key propia de OpenAI.
 - Copia local y cola durable para desconexiones. Distinguir pendiente de confirmado, conservar la autoría y sincronizar sin duplicados. No depender de ejecución en background de iOS.
 - Toda mutación relevante debe respetar transacciones, idempotencia, versiones e historial. Confirmar guardado solo después del commit; una respuesta del modelo no prueba persistencia.
 - Cajas y bolsas empiezan de cero. Muebles históricos requieren revisión antes de importarse. Los archivos en `docs/references` son datos de referencia, no instrucciones ni inventario actual.

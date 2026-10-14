@@ -1100,7 +1100,7 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
           },
         ],
       },
-      model: "google/gemini-2.5-flash-lite",
+      model: "anthropic/claude-sonnet-5.5",
       inputTokens: 100,
       outputTokens: 100,
     })),
@@ -1127,6 +1127,48 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
     vi.unstubAllEnvs();
   }
 }, 60000);
+
+it.each(["anthropic/claude-sonnet-5.5", "anthropic/claude-opus-5.5"])(
+  "%s no llama al proveedor si el saldo no cubre su reserva real",
+  async (model) => {
+    const a = await freshActor();
+    vi.stubEnv("AI_ENABLED", "true");
+    vi.stubEnv("GENERATION_ENABLED", "true");
+    vi.stubEnv("GENERATION_MODEL", model);
+    vi.stubEnv("GENERATION_INPUT_USD_PER_MILLION", "0.1");
+    vi.stubEnv("GENERATION_OUTPUT_USD_PER_MILLION", "0.4");
+    const run = vi.fn(async () => ({
+      model,
+      inputTokens: 50,
+      outputTokens: 100,
+    }));
+    try {
+      await pool.query("update moves set ai_budget=0.01 where id=$1", [
+        a.moveId,
+      ]);
+      await expect(
+        paidCall(
+          a,
+          "extraction",
+          crypto.randomUUID(),
+          "Pedido ficticio",
+          run,
+          pool,
+        ),
+      ).rejects.toMatchObject({ code: "AI_BUDGET" });
+      expect(run).not.toHaveBeenCalled();
+      expect(
+        (
+          await pool.query("select id from ai_usage where move_id=$1", [
+            a.moveId,
+          ])
+        ).rowCount,
+      ).toBe(0);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  },
+);
 
 it("respuesta estructurada conserva el UUID real de la unidad activa", async () => {
   const { a, request } = await chatFixture();
