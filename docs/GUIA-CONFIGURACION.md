@@ -166,7 +166,7 @@ Las URLs de preview cambian según despliegue. T10 debe elegir y documentar el o
 1. En Vercel: **Add New / Project** o la opción equivalente.
 2. Importá `sebastian-gesualdo/mudanza-savanna`.
 3. Nombre sugerido del proyecto: `mudanza-savanna`.
-4. Framework: **Next.js**. Root Directory: raíz del repositorio, mientras la implementación conserve esa estructura.
+4. Framework: **Next.js**. Root Directory: raíz del repositorio, mientras la implementación conserve esa estructura. `vercel.json` fija `framework=nextjs`, `buildCommand=npm run build` y `outputDirectory=null` para usar la salida predeterminada del adaptador Next.js, incluso si el proyecto se importó inicialmente como “Other”. No servir `public/` o `.next/` como un sitio estático: la página, API y callback necesitan las funciones de Next.js.
 5. Usá las opciones de instalación/build del framework y el lockfile del repo. El proyecto debe usar la versión Node 24 compatible acordada; no instalar dependencias con un gestor diferente por defecto.
 6. En Environment Variables, cargá las variables del paso 6 en los ámbitos correctos. La rama inicial de aplicación puede desplegarse como preview contra el proyecto test.
 7. Configurá `main` como rama de producción en la sección Git/Environments correspondiente. Antes de desplegar producción, `main` debe contener el código aprobado y las migraciones compatibles, no solo el README inicial.
@@ -275,7 +275,8 @@ Objetivo: Vercel Hobby y Supabase Free, incluidas sus cuotas de Auth, mientras s
 | Síntoma | Revisar primero |
 | --- | --- |
 | El repo no aparece en Vercel | Permisos de la GitHub App y cuenta/ámbito seleccionado. |
-| Vercel no detecta Next.js | La rama desplegada puede contener solo specs; comprobar `package.json` y Root Directory. |
+| Vercel no detecta Next.js | Comprobar `package.json`, Root Directory y la configuración versionada `vercel.json`. Un proyecto importado cuando solo había specs puede conservar el preset “Other”. |
+| Deployment Ready pero la portada devuelve `404 NOT_FOUND` de Vercel | Confirmar el dominio en Domains del deployment y que la versión incluya `vercel.json` con Next.js y su salida predeterminada. Ready no demuestra que la portada o las funciones estén publicadas. |
 | Build falla por una variable faltante | Variables requeridas por la implementación y ámbito Production/Preview/Development. Guardar y redeploy. |
 | API responde `401` | Sesión/renovación de Supabase, cookies del origen visitado; volver a Google Login sin borrar pendientes. |
 | Google funciona pero la app responde `403` | Correo autorizado, membresía activa y vinculación al participante del entorno correcto. No habilitar cualquier cuenta para resolverlo. |

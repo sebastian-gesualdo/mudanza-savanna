@@ -176,6 +176,7 @@ Las claves privilegiadas jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivo
 ## GitHub y Vercel
 
 - Conectar el repositorio a Vercel; rama de producción `main`.
+- Mantener `vercel.json` en la raíz con framework Next.js y su salida predeterminada. La configuración versionada prevalece sobre presets/directorios antiguos del panel; no publicar la aplicación como archivos estáticos. Confirmar el dominio realmente asignado y comprobar la portada/API además del estado Ready.
 - Push a rama/PR: preview. Merge/push autorizado a `main`: producción.
 - CI requerida: tipos, lint, pruebas relevantes y build. Agregar integración de PostgreSQL y E2E a medida que existan.
 - Previews usan otro proyecto de Supabase o fixtures/modo demo aislado. Nunca heredan credenciales de producción para modificar el inventario real.
