@@ -9,7 +9,7 @@
   "packageManager": "npm@11.9.0",
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "tsx scripts/release-migrations.ts && next build",
+    "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

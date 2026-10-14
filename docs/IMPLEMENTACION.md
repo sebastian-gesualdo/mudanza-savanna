@@ -109,3 +109,12 @@ El paso temporal de publicación verifica además Gateway desde Vercel: dos etap
 
 
 CI de `5103d44` pasó tipos, lint, 49 pruebas locales, 19 PostgreSQL, build y 17 de 18 recorridos de navegador. El único fallo fue la importación con API simulada en WebKit: no apareció el botón de revisión en el test con service worker habilitado. Para comprobar una posible interferencia con las respuestas simuladas, se bloquea el service worker solo en `shared.spec.ts`, como recomienda [Playwright](https://playwright.dev/docs/network#missing-network-events-and-service-workers); la prueba real de shell/reapertura offline mantiene el worker habilitado. Los controles de división/corrección y la cola compartida también pasaron en Chromium móvil local por separado. Se exige repetir los 18 escenarios en CI antes de integrar.
+
+
+## Publicación de la ampliación v1 · 14/10/2026
+
+[PR #6](https://github.com/sebastian-gesualdo/mudanza-savanna/pull/6) integrado en `main`, commit `b5d5c37c943b6544d9fb5e0aef80031056ccdb9c`. [CI del head exacto](https://github.com/sebastian-gesualdo/mudanza-savanna/actions/runs/38595590937) correcto: tipos, lint, 49 pruebas locales, 21 PostgreSQL temporal y 18 E2E Chromium/WebKit (88 en total). La simulación de importación WebKit pasó al aislar el worker del mock; el escenario de PWA offline conserva su worker real. Los cuarenta casos deterministas también pasaron localmente.
+
+[Deployment de producción](https://vercel.com/sebagesualdo/mudanza-savanna/A15GmLvqWSK1h2Gg3VKJyHpxbE2G) exitoso según Vercel/GitHub. En ese commit el build ejecuta el paso explícito y restringido de migración y la prueba presupuestada del asistente antes de Next.js. Por tanto completó el paso sin errores; la prueba de modelos exige respuestas válidas cuando sus flags están activos. Un false explícito se conserva y se informa como disabled; no se leyó el log administrativo para distinguir ese estado de verified. Se pidió comprobar Disponible y la prueba protegida desde la sesión real del organizador.
+
+Se retira el hook automático: el build habitual vuelve a `next build`. Migraciones y comprobaciones posteriores son pasos explícitos, nunca prefetched por GET. Los scripts y las pruebas quedan como evidencia; no reactivan accesos ni reinician inventario/presupuesto. Pendiente de certificar T11: calibración completa con modelos reales, p95 alojado, recorrido compartido entre dos cuentas reales e iPhone físico. Esos criterios no se confunden con mocks ni con un build exitoso.

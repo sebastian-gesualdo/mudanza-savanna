@@ -382,3 +382,6 @@ Para inicializar desde el panel sin compartir credenciales, se preparó el archi
 
 
 El organizador confirmó ingreso por Google y guardado de una caja. Para la nueva publicación v1 se aplica una migración aditiva mediante un paso temporal y explícito de build, restringido a main/Production/proyecto confirmado; no reimporta datos ni modifica membresías o presupuesto. Tras deployment exitoso se retira. En Ajustes → Asistente → Probar conexión se pueden verificar OIDC y extracción con dos llamadas pequeñas y el presupuesto persistente. El resultado debe registrarse aparte del build; el entorno de Codex carece de esa sesión y de credenciales administrativas.
+
+
+La ampliación v1 se integró mediante PR #6 y Vercel publicó correctamente `b5d5c37`. CI verificó 88 tests (49 locales, 21 PostgreSQL temporal y 18 E2E Chromium/WebKit). Se retira el hook temporal una vez confirmado ese deployment; el build normal vuelve a `next build`. El organizador puede comprobar Disponible y Probar conexión desde su sesión real. Estado y alcance de la evidencia: [IMPLEMENTACION](IMPLEMENTACION.md).

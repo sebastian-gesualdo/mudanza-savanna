@@ -220,3 +220,6 @@ La protección de previews también está en `configured()`: una referencia al p
 
 
 La comprobación temporal de Gateway del release usa únicamente el organizador con membresía activa ya vinculada a Auth, dos casos ficticios y reservas persistentes por etapa. No es una API administrativa ni simula Google Login. Si IA está activa exige decisiones/esquema válidos antes de completar el build; el resultado se registra sin secretos ni datos de inventario. Un flag false explícito se conserva y se informa como desactivado. Esta prueba no sustituye la calibración live ni el recorrido familiar; se retira junto con el hook.
+
+
+El deployment de ampliación `b5d5c37` completó el paso temporal. Se retira la invocación automática y `build` vuelve a `next build`; los scripts quedan disponibles como herramientas explícitas de operación. Las futuras migraciones requieren una publicación revisada propia. Una desactivación explícita de IA continúa prevaleciendo en runtime.
