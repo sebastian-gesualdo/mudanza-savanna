@@ -45,7 +45,13 @@ export async function checkReleaseAi(
     await checkMembership(client, actor);
     return actor;
   });
-  const revision = process.env.VERCEL_GIT_COMMIT_SHA ?? "local-test";
+  // Each explicit deployment gets one probe; rebuilding it reuses its results.
+  // A new deployment can recover after account settings change, even on the same SHA.
+  const deployment =
+    process.env.VERCEL_DEPLOYMENT_ID ||
+    process.env.VERCEL_URL ||
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    "local-test";
   onStage("gateway_decision", modelConfig("decision").model);
   const selected = await budgetedDecision(
     actor,
@@ -55,7 +61,7 @@ export async function checkReleaseAi(
       unknown: "No hay coincidencia sustentada",
     },
     decision,
-    `release-v1-20261014:${revision}:decision`,
+    `release-v1-20261014:${deployment}:decision`,
     pool,
   );
   if (selected.choice !== "match")
@@ -80,7 +86,7 @@ export async function checkReleaseAi(
   const result = await paidCall(
     actor,
     "extraction",
-    `release-v1-20261014:${revision}:extraction`,
+    `release-v1-20261014:${deployment}:extraction`,
     input,
     () => extraction.extract(input),
     pool,

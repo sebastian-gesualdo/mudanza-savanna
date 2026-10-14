@@ -128,3 +128,10 @@ La publicación de activación 05671c74 falló en Vercel. El organizador compart
 
 
 La integración de Jev usa el endpoint público documentado POST /v1/evaluate, con state y questions, manteniendo autenticación OIDC y validación de respuestas del AI SDK 7.0.139. El SDK fijado normaliza el texto a stateParts en su transporte experimental; la app traduce únicamente un estado textual, sin degradar el SDK ni añadir reintentos. La publicación registra por separado gateway_decision y gateway_extraction y datos sanitizados de error (HTTP status/tipo/código), nunca mensajes, cuerpos ni cabeceras de autenticación. Se exige repetir la comprobación real antes de retirar el hook temporal.
+
+
+## Acceso de Gateway y recuperación de publicación · 14/10/2026
+
+El log de producción de a08cf056 confirmó gateway_decision / typesafe-ai/jev rechazado con HTTP 403 y no_providers_available. La migración terminó sin pendientes y DeepSeek no llegó a ejecutarse. El organizador confirmó restricciones de equipo deshabilitadas y saldo de US$ 5 free credit; después indicó que completó la recarga solicitada. Se vuelve a verificar acceso desde el mismo equipo antes de certificar la publicación. Los niveles Free/Paid de Gateway son distintos del plan Hobby/Pro de hosting; ver [tarifas y acceso](https://vercel.com/docs/ai-gateway/pricing).
+
+La prueba temporal identifica sus etapas por VERCEL_DEPLOYMENT_ID (o URL única, con SHA como fallback). Repetir el mismo deployment reutiliza resultados y nunca redispara una etapa incierta. Un nuevo deployment explícito puede comprobar la conexión después de corregir el acceso aun con el mismo código. La reserva anterior se conserva hasta reconciliarla; no se reinicia presupuesto ni se cambia inventario/membresías. La prueba PostgreSQL reproduce rechazo, repetición bloqueada, nueva publicación correcta y reutilización sin solicitudes adicionales.

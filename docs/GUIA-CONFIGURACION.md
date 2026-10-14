@@ -387,3 +387,6 @@ El organizador confirmó ingreso por Google y guardado de una caja. Para la nuev
 
 
 La ampliación v1 se integró mediante PR #6 y Vercel publicó correctamente `b5d5c37`. CI verificó 88 tests (49 locales, 21 PostgreSQL temporal y 18 E2E Chromium/WebKit). El organizador observó Desactivado: ese deployment no acreditó llamadas reales. Se corrige la activación y se exige verified para ambos modelos en el paso temporal antes de retirar el hook y volver a next build. Luego se comprueba Disponible y Probar conexión desde su sesión real. Estado y alcance de la evidencia: [IMPLEMENTACION](IMPLEMENTACION.md).
+
+
+Ante HTTP 403 / no_providers_available para Jev, verificar acceso del equipo que aloja el proyecto: saldo Free/Paid, proveedores permitidos, modelo y restricciones de retención. Los US$ 5 mensuales gratuitos no habilitan todo el catálogo; comprar AI Gateway Credits habilita su nivel pago sin exigir Pro de hosting. Revisar la [documentación vigente](https://vercel.com/docs/ai-gateway/pricing) antes de comprar. Una compra confirmada no acredita por sí sola una respuesta del modelo: volver a comprobar Jev y DeepSeek. La prueba del release usa una identidad por deployment; un nuevo despliegue explícito puede recuperarse del rechazo anterior y los reintentos del mismo deployment conservan sus reservas/resultados.

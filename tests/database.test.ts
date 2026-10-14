@@ -1076,6 +1076,8 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
   vi.stubEnv("VERCEL_ENV", "production");
   vi.stubEnv("AI_ENABLED", "false");
   vi.stubEnv("GENERATION_ENABLED", "false");
+  vi.stubEnv("VERCEL_GIT_COMMIT_SHA", "same-release-revision");
+  vi.stubEnv("VERCEL_DEPLOYMENT_ID", "dpl_denied");
   const decision = {
     choose: vi.fn(async () => ({
       choice: "match",
@@ -1105,7 +1107,24 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
       outputTokens: 100,
     })),
   };
+  decision.choose.mockRejectedValueOnce(new Error("Provider rejected with 403"));
   try {
+    await expect(checkReleaseAi(pool, a, decision, extraction)).rejects.toThrow(
+      "403",
+    );
+    await expect(checkReleaseAi(pool, a, decision, extraction)).rejects.toThrow(
+      "pendiente",
+    );
+    expect(decision.choose).toHaveBeenCalledTimes(1);
+    expect(extraction.extract).not.toHaveBeenCalled();
+    const failed = (
+      await pool.query(
+        "select id,reserved,status from ai_usage where move_id=$1",
+        [a.moveId],
+      )
+    ).rows[0];
+    expect(failed.status).toBe("unreconciled");
+    vi.stubEnv("VERCEL_DEPLOYMENT_ID", "dpl_allowed");
     const stages = vi.fn();
     expect(
       (await checkReleaseAi(pool, a, decision, extraction, stages)).status,
@@ -1117,8 +1136,16 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
     expect((await checkReleaseAi(pool, a, decision, extraction)).status).toBe(
       "verified",
     );
-    expect(decision.choose).toHaveBeenCalledTimes(1);
+    expect(decision.choose).toHaveBeenCalledTimes(2);
     expect(extraction.extract).toHaveBeenCalledTimes(1);
+    const preserved = (
+      await pool.query("select cost,reserved,status from ai_usage where id=$1", [
+        failed.id,
+      ])
+    ).rows[0];
+    expect(preserved.status).toBe("unreconciled");
+    expect(preserved.cost).toBeNull();
+    expect(preserved.reserved).toEqual(failed.reserved);
     expect(await snapshot(a, pool)).toEqual(before);
     await pool.query(
       "update move_memberships set active=false where move_id=$1",
@@ -1127,7 +1154,7 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
     await expect(checkReleaseAi(pool, a, decision, extraction)).rejects.toThrow(
       "ingresado",
     );
-    expect(decision.choose).toHaveBeenCalledTimes(1);
+    expect(decision.choose).toHaveBeenCalledTimes(2);
   } finally {
     vi.unstubAllEnvs();
   }
