@@ -236,3 +236,6 @@ La extracción tiene un timeout de 45 segundos, una sola llamada y un máximo de
 
 
 La comprobación de conectividad del release admite cualquier respuesta Jev dentro del catálogo ficticio (match/unknown), registra decisionProbe.choice y decisionProbe.matched y exige después la extracción válida. Un unknown permitido no se clasifica como fallo de conexión. La calidad semántica se evalúa con el conjunto etiquetado y sus metas de aceptación independientes; un estado verified del helper solo acredita conectividad/formato y la extracción de prueba, no recall ni calibración.
+
+
+Tras el deployment exitoso 6d15b6d, que exigía las dos etapas reales válidas, se retira la invocación de release-migrations.ts del build. El comando habitual vuelve a next build y no requiere PostgreSQL/Gateway durante compilación. Conservar scripts y pruebas como herramientas explícitas; las próximas migraciones requieren un paso revisado. La activación de IA, reservas, validaciones de propuestas y los interruptores operativos siguen vigentes. La calibración del conjunto completo es independiente de esta evidencia de conexión.
