@@ -153,3 +153,12 @@ El organizador compartió el log del deployment bcf3831: Jev respondió en menos
 El helper de publicación ahora exige una opción del catálogo y registra decisionProbe con choice/matched, incluso unknown/matched=false. Continúan siendo obligatorias ambas respuestas reales, la validación del esquema de extracción y del caso ficticio sin cantidades inventadas. Una respuesta de Jev fuera del catálogo, fallo HTTP, timeout o extracción inválida sigue bloqueando el paso. La evaluación semántica de 40 ejemplos y sus metas de precisión/recall no cambian ni se declaran cumplidas por este smoke test. La búsqueda determinista ya incluye hervidor→pava eléctrica; no se altera para disimular el resultado.
 
 La prueba PostgreSQL usa unknown válido y verifica que queda visible en el resultado, que se comprueba extracción, que se conservan reservas y que no se modifica inventario ni accesos.
+
+
+## Conexión verificada y retirada del hook · 14/10/2026
+
+[PR #12](https://github.com/sebastian-gesualdo/mudanza-savanna/pull/12) integrado en 6d15b6d1cb2814ef3b6678a52e93bdd816b6e0c2. [CI del head exacto](https://github.com/sebastian-gesualdo/mudanza-savanna/actions/runs/38616555130) pasó tipos, lint, 62 unitarios, 23 PostgreSQL temporal, build y 18 E2E Chromium/WebKit: 103 pruebas. El [deployment de producción](https://vercel.com/sebagesualdo/mudanza-savanna/GD7XZzi3EoYG5KC6gojYEH4Nd53f) fue exitoso según el estado Vercel/GitHub. Su build ejecutaba obligatoriamente release-migrations.ts y exigía verified de ambas etapas antes de compilar. Esta evidencia acredita respuestas reales tipadas de Jev y la extracción ficticia válida de DeepSeek V4 Pro 0813. No acredita que Jev eligiera match ni la calibración semántica completa; no se leyó directamente el log privado del deployment exitoso.
+
+Se retira la invocación automática: npm run build vuelve a next build. Las migraciones futuras son explícitas y revisadas; compilar no necesita base de datos ni llamadas facturadas. El script y sus pruebas permanecen como herramientas de comprobación. La API, los modelos activos, los datos y las reservas pendientes se conservan. Se solicita al organizador comprobar Disponible y un pedido libre desde su sesión real.
+
+Siguen pendientes la evaluación live completa, métricas p95, recorrido con dos cuentas reales e iPhone físico. Los fallos semánticos anteriores quedan documentados y las propuestas de mutación siguen requiriendo confirmación humana.
