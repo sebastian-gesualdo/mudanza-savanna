@@ -7,6 +7,11 @@ import {
 } from "../src/server/initial-setup";
 import { applyMigrations } from "../src/server/migrations";
 import { DomainError } from "../src/domain/model";
+import { aiDiagnostics } from "../src/ai/diagnostics";
+import {
+  JevDecisionService,
+  GatewayExtractionService,
+} from "../src/ai/services";
 // Temporary, reviewed release step. No seed, membership changes or budget reset.
 if (process.env.VERCEL_ENV === "production") {
   if (process.env.VERCEL_GIT_COMMIT_REF !== "main")
@@ -17,7 +22,16 @@ if (process.env.VERCEL_ENV === "production") {
   try {
     console.log("RELEASE_MIGRATIONS", await applyMigrations(pool));
     phase = "gateway_validation";
-    const result = await checkReleaseAi(pool, productionSetup);
+    const result = await checkReleaseAi(
+      pool,
+      productionSetup,
+      new JevDecisionService(),
+      new GatewayExtractionService(),
+      (stage, model) => {
+        phase = stage;
+        console.log("RELEASE_AI_STAGE", { stage, model });
+      },
+    );
     if (result.status !== "verified")
       throw new DomainError(
         "RELEASE_AI_DISABLED",
@@ -28,8 +42,7 @@ if (process.env.VERCEL_ENV === "production") {
   } catch (error) {
     console.error("RELEASE_SETUP_FAILED", {
       phase,
-      code: (error as { code?: string }).code,
-      name: error instanceof Error ? error.name : "UnknownError",
+      ...aiDiagnostics(error),
     });
     process.exitCode = 1;
   } finally {

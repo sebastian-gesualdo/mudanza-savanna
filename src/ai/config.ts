@@ -3,14 +3,15 @@ import { deploymentEnvironment } from "../deployment";
 
 // Official Gateway model pages verified 2026-10-14. Per million text tokens.
 // https://vercel.com/ai-gateway/models/jev
-// https://vercel.com/ai-gateway/models/gemini-2.5-flash-lite
-// https://vercel.com/ai-gateway/models/gpt-5.4-nano
+// https://vercel.com/ai-gateway/models/deepseek-v4-pro-0813
+// https://vercel.com/ai-gateway/models/gpt-6.1-sol
 export const verifiedPrices: Record<string, { input: number; output: number }> =
   {
     "typesafe-ai/jev": { input: 0.04, output: 0 },
-    "google/gemini-2.5-flash-lite": { input: 0.1, output: 0.4 },
-    "openai/gpt-5.4-nano": { input: 0.2, output: 1.25 },
+    "deepseek/deepseek-v4-pro-0813": { input: 0.66, output: 1.98 },
+    "openai/gpt-6.1-sol": { input: 2, output: 10 },
   };
+export const defaultExtractionModel = "deepseek/deepseek-v4-pro-0813";
 export function aiEnabled(
   env: Record<string, string | undefined> = process.env,
 ) {
@@ -32,16 +33,32 @@ export function generationEnabled(
   );
 }
 export function modelConfig(kind: "decision" | "extraction") {
+  const requested = process.env.GENERATION_MODEL?.trim();
+  if (kind === "extraction" && requested?.startsWith("anthropic/"))
+    throw new DomainError(
+      "AI_MODEL_NOT_ALLOWED",
+      "Ese modelo no está habilitado para esta mudanza.",
+      503,
+    );
+  // Honor the organizer's model change even if Vercel retains the initial values.
+  // Old price overrides belong to those old models and must not price DeepSeek.
+  const replacedLegacyModel =
+    kind === "extraction" &&
+    Boolean(requested?.match(/^(google\/gemini-2\.5|openai\/gpt-5\.4)(?:-|$)/));
   const model =
     kind === "decision"
       ? process.env.DECISION_MODEL?.trim() || "typesafe-ai/jev"
-      : process.env.GENERATION_MODEL?.trim() || "google/gemini-2.5-flash-lite";
+      : replacedLegacyModel
+        ? defaultExtractionModel
+        : requested || defaultExtractionModel;
   const prefix = kind === "decision" ? "AI" : "GENERATION";
   const known = verifiedPrices[model];
-  const inputText =
-    process.env[`${prefix}_INPUT_USD_PER_MILLION`]?.trim() || undefined;
-  const outputText =
-    process.env[`${prefix}_OUTPUT_USD_PER_MILLION`]?.trim() || undefined;
+  const inputText = !replacedLegacyModel
+    ? process.env[`${prefix}_INPUT_USD_PER_MILLION`]?.trim() || undefined
+    : undefined;
+  const outputText = !replacedLegacyModel
+    ? process.env[`${prefix}_OUTPUT_USD_PER_MILLION`]?.trim() || undefined
+    : undefined;
   const input = inputText !== undefined ? Number(inputText) : known?.input;
   const output = outputText !== undefined ? Number(outputText) : known?.output;
   if (
@@ -59,8 +76,9 @@ export function modelConfig(kind: "decision" | "extraction") {
     );
   return {
     model,
-    input,
-    output,
-    maxOutputTokens: kind === "decision" ? 0 : 1800,
+    // A stale cheap-model override must never lower the verified reservation/cost.
+    input: Math.max(input, known?.input ?? input),
+    output: Math.max(output, known?.output ?? output),
+    maxOutputTokens: kind === "decision" ? 0 : 4096,
   };
 }

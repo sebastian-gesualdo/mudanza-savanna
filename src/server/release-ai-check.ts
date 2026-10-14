@@ -1,6 +1,6 @@
 import type { Pool } from "pg";
 import { DomainError, rooms } from "../domain/model";
-import { aiEnabled, generationEnabled } from "../ai/config";
+import { aiEnabled, generationEnabled, modelConfig } from "../ai/config";
 import {
   budgetedDecision,
   DecisionService,
@@ -18,6 +18,10 @@ export async function checkReleaseAi(
   scope: { moveId: string; participantId: string },
   decision: DecisionService = new JevDecisionService(),
   extraction: ExtractionService = new GatewayExtractionService(),
+  onStage: (
+    stage: "gateway_decision" | "gateway_extraction",
+    model: string,
+  ) => void = () => {},
 ) {
   if (!aiEnabled()) return { status: "disabled" };
   const actor = await transaction(pool, async (client) => {
@@ -42,6 +46,7 @@ export async function checkReleaseAi(
     return actor;
   });
   const revision = process.env.VERCEL_GIT_COMMIT_SHA ?? "local-test";
+  onStage("gateway_decision", modelConfig("decision").model);
   const selected = await budgetedDecision(
     actor,
     "Consulta de prueba: hervidor. Texto registrado ficticio: pava eléctrica.",
@@ -71,6 +76,7 @@ export async function checkReleaseAi(
     entries: [],
     rooms: rooms.map((r) => ({ key: r.key, name: r.name })),
   });
+  onStage("gateway_extraction", modelConfig("extraction").model);
   const result = await paidCall(
     actor,
     "extraction",
