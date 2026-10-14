@@ -98,3 +98,72 @@ test("controles manuales, búsquedas e historial con demo explícita", async ({
     .click();
   await page.screenshot({ path: "test-results/manual.png", fullPage: true });
 });
+
+test("separar contenido y corregir un estado conserva cantidades e historial", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Probar demo local" }).click();
+  const input = page.getByRole("textbox", { name: "Mensaje para la mudanza" });
+  await input.fill("Estoy armando una caja para la cocina");
+  await page
+    .getByRole("button", { name: "Enviar mensaje", exact: true })
+    .click();
+  await expect(page.locator(".chat-context")).toContainText("C-001");
+  await page
+    .getByRole("button", { name: "Ver ficha de unidad activa" })
+    .click();
+  await page.getByRole("button", { name: "Agregar", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("Descripción", { exact: true }).fill("Platos azules");
+  await dialog.getByLabel("Cantidad · opcional").fill("6");
+  await dialog
+    .getByRole("button", { name: "Guardar cambio", exact: true })
+    .click();
+
+  await page
+    .getByRole("button", { name: "Separar parte del contenido" })
+    .click();
+  await dialog
+    .getByLabel("Descripción de la parte")
+    .fill("Platos azules para comedor");
+  await dialog.getByLabel("Cantidad que separás").fill("2");
+  await dialog
+    .getByRole("button", { name: "Guardar cambio", exact: true })
+    .click();
+  await expect(page.locator(".page-content")).toContainText("cantidad: 4");
+  await expect(page.locator(".page-content")).toContainText("cantidad: 2");
+  await page
+    .getByRole("button", { name: "Volver al chat", exact: true })
+    .last()
+    .click();
+  await input.fill("Cerrala");
+  await page
+    .getByRole("button", { name: "Enviar mensaje", exact: true })
+    .click();
+  await expect(page.locator(".chat-context")).toContainText("Cerrada");
+  await input.fill("Cargar C-001");
+  await page
+    .getByRole("button", { name: "Enviar mensaje", exact: true })
+    .click();
+  await expect(page.locator(".chat-context")).toContainText("Cargada");
+  await page
+    .getByRole("button", { name: "Ver ficha de unidad activa" })
+    .click();
+  await page
+    .getByRole("button", { name: "Corregir estado o ubicación" })
+    .click();
+  await dialog
+    .getByRole("combobox", { name: "Traslado", exact: true })
+    .selectOption("at_origin");
+  await dialog
+    .getByLabel("Confirmo el nuevo estado y su efecto sobre el contenido")
+    .check();
+  await dialog
+    .getByRole("button", { name: "Guardar cambio", exact: true })
+    .click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.locator(".page-content")).toContainText(
+    "ubicación corregida",
+  );
+});

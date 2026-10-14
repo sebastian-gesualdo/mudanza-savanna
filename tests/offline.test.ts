@@ -1,8 +1,9 @@
 import "fake-indexeddb/auto";
 import { expect, it } from "vitest";
-import { command } from "../src/domain/commands";
+import { command, execute } from "../src/domain/commands";
 import {
   acknowledge,
+  applyDelta,
   editDocument,
   enqueue,
   loadDocument,
@@ -69,4 +70,76 @@ it("conflicto preserva el texto original sin proyectarlo como confirmado", async
   expect(project(doc).entries).toHaveLength(0);
   expect(JSON.stringify(doc.queue)).toContain("Pava no confirmada");
   expect(doc.queue[0].status).toBe("review");
+});
+
+it("un recibo adelantado no saltea cambios ajenos; el cursor se guarda con la página completa", async () => {
+  const state = withBox();
+  const owner = crypto.randomUUID();
+  await loadDocument(owner, state);
+  const foreign = execute(
+    state,
+    command(actorId, {
+      type: "append_content",
+      payload: { id: crypto.randomUUID(), unitId, description: "Cambio ajeno" },
+    }),
+    actorId,
+  );
+  const own = execute(
+    foreign.state,
+    command(actorId, {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId,
+        description: "Cambio propio",
+      },
+    }),
+    actorId,
+  );
+  await acknowledge(owner, own.receipt);
+  const ahead = await loadDocument(owner, state);
+  expect(ahead.syncedRevision).toBe(state.revision);
+  expect(ahead.confirmed.revision).toBe(own.receipt.revision);
+  const delta = {
+    events: own.state.events.filter((e) => e.revision > state.revision),
+    nextCursor: own.receipt.revision,
+    hasMore: false,
+    headRevision: own.receipt.revision,
+    counters: own.state.counters,
+  };
+  await editDocument(owner, (d) => applyDelta(d, delta));
+  const saved = await loadDocument(owner, state);
+  expect(saved.confirmed.entries).toHaveLength(2);
+  expect(saved.syncedRevision).toBe(own.receipt.revision);
+});
+it("una página incompleta aborta la transacción IndexedDB y no adelanta cursor", async () => {
+  const state = withBox();
+  const owner = crypto.randomUUID();
+  await loadDocument(owner, state);
+  const next = execute(
+    state,
+    command(actorId, {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId,
+        description: "Nunca parcial",
+      },
+    }),
+    actorId,
+  );
+  await expect(
+    editDocument(owner, (d) =>
+      applyDelta(d, {
+        events: [next.state.events.at(-1)!],
+        nextCursor: next.receipt.revision + 1,
+        hasMore: true,
+        headRevision: next.receipt.revision + 1,
+        counters: next.state.counters,
+      }),
+    ),
+  ).rejects.toThrow();
+  const saved = await loadDocument(owner, state);
+  expect(saved.syncedRevision).toBe(state.revision);
+  expect(saved.confirmed.entries).toHaveLength(0);
 });

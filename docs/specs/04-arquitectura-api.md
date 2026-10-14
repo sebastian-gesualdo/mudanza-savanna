@@ -166,9 +166,9 @@ Leer cambios al iniciar, al volver al primer plano, después de escribir y cada 
 | `AI_GATEWAY_API_KEY` | Secreto para Gateway cuando no se usa identidad OIDC compatible de Vercel. |
 | `APP_BASE_URL` | Origen autorizado, base de enlaces de fichas y retorno OAuth de la aplicación (`/auth/callback`). |
 | `DECISION_MODEL` | Identificador de Jev verificado en Gateway. |
-| `GENERATION_MODEL` | Modelo de extracción elegido en T00. Ausente/deshabilitado implica aclaración/formulario; no una llamada oculta a otro proveedor. |
+| `GENERATION_MODEL` | Modelo de extracción en Gateway; por defecto `google/gemini-2.5-flash-lite`, candidato económico con tarifas oficiales verificadas. `GENERATION_ENABLED=false` desactiva la extracción. Siempre se confirma la propuesta; la calibración live sigue siendo una prueba independiente. |
 | `AI_BUDGET_USD` | Default 5 para producción; menor para pruebas. |
-| `AI_ENABLED` / `GENERATION_ENABLED` | Interruptores independientes de operaciones de IA. |
+| `AI_ENABLED` / `GENERATION_ENABLED` | Interruptores independientes. En Vercel Production, ausencia habilita el asistente solicitado por el organizador; `false` prevalece. Preview/desarrollo requieren `true` explícito y recursos de prueba. |
 | `APP_ENV` | Desarrollo, preview o producción; controla datos y presupuestos separados. |
 
 Las claves privilegiadas jamás van en `NEXT_PUBLIC_*`, logs, fixtures o archivos de especificación. Estas variables se usan en servidor; la clave publicable de Auth no sustituye a la privilegiada de datos. El Client ID y Client Secret de Google se configuran en el proveedor Google del dashboard de Supabase, no en variables de Vercel. No hay `INVITE_TOKEN_HASH` ni clave de Auth.js. Crear `.env.example` con nombres y valores no secretos durante T01. Verificar bindings existentes antes de pedir credenciales nuevas. No configurar servicios reales durante una tarea que solo crea UI o pruebas con mocks.
@@ -203,3 +203,20 @@ El chat acepta también `deviceId` y un `structuredCommand` opcional ya capturad
 La revisión histórica inicial confirma una fila por vez mediante `create_unit` con procedencia y unicidad fuente/fila. Las sesiones y lotes de `/api/imports/:id/commit`, generación excepcional, clasificación libre con Jev y ampliación semántica por bloques siguen pendientes; consultar [evidencia y límites](../IMPLEMENTACION.md). El cliente usa snapshots coherentes para refrescar su copia; el feed de deltas existe, pero su consumo incremental aún no sustituye al snapshot. No considerar esta nota una validación de lanzamiento de todos los endpoints propuestos.
 
 La conexión PostgreSQL verifica cadena TLS y hostname. Para hosts de Supabase se añaden las CA públicas de producción del CLI oficial a las raíces predeterminadas de Node. No se permite desactivar TLS en Supabase; las opciones TLS de `DATABASE_URL` no sustituyen la política del servidor. El mismo cliente se usa en scripts y API. Ver fuente fijada y evidencia en [IMPLEMENTACION](../IMPLEMENTACION.md).
+
+
+## Ampliación v1 autorizada · 14/10/2026
+
+El organizador confirmó Google Login y guardado real y pidió implementar el chat con IA y los faltantes. `POST /chat/messages` reclama una lease de 75 segundos antes de llamar a modelos fuera de transacción. Devuelve 202 durante procesamiento; el cliente conserva el request y reintenta el mismo UUID. La respuesta queda persistida y las llamadas pagadas usan claves de etapa estables. Un timeout no se redispara ni libera su reserva automáticamente.
+
+`POST /chat/messages/:id/resolve` toma índice de opción, UUID de resolución, dispositivo y actor esperado. El servidor usa la acción y versiones originales, vence propuestas a los diez minutos y asigna una identidad canónica de operación por mensaje/opción, evitando dos confirmaciones de la misma propuesta. `POST /imports/preview` crea o recupera una sesión sin inventario; `POST /imports/commit` confirma hasta veinte filas revisadas en una transacción repetible. `GET /sync` pagina eventos ordenados con cabeza y contadores coherentes; el cursor local es independiente de recibos adelantados.
+
+Esta publicación aplica explícitamente la migración aditiva `202610140001_complete_v1.sql` mediante un hook temporal `release-migrations.ts`, restringido a main/Production y al proyecto/origen confirmado. Conserva inventario, accesos y presupuesto. Retirar el hook después de comprobar la publicación. No usarlo como migración indiscriminada de futuras versiones.
+
+`POST /ai/check` es una prueba explícita de dos llamadas pequeñas, con UUID durable, presupuesto y sesión. No modifica inventario. GET/bootstrap/settings nunca disparan modelos facturados.
+
+
+La protección de previews también está en `configured()`: una referencia al proyecto de producción en API/PostgreSQL/origen bloquea Auth y por tanto todos los endpoints familiares. Los POST facturados `/ai/check` y `/search/semantic` requieren actor esperado y rechazan una pestaña de otra cuenta antes de reservar o llamar al proveedor. Confirmar una propuesta valida todas sus versiones originales; un comando manual de adición conserva la concurrencia permitida por el dominio.
+
+
+La comprobación temporal de Gateway del release usa únicamente el organizador con membresía activa ya vinculada a Auth, dos casos ficticios y reservas persistentes por etapa. No es una API administrativa ni simula Google Login. Si IA está activa exige decisiones/esquema válidos antes de completar el build; el resultado se registra sin secretos ni datos de inventario. Un flag false explícito se conserva y se informa como desactivado. Esta prueba no sustituye la calibración live ni el recorrido familiar; se retira junto con el hook.

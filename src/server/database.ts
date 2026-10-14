@@ -48,7 +48,7 @@ export async function lockMove(client: PoolClient, moveId: string) {
 }
 export async function checkMembership(client: PoolClient, actor: Actor) {
   const result = await client.query(
-    "select id from move_memberships where move_id=$1 and participant_id=$2 and auth_user_id=$3 and active=true",
+    "select id from move_memberships where move_id=$1 and participant_id=$2 and auth_user_id=$3 and active=true for share",
     [actor.moveId, actor.participantId, actor.userId],
   );
   if (!result.rowCount)

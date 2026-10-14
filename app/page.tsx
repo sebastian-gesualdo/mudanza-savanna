@@ -10,8 +10,9 @@ export default async function Page() {
       redirect(canonical.href);
   }
   const demoAllowed =
-    process.env.APP_DEMO === "true" ||
-    (!configured() && process.env.APP_ENV !== "production");
+    process.env.APP_ENV !== "production" &&
+    process.env.VERCEL_ENV !== "production" &&
+    (process.env.APP_DEMO === "true" || !configured());
   return (
     <FamilyApp
       configured={configured()}

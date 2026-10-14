@@ -64,12 +64,18 @@ type Editor = {
     | "content"
     | "transfer"
     | "split"
+    | "split_content"
+    | "correction"
     | "link"
     | "import";
   unit?: Unit;
   entry?: Entry;
   candidate?: HistoricalCandidate;
 };
+const dollars = (value: string) =>
+  Number(value) > 0 && Number(value) < 0.00001
+    ? "< 0.00001"
+    : Number(value).toFixed(5);
 const time = (at: string) =>
   new Date(at).toLocaleString("es-AR", {
     timeZone: "America/New_York",
@@ -265,11 +271,16 @@ export function FamilyApp({
     budget: string;
     enabled: boolean;
   } | null>(null);
+  const [aiCheck, setAiCheck] = useState("");
+  const [checkingAi, setCheckingAi] = useState(false);
   const [notice, setNotice] = useState("");
   const scroll = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const [draft, setDraft] = useState("");
   const draftOwner = useRef<string | undefined>(undefined);
+  const [importSession, setImportSession] = useState("");
+  const [importStatus, setImportStatus] = useState<Record<number, string>>({});
+  const [importing, setImporting] = useState(false);
   const [historicalCandidates, setHistoricalCandidates] = useState<
     HistoricalCandidate[]
   >([]);
@@ -296,8 +307,18 @@ export function FamilyApp({
       setHistoricalCandidates(demoCandidates);
       return;
     }
-    api<{ candidates: HistoricalCandidate[] }>("imports/preview", {})
-      .then((result) => setHistoricalCandidates(result.candidates))
+    api<{
+      candidates: HistoricalCandidate[];
+      sessionId: string;
+      rows: { row_number: number; status: string }[];
+    }>("imports/preview", {})
+      .then((result) => {
+        setHistoricalCandidates(result.candidates);
+        setImportSession(result.sessionId);
+        setImportStatus(
+          Object.fromEntries(result.rows.map((r) => [r.row_number, r.status])),
+        );
+      })
       .catch((e) =>
         reportError(
           e instanceof Error
@@ -342,6 +363,8 @@ export function FamilyApp({
         .then(setUsage)
         .catch(() => setUsage(null));
   }, [view, session, family.online]);
+  const pendingCount =
+    (doc?.queue.length ?? 0) + (doc?.resolutions?.length ?? 0);
   const actor = state?.participants.find((p) => p.id === session?.actorId);
   const active = state?.units.find(
     (u) => u.id === doc?.activeUnitId && !u.archived,
@@ -523,7 +546,33 @@ export function FamilyApp({
     const value = (key: string) => String(data.get(key) ?? "").trim();
     const destination = value("room") || null;
     try {
-      if (editor.type === "create" || editor.type === "import") {
+      if (editor.type === "import" && editor.candidate && !session.demo) {
+        if (!importSession)
+          throw new Error("Esperá a que termine de cargar la importación.");
+        const kind = value("kind") as Kind;
+        const count = Number(value("count") || 1);
+        if (data.has("exists") && ["box", "bag"].includes(kind) && count !== 1)
+          throw new Error(
+            "Revisá cada caja o bolsa por separado; no se crean contenedores en lote.",
+          );
+        const reviewed = {
+          row: editor.candidate.row,
+          exists: data.has("exists"),
+          kind,
+          name: value("name"),
+          count,
+          destination,
+        };
+        await family.write((local) => {
+          local.importReview ??= { sessionId: importSession, rows: [] };
+          if (local.importReview.sessionId !== importSession)
+            throw new Error("Cambió la sesión de importación.");
+          local.importReview.rows = local.importReview.rows.filter(
+            (r) => r.row !== reviewed.row,
+          );
+          local.importReview.rows.push(reviewed);
+        });
+      } else if (editor.type === "create" || editor.type === "import") {
         const kind = value("kind") as Kind;
         const id = crypto.randomUUID();
         await act({
@@ -624,6 +673,56 @@ export function FamilyApp({
           },
           [editor.unit.id],
         );
+      } else if (
+        editor.type === "split_content" &&
+        editor.entry &&
+        editor.unit
+      ) {
+        await act(
+          {
+            type: "split_content",
+            payload: {
+              entryId: editor.entry.id,
+              id: crypto.randomUUID(),
+              quantity: Number(value("quantity")),
+              description: value("description"),
+            },
+          },
+          [editor.entry.id, editor.unit.id],
+        );
+      } else if (editor.type === "correction" && editor.unit) {
+        if (!data.has("confirm"))
+          throw new Error("Confirmá la corrección del estado anterior.");
+        const actions: Exclude<Command["action"], { type: "compound" }>[] = [];
+        if (
+          value("transit") !== editor.unit.transit ||
+          destination !== editor.unit.actualRoom
+        )
+          actions.push({
+            type: "set_transit_state",
+            payload: {
+              unitId: editor.unit.id,
+              state: value("transit") as Unit["transit"],
+              actualRoom: destination,
+              correction: true,
+            },
+          });
+        if (value("unpacking") && value("unpacking") !== editor.unit.unpacking)
+          actions.push({
+            type: "set_unpack_state",
+            payload: {
+              unitId: editor.unit.id,
+              state: value("unpacking") as "not_started" | "partial" | "done",
+              correction: true,
+            },
+          });
+        if (!actions.length) throw new Error("No hay cambios de estado.");
+        await act(
+          actions.length === 1
+            ? actions[0]
+            : { type: "compound", payload: { actions } },
+          [editor.unit.id],
+        );
       } else if (editor.type === "link" && editor.entry) {
         await act(
           {
@@ -641,6 +740,47 @@ export function FamilyApp({
       setEditor(null);
     } catch (e) {
       setFormError(e instanceof Error ? e.message : "Revisá los datos.");
+    }
+  }
+  async function commitReviewedImport() {
+    const review = doc?.importReview;
+    if (!review || !session || !doc || importing) return;
+    setImporting(true);
+    try {
+      for (let start = 0; start < review.rows.length; start += 20) {
+        const rows = review.rows.slice(start, start + 20);
+        const result = await api<{ rows: { row: number; status: string }[] }>(
+          "imports/commit",
+          {
+            sessionId: review.sessionId,
+            rows,
+            deviceId: doc.deviceId,
+            expectedParticipantId: session.actorId,
+          },
+        );
+        setImportStatus((previous) => ({
+          ...previous,
+          ...Object.fromEntries(result.rows.map((r) => [r.row, r.status])),
+        }));
+        await family.write((local) => {
+          if (local.importReview)
+            local.importReview.rows = local.importReview.rows.filter(
+              (r) => !rows.some((done) => done.row === r.row),
+            );
+        });
+      }
+      setNotice(
+        "Revisión guardada. Las unidades incluidas ya están en la mudanza.",
+      );
+      await family.sync();
+    } catch (e) {
+      family.setError(
+        e instanceof Error
+          ? e.message
+          : "No se pudo confirmar. Podés reintentar las filas pendientes.",
+      );
+    } finally {
+      setImporting(false);
     }
   }
   const confirmChoice = (choice: Choice, message: Message) => {
@@ -838,15 +978,15 @@ export function FamilyApp({
             ? "copia local de ejemplo"
             : family.busy
               ? "sincronizando"
-              : doc.queue.length
-                ? `${doc.queue.length} cambios pendientes`
+              : pendingCount
+                ? `${pendingCount} cambios pendientes`
                 : family.online
                   ? "todo al día"
                   : "sin conexión · copia local"}
         </span>
-        {doc.queue.length > 0 && (
+        {pendingCount > 0 && (
           <button onClick={() => navigate("sync")}>
-            {doc.queue.length} pendientes
+            {pendingCount} pendientes
           </button>
         )}
       </div>
@@ -1221,7 +1361,7 @@ export function FamilyApp({
                 {inventory.length} unidades ·{" "}
                 {session.demo
                   ? "demo local"
-                  : doc.queue.length || !family.online
+                  : pendingCount || !family.online
                     ? "copia local con pendientes"
                     : "inventario confirmado"}
               </p>
@@ -1406,6 +1546,20 @@ export function FamilyApp({
                               >
                                 Retirar / mover
                               </button>
+                              {e.quantity !== null && e.quantity > 0.01 && (
+                                <button
+                                  className="text-button"
+                                  onClick={() =>
+                                    openEditor({
+                                      type: "split_content",
+                                      unit: selected,
+                                      entry: e,
+                                    })
+                                  }
+                                >
+                                  Separar parte del contenido
+                                </button>
+                              )}
                               <button
                                 className="text-button"
                                 onClick={() =>
@@ -1468,6 +1622,14 @@ export function FamilyApp({
                 </div>
               )}
               <div className="action-grid">
+                <button
+                  className="button secondary"
+                  onClick={() =>
+                    openEditor({ type: "correction", unit: selected })
+                  }
+                >
+                  Corregir estado o ubicación
+                </button>
                 <button
                   className="button secondary"
                   onClick={() => workWith(selected)}
@@ -1685,7 +1847,7 @@ export function FamilyApp({
                 <p className="small">
                   {session.demo
                     ? "Demo local"
-                    : !family.online || doc.queue.length
+                    : !family.online || pendingCount
                       ? "Copia local con pendientes"
                       : "Inventario confirmado"}{" "}
                   · registros de traslado
@@ -1870,9 +2032,68 @@ export function FamilyApp({
                   {session.demo
                     ? "Demo con controles y reglas locales. No consume saldo."
                     : usage
-                      ? `US$ ${Number(usage.spent).toFixed(3)} consumidos · ${Number(usage.reserved).toFixed(3)} reservados / ${usage.budget}. ${usage.enabled ? "Disponible" : "Desactivado"}.`
+                      ? `US$ ${dollars(usage.spent)} consumidos · ${dollars(usage.reserved)} reservados / ${usage.budget}. ${usage.enabled ? "Disponible" : "Desactivado"}.`
                       : "El consumo no está disponible en este momento."}
                 </p>
+                {!session.demo && usage?.enabled && (
+                  <button
+                    className="button secondary"
+                    disabled={checkingAi || !family.online}
+                    onClick={() =>
+                      safe(async () => {
+                        setCheckingAi(true);
+                        try {
+                          const key = doc.aiCheckId ?? crypto.randomUUID();
+                          await family.write((local) => {
+                            local.aiCheckId = key;
+                          });
+                          const result = await api<{ message: string }>(
+                            "ai/check",
+                            {
+                              operationId: key,
+                              expectedParticipantId: session.actorId,
+                            },
+                          );
+                          setAiCheck(result.message);
+                        } finally {
+                          setCheckingAi(false);
+                        }
+                      })
+                    }
+                  >
+                    {checkingAi
+                      ? "Probando asistente…"
+                      : "Probar conexión del asistente"}
+                  </button>
+                )}
+                {aiCheck && <p role="status">{aiCheck}</p>}
+                {!session.demo && doc.aiCheckId && (
+                  <button
+                    className="text-button"
+                    onClick={() =>
+                      ask(
+                        "Nueva prueba del asistente",
+                        "Se hará otra prueba pequeña con el presupuesto del asistente.",
+                        async () => {
+                          await family.write((local) => {
+                            local.aiCheckId = undefined;
+                          });
+                          setAiCheck("");
+                        },
+                      )
+                    }
+                  >
+                    Preparar otra prueba
+                  </button>
+                )}
+                {usage &&
+                  (Number(usage.spent) + Number(usage.reserved)) /
+                    Number(usage.budget) >=
+                    0.8 && (
+                    <p className="notice">
+                      El asistente usó el 80% o más de su presupuesto.
+                    </p>
+                  )}
                 <p className="small muted">
                   Los controles manuales siguen disponibles si el asistente
                   alcanza el límite.
@@ -1891,7 +2112,7 @@ export function FamilyApp({
                 onClick={() =>
                   ask(
                     "Antes de salir",
-                    `${doc.queue.length ? `${doc.queue.length} cambios pendientes quedan ligados a esta cuenta. Podés exportarlos antes de salir.` : "Tu inventario y conversación se conservan."} ${!family.online ? "Sin conexión se bloquea el acceso local; la salida del servidor queda pendiente." : ""}`,
+                    `${pendingCount ? `${pendingCount} cambios pendientes quedan ligados a esta cuenta. Podés exportarlos antes de salir.` : "Tu inventario y conversación se conservan."} ${!family.online ? "Sin conexión se bloquea el acceso local; la salida del servidor queda pendiente." : ""}`,
                     async () => {
                       await family.logout();
                       navigate("chat");
@@ -1915,7 +2136,7 @@ export function FamilyApp({
               <div className="card orange">
                 <strong>
                   {family.online ? "Conexión disponible" : "Sin conexión"} ·{" "}
-                  {doc.queue.length} pendientes
+                  {pendingCount} pendientes
                 </strong>
                 <p className="small">
                   Última sincronización:{" "}
@@ -1988,7 +2209,36 @@ export function FamilyApp({
                   </button>
                 </div>
               ))}
-              {!doc.queue.length && (
+              {doc.resolutions?.map((r) => (
+                <div className="card" key={r.operationId}>
+                  <strong>
+                    {r.status
+                      ? "Confirmación requiere revisión"
+                      : "Confirmación pendiente"}
+                  </strong>
+                  <p>
+                    {r.status ??
+                      "Se enviará al recuperar conexión. Todavía no está guardada."}
+                  </p>
+                  {r.status && (
+                    <button
+                      className="text-button"
+                      onClick={() =>
+                        safe(() =>
+                          family.write((local) => {
+                            local.resolutions = local.resolutions?.filter(
+                              (item) => item.operationId !== r.operationId,
+                            );
+                          }),
+                        )
+                      }
+                    >
+                      Descartar confirmación y repetir el pedido
+                    </button>
+                  )}
+                </div>
+              ))}
+              {!pendingCount && (
                 <div className="card mint">
                   <Check />
                   <p>
@@ -2055,6 +2305,42 @@ export function FamilyApp({
                 y bolsas históricas empiezan vacías. Los precios de cotización
                 no se importan.
               </p>
+              {doc.importReview?.rows.length ? (
+                <div className="card">
+                  <strong>
+                    {doc.importReview.rows.length} filas revisadas
+                  </strong>
+                  {doc.importReview.rows.map((r) => (
+                    <p key={r.row}>
+                      {r.exists
+                        ? `${r.count} × ${r.name} · ${kindNames[r.kind]} · ${roomName(r.destination)}`
+                        : `Excluir ${r.name}`}{" "}
+                      · fila {r.row}
+                    </p>
+                  ))}
+                  <p>
+                    {doc.importReview.rows.filter((r) => r.exists).length} para
+                    incluir;{" "}
+                    {doc.importReview.rows.filter((r) => !r.exists).length}{" "}
+                    excluidas.
+                  </p>
+                  <button
+                    className="button"
+                    disabled={importing || !family.online}
+                    onClick={() =>
+                      ask(
+                        "Confirmar importación",
+                        "Se incluirán únicamente las filas revisadas. Cajas y bolsas empezarán vacías. Podés reintentar un lote interrumpido.",
+                        commitReviewedImport,
+                      )
+                    }
+                  >
+                    {importing
+                      ? "Guardando lotes…"
+                      : "Confirmar revisión por lotes"}
+                  </button>
+                </div>
+              ) : null}
               {historicalCandidates
                 .filter(
                   (c) =>
@@ -2076,7 +2362,11 @@ export function FamilyApp({
                         <span
                           className={`badge ${c.action === "Removed" ? "orange" : "green"}`}
                         >
-                          {imported ? "Importada" : c.action}
+                          {imported
+                            ? "Importada"
+                            : importStatus[c.row] === "excluded"
+                              ? "Excluida"
+                              : c.action}
                         </span>
                       </div>
                       <p className="small muted">
@@ -2095,13 +2385,18 @@ export function FamilyApp({
                       ))}
                       <button
                         className="text-button"
+                        disabled={importStatus[c.row] === "excluded"}
                         onClick={() =>
                           imported
                             ? detail(imported.id)
                             : openEditor({ type: "import", candidate: c })
                         }
                       >
-                        {imported ? "Ver unidad" : "Revisar e incluir"}
+                        {imported
+                          ? "Ver unidad"
+                          : doc.importReview?.rows.some((r) => r.row === c.row)
+                            ? "Editar revisión pendiente"
+                            : "Revisar fila"}
                       </button>
                     </div>
                   );
@@ -2154,6 +2449,8 @@ export function FamilyApp({
               content: editor.entry ? "Editar contenido" : "Agregar contenido",
               transfer: "Retirar o mover",
               split: "Dividir lote",
+              split_content: "Separar contenido",
+              correction: "Corregir estado",
               link: "Relacionar accesorio",
               import: "Revisar importación",
             }[editor.type]
@@ -2166,6 +2463,96 @@ export function FamilyApp({
                 {formError}
               </p>
             )}
+            {editor.type === "import" && (
+              <label className="toggle">
+                <span>Confirmo que existe y quiero incluirlo</span>
+                <input
+                  name="exists"
+                  type="checkbox"
+                  defaultChecked={
+                    doc.importReview?.rows.find(
+                      (r) => r.row === editor.candidate?.row,
+                    )?.exists ?? editor.candidate?.action !== "Removed"
+                  }
+                />
+              </label>
+            )}
+            {editor.type === "split_content" && (
+              <>
+                <p>
+                  Se conserva la entrada original y su historial. La parte
+                  separada seguirá en el mismo contenedor; después podés
+                  moverla.
+                </p>
+                <label className="field">
+                  Descripción de la parte
+                  <textarea
+                    name="description"
+                    required
+                    defaultValue={editor.entry?.description}
+                  />
+                </label>
+                <label className="field">
+                  Cantidad que separás
+                  <input
+                    name="quantity"
+                    type="number"
+                    required
+                    min="0.01"
+                    step="any"
+                    max={(editor.entry?.quantity ?? 1) - 0.01}
+                  />
+                </label>
+              </>
+            )}
+            {editor.type === "correction" && (
+              <>
+                <p>
+                  Esta corrección queda registrada con tu nombre. No vuelve a
+                  guardar objetos retirados: para usar de nuevo el contenedor,
+                  elegí Reabrir.
+                </p>
+                <label className="field">
+                  Traslado
+                  <select name="transit" defaultValue={editor.unit?.transit}>
+                    <option value="at_origin">En Weston Hills</option>
+                    <option value="in_transit">En camino</option>
+                    <option value="at_destination">En Savanna</option>
+                  </select>
+                </label>
+                <label className="field">
+                  Ubicación real · se usa si llegó a Savanna
+                  <select
+                    name="room"
+                    defaultValue={editor.unit?.actualRoom ?? ""}
+                  >
+                    <option value="">Sin confirmar</option>
+                    {rooms.map((r) => (
+                      <option key={r.key} value={r.key}>
+                        {r.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {editor.unit?.unpacking !== "not_applicable" && (
+                  <label className="field">
+                    Desempaque
+                    <select
+                      name="unpacking"
+                      defaultValue={editor.unit?.unpacking}
+                    >
+                      <option value="not_started">Sin empezar</option>
+                      <option value="partial">En curso</option>
+                      <option value="done">Terminado · todo retirado</option>
+                    </select>
+                  </label>
+                )}
+                <label>
+                  <input type="checkbox" name="confirm" required /> Confirmo el
+                  nuevo estado y su efecto sobre el contenido
+                </label>
+              </>
+            )}
             {["create", "import", "unit"].includes(editor.type) && (
               <>
                 {editor.type !== "unit" && (
@@ -2174,9 +2561,12 @@ export function FamilyApp({
                     <select
                       name="kind"
                       defaultValue={
-                        !editor.candidate || editor.candidate.container
+                        doc.importReview?.rows.find(
+                          (r) => r.row === editor.candidate?.row,
+                        )?.kind ??
+                        (!editor.candidate || editor.candidate.container
                           ? "box"
-                          : "furniture"
+                          : "furniture")
                       }
                     >
                       <option value="box">Caja · vacía</option>
@@ -2193,11 +2583,23 @@ export function FamilyApp({
                     required
                     maxLength={4000}
                     defaultValue={
-                      editor.unit?.name ?? editor.candidate?.name ?? ""
+                      editor.unit?.name ??
+                      doc.importReview?.rows.find(
+                        (r) => r.row === editor.candidate?.row,
+                      )?.name ??
+                      editor.candidate?.name ??
+                      ""
                     }
                   />
                 </label>
-                <RoomSelect value={editor.unit?.destination} />
+                <RoomSelect
+                  value={
+                    editor.unit?.destination ??
+                    doc.importReview?.rows.find(
+                      (r) => r.row === editor.candidate?.row,
+                    )?.destination
+                  }
+                />
                 {editor.type !== "unit" && (
                   <label className="field">
                     Cantidad del lote · solo muebles y objetos
@@ -2207,7 +2609,13 @@ export function FamilyApp({
                       min={1}
                       max={10000}
                       step={1}
-                      defaultValue={editor.candidate?.count ?? 1}
+                      defaultValue={
+                        doc.importReview?.rows.find(
+                          (r) => r.row === editor.candidate?.row,
+                        )?.count ??
+                        editor.candidate?.count ??
+                        1
+                      }
                     />
                   </label>
                 )}
@@ -2273,10 +2681,12 @@ export function FamilyApp({
                         ubicación ni contenido antiguos.
                       </p>
                     </div>
-                    <label className="toggle-row">
-                      <span>Confirmo que existe y se muda</span>
-                      <input type="checkbox" required />
-                    </label>
+                    {session.demo && (
+                      <label className="toggle-row">
+                        <span>Confirmo que existe y se muda</span>
+                        <input type="checkbox" required />
+                      </label>
+                    )}
                   </>
                 )}
               </>
@@ -2381,7 +2791,7 @@ export function FamilyApp({
             )}
             <button className="button" type="submit" disabled={family.busy}>
               {editor.type === "import"
-                ? "Confirmar importación de esta unidad"
+                ? "Guardar revisión de esta fila"
                 : editor.type === "create"
                   ? "Crear y trabajar con esta unidad"
                   : "Guardar cambio"}

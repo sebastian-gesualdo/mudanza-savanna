@@ -1,4 +1,5 @@
 import { expect, it } from "vitest";
+import { command, execute } from "../src/domain/commands";
 import { interpret, resolveRoom } from "../src/domain/chat";
 import { actorId, run, unitId, withBox } from "./fixtures";
 it("resuelve alias exactos sin asignar baños o master ambiguos", () => {
@@ -61,4 +62,43 @@ it("compuestos explícitos usan una sola operación", () => {
     null,
   );
   expect(result.command?.action.type).toBe("compound");
+});
+
+it("varias unidades exigen propuesta y llegada parcial divide sin marcar todo el lote", () => {
+  const state = withBox();
+  expect(
+    interpret(state, actorId, "Cargar C-001 y C-002", unitId).command,
+  ).toBeUndefined();
+  const group = crypto.randomUUID();
+  const grouped = run(state, {
+    type: "create_unit",
+    payload: {
+      id: group,
+      kind: "furniture",
+      name: "Sillas",
+      count: 8,
+      destination: "kitchen",
+    },
+  });
+  const reply = interpret(
+    grouped,
+    actorId,
+    "Llegaron 3 de 8 de M-001 a cocina",
+    null,
+  );
+  expect(reply.choices?.[0].action?.type).toBe("compound");
+  const choice = reply.choices![0];
+  const result = execute(
+    grouped,
+    command(actorId, choice.action!, choice.versions),
+    actorId,
+  );
+  expect(result.state.units.find((u) => u.id === group)?.count).toBe(5);
+  expect(result.state.units.find((u) => u.splitFrom === group)?.count).toBe(3);
+  expect(result.state.units.find((u) => u.splitFrom === group)?.transit).toBe(
+    "at_destination",
+  );
+  expect(result.state.units.find((u) => u.id === group)?.transit).toBe(
+    "at_origin",
+  );
 });

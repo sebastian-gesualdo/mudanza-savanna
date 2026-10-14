@@ -77,3 +77,10 @@ La salida requiere cerrar la sesión local de Supabase y limpiar cookies en serv
 El input utiliza teclado normal con dictado de iOS. El usuario puede revisar y corregir antes de enviar. No bloquear dictado con controles de entrada no estándar. La voz no requiere permiso de micrófono otorgado a la web mientras se use el dictado del sistema.
 
 La transcripción propia es P1: requeriría permisos, límites de duración y tamaño, codecs admitidos por Safari, cancelación y costo. Jev no recibe audio; una transcripción eventual entra al mismo pipeline de texto.
+
+
+### Contrato incremental implementado · 14/10/2026
+
+`LocalDocument.syncedRevision` sigue únicamente páginas completas del feed; nunca se adelanta con un recibo propio. `confirmed.revision` puede estar adelante mientras se recuperan cambios intermedios. IndexedDB guarda cambios, historial, contadores y cursor en una sola transacción; un hueco aborta la página. Documentos de la versión anterior sin cursor comienzan en cero, conservando su cola y usando las versiones para evitar regresiones. No cambia el namespace de propietarios existente.
+
+Una respuesta HTTP 202 de chat mantiene el request durable. Las confirmaciones del asistente se conservan en `resolutions` por cuenta, con actor, mensaje, índice, dispositivo y UUID; conflictos/vencimiento quedan visibles para repetir el pedido. La revisión de importación se conserva localmente y solo se retira una página después de recibir confirmación de su commit; la sesión/fila del servidor permite recuperar una respuesta perdida sin duplicar.

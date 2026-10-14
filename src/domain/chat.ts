@@ -16,9 +16,15 @@ export interface Choice {
   text?: string;
   activeUnitId?: string;
   versions?: Record<string, number>;
+  proposal?: { messageId: string; choiceIndex: number };
 }
 export interface ChatReply {
   text: string;
+  fallback?: boolean;
+  complex?: boolean;
+  searchQuery?: string;
+  expiresAt?: string;
+  processing?: boolean;
   command?: Command;
   hits?: SearchHit[];
   choices?: Choice[];
@@ -52,6 +58,20 @@ export function interpret(
   literal = false,
   clarification?: Clarification,
 ): ChatReply {
+  const mentioned = [...text.matchAll(/\b([cbmo])[-\s]*0*(\d+)\b/gi)].map((m) =>
+    normalizeCode(m[0]),
+  );
+  if (
+    new Set(mentioned).size > 1 &&
+    /\b(cerr|carg|lleg|retir|mov|transfer|agreg|add|close|load|arriv)/i.test(
+      text,
+    )
+  )
+    return {
+      fallback: true,
+      complex: true,
+      text: "Este pedido involucra varias unidades. Revisaremos una propuesta antes de guardar. Tu mensaje se conserva.",
+    };
   const q = normalize(text)
     .replace(/[¿¡?!]/g, "")
     .replace(/\.$/, "")
@@ -214,8 +234,12 @@ export function interpret(
         (!r || u.destination === r.key) &&
         (!/cajas|boxes/.test(q) || u.kind === "box"),
     );
-    const origin = list.filter((u) => u.transit === "at_origin").length;
-    const transit = list.filter((u) => u.transit === "in_transit").length;
+    const origin = list
+      .filter((u) => u.transit === "at_origin")
+      .reduce((sum, u) => sum + u.count, 0);
+    const transit = list
+      .filter((u) => u.transit === "in_transit")
+      .reduce((sum, u) => sum + u.count, 0);
     return {
       text: say(
         `${origin + transit} unidades todavía no llegaron${r ? ` de ${r.name}` : ""}: ${origin} por cargar y ${transit} en camino.`,
@@ -242,6 +266,7 @@ export function interpret(
             "I found no matches. Try another description.",
           ),
       hits,
+      searchQuery: query,
     };
   }
   if (/^(?:trabajar|usar|use|work)\b/.test(q) && unit)
@@ -293,10 +318,82 @@ export function interpret(
       : { text: "Indicá el código que se cargó." };
   if (/\b(?:llego|llegaron|llegada|arrived)\b/.test(q)) {
     if (!unit) return { text: "Indicá qué unidad llegó." };
-    if (/\b(?:tres|dos|\d+) de (?:las|los|\d+)\b/.test(q) || unit.count > 1)
-      return {
-        text: "Es un lote. Confirmá la cantidad desde Dividir lote antes de registrar una llegada parcial.",
+    if (unit.count > 1) {
+      const match = q.match(
+        /\b(\d+|dos|tres|four|three|two|cuatro|cinco|five|seis|six) (?:de|of) (?:las |los |the )?(?:\d+|ocho|eight)?/,
+      );
+      const numbers: Record<string, number> = {
+        dos: 2,
+        tres: 3,
+        cuatro: 4,
+        cinco: 5,
+        seis: 6,
+        two: 2,
+        three: 3,
+        four: 4,
+        five: 5,
+        six: 6,
       };
+      const count = match ? Number(match[1]) || numbers[match[1]] : null;
+      if (count && count < unit.count) {
+        const id = crypto.randomUUID();
+        const r = resolveRoom(text);
+        return {
+          text: `Se separarán ${count} de ${unit.count} objetos de ${unit.code} y se registrará su llegada${r ? ` a ${r.name}` : " con habitación sin confirmar"}. El resto conserva su estado.`,
+          choices: [
+            {
+              label: "Confirmar llegada parcial",
+              action: {
+                type: "compound",
+                payload: {
+                  actions: [
+                    {
+                      type: "split_unit_group",
+                      payload: {
+                        unitId: unit.id,
+                        id,
+                        count,
+                        destination: unit.destination,
+                      },
+                    },
+                    {
+                      type: "set_transit_state",
+                      payload: {
+                        unitId: id,
+                        state: "at_destination",
+                        actualRoom: r?.key ?? null,
+                      },
+                    },
+                  ],
+                },
+              },
+              versions: versionsFor(state, [unit.id]),
+            },
+          ],
+        };
+      }
+      if (count === unit.count || /\b(todas|todos|all)\b/.test(q))
+        return {
+          text: `Se registrará la llegada de los ${unit.count} objetos de ${unit.code}.`,
+          choices: [
+            {
+              label: "Confirmar llegada del lote completo",
+              action: {
+                type: "set_transit_state",
+                payload: {
+                  unitId: unit.id,
+                  state: "at_destination",
+                  actualRoom: resolveRoom(text)?.key ?? null,
+                },
+              },
+              versions: versionsFor(state, [unit.id]),
+            },
+          ],
+        };
+      return {
+        text: "Es un lote. Indicá cuántos objetos llegaron, por ejemplo “Llegaron 3 de 8 de M-001”.",
+      };
+    }
     const r = resolveRoom(text);
     if (r)
       return make(
@@ -420,6 +517,7 @@ export function interpret(
       payload: { unitId: unit.id, id: crypto.randomUUID(), description: text },
     });
   return {
+    fallback: true,
     text: say(
       "Necesito un dato más. Podés indicar una caja, buscar algo o usar los controles del botón +. Tu mensaje se conserva.",
       "I need more detail. Specify a unit, search for an item, or use the + controls. Your message is preserved.",

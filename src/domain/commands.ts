@@ -519,10 +519,23 @@ export function execute(
             "ARRIVAL_REQUIRED",
             "Registrá primero la llegada a Savanna.",
           );
-        if (u.unpacking === "done" && a.payload.state !== "done")
+        if (
+          u.unpacking === "done" &&
+          a.payload.state !== "done" &&
+          !a.payload.correction
+        )
           throw new DomainError(
             "REUSE_REQUIRED",
             "Usá Reabrir para reutilizarla.",
+          );
+        if (
+          u.unpacking === "partial" &&
+          a.payload.state === "not_started" &&
+          !a.payload.correction
+        )
+          throw new DomainError(
+            "CORRECTION_REQUIRED",
+            "Confirmá la corrección del estado de desempaque.",
           );
         u.unpacking = a.payload.state;
         u.version++;
@@ -580,6 +593,26 @@ export function execute(
           createdBy: actorId,
           createdAt: at,
         });
+        for (const link of state.links.filter(
+          (l) => l.entryId === e.id && l.relation !== "removed",
+        )) {
+          const x = link.id.replaceAll("-", "");
+          const y = a.payload.id.replaceAll("-", "");
+          const hex = [...x].map((c, i) =>
+            (parseInt(c, 16) ^ parseInt(y[i], 16)).toString(16),
+          );
+          hex[12] = "4";
+          hex[16] = "8";
+          const raw = hex.join("");
+          const linkId = `${raw.slice(0, 8)}-${raw.slice(8, 12)}-${raw.slice(12, 16)}-${raw.slice(16, 20)}-${raw.slice(20)}`;
+          unique(linkId);
+          state.links.push({
+            ...link,
+            id: linkId,
+            entryId: a.payload.id,
+            version: 1,
+          });
+        }
         e.quantity -= a.payload.quantity;
         e.version++;
         u.version++;
