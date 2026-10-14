@@ -2,6 +2,7 @@ import { FamilyApp } from "@/components/family-app";
 import { configured } from "@/server/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { deploymentEnvironment } from "@/deployment";
 export const dynamic = "force-dynamic";
 export default async function Page() {
   if (configured() && process.env.APP_BASE_URL) {
@@ -11,7 +12,7 @@ export default async function Page() {
   }
   const demoAllowed =
     process.env.APP_ENV !== "production" &&
-    process.env.VERCEL_ENV !== "production" &&
+    deploymentEnvironment() !== "production" &&
     (process.env.APP_DEMO === "true" || !configured());
   return (
     <FamilyApp

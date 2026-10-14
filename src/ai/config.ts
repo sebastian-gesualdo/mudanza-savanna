@@ -1,4 +1,5 @@
 import { DomainError } from "../domain/model";
+import { deploymentEnvironment } from "../deployment";
 
 // Official Gateway model pages verified 2026-10-14. Per million text tokens.
 // https://vercel.com/ai-gateway/models/jev
@@ -13,10 +14,11 @@ export const verifiedPrices: Record<string, { input: number; output: number }> =
 export function aiEnabled(
   env: Record<string, string | undefined> = process.env,
 ) {
-  // Production access is already authorized; previews never enable paid AI by default.
+  // The organizer requested production activation. Legacy setup flags only opt in
+  // local/test environments; explicit DISABLED switches remain available to operators.
   return (
-    env.AI_ENABLED === "true" ||
-    (env.AI_ENABLED !== "false" && env.VERCEL_ENV === "production")
+    env.AI_DISABLED !== "true" &&
+    (deploymentEnvironment(env) === "production" || env.AI_ENABLED === "true")
   );
 }
 export function generationEnabled(
@@ -24,8 +26,9 @@ export function generationEnabled(
 ) {
   return (
     aiEnabled(env) &&
-    (env.GENERATION_ENABLED === "true" ||
-      (env.GENERATION_ENABLED !== "false" && env.VERCEL_ENV === "production"))
+    env.GENERATION_DISABLED !== "true" &&
+    (deploymentEnvironment(env) === "production" ||
+      env.GENERATION_ENABLED === "true")
   );
 }
 export function modelConfig(kind: "decision" | "extraction") {
