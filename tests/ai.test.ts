@@ -5,6 +5,7 @@ import { compilePlan, stableId } from "../src/ai/pipeline";
 import {
   extractionSchema,
   Extraction,
+  GatewayExtractionService,
   JevDecisionService,
 } from "../src/ai/services";
 import { actorId, unitId, withBox } from "./fixtures";
@@ -15,6 +16,96 @@ import { decisionGateway } from "../src/ai/decision-gateway";
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
+});
+
+it("extracción conserva el JSON después de 30s y aborta una llamada colgada sin repetirla", async () => {
+  vi.stubEnv("AI_GATEWAY_API_KEY", "test-only-token");
+  vi.stubEnv("GENERATION_MODEL", "deepseek/deepseek-v4-pro-0813");
+  vi.useFakeTimers();
+  const timeout = vi.spyOn(AbortSignal, "timeout").mockImplementation((ms) => {
+    const controller = new AbortController();
+    setTimeout(
+      () => controller.abort(new DOMException("Timeout", "TimeoutError")),
+      ms,
+    );
+    return controller.signal;
+  });
+  const plan = {
+    question: null,
+    operations: [
+      {
+        type: "append",
+        target: "C-001",
+        entry: null,
+        sourceText: "platos azules",
+        kind: null,
+        room: null,
+        count: null,
+      },
+    ],
+  };
+  let stalled = false;
+  const mock = vi.fn(async (_url: URL, init: RequestInit) => {
+    const headers = new Headers(init.headers);
+    expect(headers.get("ai-language-model-id")).toBe(
+      "deepseek/deepseek-v4-pro-0813",
+    );
+    expect(headers.get("authorization")).toBe("Bearer test-only-token");
+    const body = JSON.parse(init.body as string);
+    expect(body.reasoning).toBe("none");
+    expect(body.providerOptions).toMatchObject({
+      deepseek: { thinking: { type: "disabled" } },
+      gateway: { only: ["deepseek", "alibaba"] },
+    });
+    expect(body.responseFormat.type).toBe("json");
+    return new Promise<Response>((resolve, reject) => {
+      init.signal!.addEventListener(
+        "abort",
+        () => reject(init.signal!.reason),
+        { once: true },
+      );
+      if (!stalled)
+        setTimeout(
+          () =>
+            resolve(
+              Response.json({
+                content: [{ type: "text", text: JSON.stringify(plan) }],
+                finishReason: { unified: "stop", raw: "stop" },
+                usage: {
+                  inputTokens: { total: 100 },
+                  outputTokens: { total: 90, text: 90, reasoning: 0 },
+                },
+                response: { modelId: "deepseek/deepseek-v4-pro-0813" },
+                warnings: [],
+              }),
+            ),
+          31000,
+        );
+    });
+  });
+  vi.stubGlobal("fetch", mock);
+  try {
+    const completed = new GatewayExtractionService().extract(
+      "Agregá platos azules a C-001",
+    );
+    await vi.advanceTimersByTimeAsync(31000);
+    expect(await completed).toMatchObject({
+      plan,
+      inputTokens: 100,
+      outputTokens: 90,
+    });
+    expect(mock).toHaveBeenCalledTimes(1);
+    expect(timeout).toHaveBeenCalledWith(45000);
+    stalled = true;
+    const pending = new GatewayExtractionService().extract("Otra consulta");
+    const rejected = expect(pending).rejects.toThrow();
+    await vi.advanceTimersByTimeAsync(45000);
+    await rejected;
+    expect(mock).toHaveBeenCalledTimes(2);
+  } finally {
+    timeout.mockRestore();
+    vi.useRealTimers();
+  }
 });
 
 it("Jev usa el contrato HTTP público con el SDK real y conserva uso y validación", async () => {

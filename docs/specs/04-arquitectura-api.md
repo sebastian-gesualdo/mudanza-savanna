@@ -230,3 +230,6 @@ La publicación distingue gateway_decision (Jev) y gateway_extraction (DeepSeek)
 
 
 Las etapas de la comprobación temporal usan VERCEL_DEPLOYMENT_ID, con VERCEL_URL o SHA como fallback, según las [variables oficiales de Vercel](https://vercel.com/docs/environment-variables/system-environment-variables). Un nuevo deployment explícito habilita otra comprobación presupuestada tras corregir acceso de Gateway; repetir el mismo deployment no redispara etapas inciertas ni duplica resultados. Conservar las reservas anteriores. La corrección de configuración no sustituye la verificación real de ambos modelos ni cambia el presupuesto de la mudanza.
+
+
+La extracción tiene un timeout de 45 segundos, una sola llamada y un máximo de 4096 tokens. Con Jev (12 segundos) queda margen para completar el lease de mensaje de 75 segundos; la ruta conserva maxDuration=90. DeepSeek V4 Pro 0813 desactiva thinking para esta extracción estructurada y solo se enruta a deepseek/alibaba a las tarifas documentadas, sin cambiar de modelo automáticamente. Timeout conserva la reserva incierta y el texto del usuario; no se presenta como gasto cero ni se redispara esa etapa.
