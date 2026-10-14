@@ -144,3 +144,12 @@ El deployment bb6af85, después de la recarga, completó la decisión Jev y avan
 La extracción conserva el modelo elegido, el esquema y la confirmación humana. Se desactiva el razonamiento extendido de DeepSeek con reasoning=none y thinking disabled y se admite hasta 45 segundos: con la decisión de 12 segundos queda margen dentro del lease de 75 segundos y la ruta de 90. Se mantienen 4096 tokens, una única llamada y las reservas inciertas. El enrutamiento de ese modelo se limita a deepseek/alibaba, cuyos precios de texto verificados son 0.66/1.98 USD por millón; no se habilitan hosts más caros con reservas calculadas a la tarifa menor. Fuentes: [modelo y proveedores](https://vercel.com/ai-gateway/models/deepseek-v4-pro-0813) y [thinking en el SDK](https://ai-sdk.dev/providers/ai-sdk-providers/deepseek).
 
 La prueba usa el SDK real con transporte HTTP simulado y reloj controlado: una respuesta JSON a los 31 segundos se valida con cantidad desconocida preservada; una llamada colgada aborta a los 45 sin reintentos. El nuevo deployment debe verificar ambos modelos antes de retirar el hook. La calibración completa y p95 siguen pendientes.
+
+
+## Conectividad y evaluación semántica · 14/10/2026
+
+El organizador compartió el log del deployment bcf3831: Jev respondió en menos de un segundo, pero el release terminó con RELEASE_AI_DECISION_INVALID. No hubo un rechazo HTTP ni se llegó a ejecutar DeepSeek. El adaptador validó una opción permitida y el helper exigía match para el ejemplo hervidor/pava eléctrica. El resultado conservador válido bloqueaba incorrectamente una comprobación de conexión. El deployment anterior sí había elegido match: estos dos casos muestran variación y no acreditan calidad calibrada.
+
+El helper de publicación ahora exige una opción del catálogo y registra decisionProbe con choice/matched, incluso unknown/matched=false. Continúan siendo obligatorias ambas respuestas reales, la validación del esquema de extracción y del caso ficticio sin cantidades inventadas. Una respuesta de Jev fuera del catálogo, fallo HTTP, timeout o extracción inválida sigue bloqueando el paso. La evaluación semántica de 40 ejemplos y sus metas de precisión/recall no cambian ni se declaran cumplidas por este smoke test. La búsqueda determinista ya incluye hervidor→pava eléctrica; no se altera para disimular el resultado.
+
+La prueba PostgreSQL usa unknown válido y verifica que queda visible en el resultado, que se comprueba extracción, que se conservan reservas y que no se modifica inventario ni accesos.

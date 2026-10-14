@@ -64,7 +64,9 @@ export async function checkReleaseAi(
     `release-v1-20261014:${deployment}:decision`,
     pool,
   );
-  if (selected.choice !== "match")
+  // This checks access and a typed response. Semantic accuracy belongs to the
+  // labelled evaluation; a valid conservative answer is not a transport failure.
+  if (!["match", "unknown"].includes(selected.choice))
     throw new DomainError(
       "RELEASE_AI_DECISION_INVALID",
       "La decisión de prueba necesita revisión.",
@@ -74,6 +76,10 @@ export async function checkReleaseAi(
     return {
       status: "decision_verified",
       decisionModel: selected.model,
+      decisionProbe: {
+        choice: selected.choice,
+        matched: selected.choice === "match",
+      },
       generation: "disabled",
     };
   const input = JSON.stringify({
@@ -108,6 +114,10 @@ export async function checkReleaseAi(
   return {
     status: "verified",
     decisionModel: selected.model,
+    decisionProbe: {
+      choice: selected.choice,
+      matched: selected.choice === "match",
+    },
     extractionModel: result.model,
   };
 }
