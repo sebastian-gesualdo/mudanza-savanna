@@ -25,7 +25,7 @@ El chat es la interfaz principal y el destino al entrar o volver a la app. La ma
 | Plataforma | PWA instalada desde Safari en iPhone; también usable desde el navegador. |
 | Datos | Inventario central en Supabase/PostgreSQL; copia local y cola de operaciones para desconexiones. |
 | Publicación | Vercel conectado a GitHub: producción desde `main`, previews para ramas/PR. |
-| IA | Priorizar Jev en toda decisión adecuada a sus capacidades. Reglas y controles explícitos evitan llamadas innecesarias. Modelo generativo económico solo para lo que lo necesita. |
+| IA | Priorizar Jev en toda decisión adecuada a sus capacidades. Reglas y controles explícitos evitan llamadas innecesarias. Modelo generativo de mayor capacidad solo para lo que lo necesita, priorizando calidad según el cambio solicitado el 14/10/2026 y conservando el límite de presupuesto. El usuario descartó Anthropic y eligió DeepSeek V4 Pro 0813; Jev conserva decisiones, búsqueda y scores. |
 | Acceso a modelos | Vercel AI SDK + Vercel AI Gateway. Sin integración directa ni clave propia de la API de OpenAI como requisito. Un modelo de OpenAI vía Gateway es una opción, no una obligación. |
 | Voz inicial | Dictado del teclado de iOS. Grabación y transcripción propias son una ampliación opcional. |
 | Inventario inicial | Cajas y bolsas vacías desde cero. Muebles y otros objetos históricos como candidatos para revisar. |

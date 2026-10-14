@@ -166,7 +166,7 @@ Leer cambios al iniciar, al volver al primer plano, después de escribir y cada 
 | `AI_GATEWAY_API_KEY` | Secreto para Gateway cuando no se usa identidad OIDC compatible de Vercel. |
 | `APP_BASE_URL` | Origen autorizado, base de enlaces de fichas y retorno OAuth de la aplicación (`/auth/callback`). |
 | `DECISION_MODEL` | Identificador de Jev verificado en Gateway. |
-| `GENERATION_MODEL` | Modelo de extracción en Gateway; por defecto `google/gemini-2.5-flash-lite`, candidato económico con tarifas oficiales verificadas. `GENERATION_ENABLED=false` desactiva la extracción. Siempre se confirma la propuesta; la calibración live sigue siendo una prueba independiente. |
+| `GENERATION_MODEL` | Modelo de extracción en Gateway; por defecto `deepseek/deepseek-v4-pro-0813`; alternativa `openai/gpt-6.1-sol`. Valores heredados de Gemini 2.5/GPT 5.4 se sustituyen por DeepSeek con sus propias tarifas. `GENERATION_DISABLED=true` desactiva la extracción. Siempre se confirma la propuesta; la calibración live sigue siendo una prueba independiente. |
 | `AI_BUDGET_USD` | Default 5 para producción; menor para pruebas. |
 | `AI_ENABLED` / `GENERATION_ENABLED` | Opt-in de preview/desarrollo con recursos de prueba; producción activa ambos modelos aunque conserve false de instalación. |
 | `AI_DISABLED` / `GENERATION_DISABLED` | Interruptores operativos: true apaga ambos modelos o solo extracción, respectivamente. |
@@ -225,3 +225,5 @@ La comprobación temporal de Gateway del release usa únicamente el organizador 
 
 
 El deployment de ampliación `b5d5c37` completó el paso temporal, pero el organizador observó Desactivado en su sesión real. La corrección activa IA en producción pese a los flags antiguos de instalación y conserva el destino de build en runtime. La protección de previews usa ese mismo destino. Se mantiene temporalmente el hook hasta verificar ambos modelos reales: disabled y decision_verified no satisfacen esta publicación. Luego se retira la invocación automática y build vuelve a next build. Los interruptores AI_DISABLED=true y GENERATION_DISABLED=true siguen disponibles; las futuras migraciones requieren una publicación revisada propia.
+
+La publicación distingue gateway_decision (Jev) y gateway_extraction (DeepSeek) y registra HTTP status/tipo/código de proveedor sin mensajes, cuerpos, credenciales ni inventario. La integración Jev conserva AI SDK 7.0.139 y usa su autenticación/validación con el transporte público POST /v1/evaluate. Un rechazo del proveedor o una indisponibilidad real sigue fallando la comprobación; no se oculta como verified. Anthropic no se permite conforme al pedido del organizador.
