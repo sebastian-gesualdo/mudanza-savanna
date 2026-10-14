@@ -16,6 +16,7 @@ import { reserveBudget, paidCall } from "../src/ai/services";
 import { processMessage, resolveProposal } from "../src/server/chat";
 import { semanticSearch } from "../src/ai/pipeline";
 import { previewImport, commitImport } from "../src/server/imports";
+import { checkReleaseAi } from "../src/server/release-ai-check";
 import { applyMigrations } from "../src/server/migrations";
 import { exportInventory } from "../src/server/backup";
 import { restoreEmpty } from "../src/server/restore";
@@ -1068,3 +1069,79 @@ it("confirmación de IA rechaza cualquier referencia que cambió, incluso una ad
   ).rejects.toThrow("cambiaron");
   expect((await snapshot(a, pool)).entries).toHaveLength(0);
 }, 60000);
+
+it("verificación del release usa dos etapas recuperables, sin cambiar inventario ni accesos", async () => {
+  const { a } = await chatFixture();
+  const before = await snapshot(a, pool);
+  vi.stubEnv("AI_ENABLED", "true");
+  vi.stubEnv("GENERATION_ENABLED", "true");
+  const decision = {
+    choose: vi.fn(async () => ({
+      choice: "match",
+      model: "typesafe-ai/jev",
+      inputTokens: 50,
+      outputTokens: 0,
+    })),
+  };
+  const extraction = {
+    extract: vi.fn(async () => ({
+      plan: {
+        question: null,
+        operations: [
+          {
+            type: "append" as const,
+            target: "C-001",
+            entry: null,
+            sourceText: "platos azules",
+            kind: null,
+            room: null,
+            count: null,
+          },
+        ],
+      },
+      model: "google/gemini-2.5-flash-lite",
+      inputTokens: 100,
+      outputTokens: 100,
+    })),
+  };
+  try {
+    expect((await checkReleaseAi(pool, a, decision, extraction)).status).toBe(
+      "verified",
+    );
+    expect((await checkReleaseAi(pool, a, decision, extraction)).status).toBe(
+      "verified",
+    );
+    expect(decision.choose).toHaveBeenCalledTimes(1);
+    expect(extraction.extract).toHaveBeenCalledTimes(1);
+    expect(await snapshot(a, pool)).toEqual(before);
+    await pool.query(
+      "update move_memberships set active=false where move_id=$1",
+      [a.moveId],
+    );
+    await expect(checkReleaseAi(pool, a, decision, extraction)).rejects.toThrow(
+      "ingresado",
+    );
+    expect(decision.choose).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.unstubAllEnvs();
+  }
+}, 60000);
+
+it("respuesta estructurada conserva el UUID real de la unidad activa", async () => {
+  const { a, request } = await chatFixture();
+  const id = crypto.randomUUID();
+  const c = command(a.participantId, {
+    type: "create_unit",
+    payload: { id, kind: "box", name: "Nueva caja", destination: "kitchen" },
+  });
+  c.operationId = request.messageId;
+  const response = await processMessage(
+    a,
+    { ...request, text: "Crear caja para cocina", structuredCommand: c },
+    pool,
+  );
+  expect(response.activeUnitId).toBe(id);
+  expect(response.receipt?.changes.some((change) => change.id === id)).toBe(
+    true,
+  );
+});

@@ -72,6 +72,10 @@ type Editor = {
   entry?: Entry;
   candidate?: HistoricalCandidate;
 };
+const dollars = (value: string) =>
+  Number(value) > 0 && Number(value) < 0.00001
+    ? "< 0.00001"
+    : Number(value).toFixed(5);
 const time = (at: string) =>
   new Date(at).toLocaleString("es-AR", {
     timeZone: "America/New_York",
@@ -2028,7 +2032,7 @@ export function FamilyApp({
                   {session.demo
                     ? "Demo con controles y reglas locales. No consume saldo."
                     : usage
-                      ? `US$ ${Number(usage.spent).toFixed(3)} consumidos · ${Number(usage.reserved).toFixed(3)} reservados / ${usage.budget}. ${usage.enabled ? "Disponible" : "Desactivado"}.`
+                      ? `US$ ${dollars(usage.spent)} consumidos · ${dollars(usage.reserved)} reservados / ${usage.budget}. ${usage.enabled ? "Disponible" : "Desactivado"}.`
                       : "El consumo no está disponible en este momento."}
                 </p>
                 {!session.demo && usage?.enabled && (

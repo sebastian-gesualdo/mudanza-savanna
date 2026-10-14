@@ -6,6 +6,7 @@ import { DomainError, emptyState, Receipt, State } from "../domain/model";
 import {
   acknowledge,
   applyDelta,
+  applyReceipt,
   Delta,
   editDocument,
   enqueue,
@@ -317,9 +318,14 @@ export function useFamily(
               },
             );
             await write((local) => {
+              applyReceipt(local.confirmed, receipt);
               local.resolutions = local.resolutions?.filter(
                 (r) => r.operationId !== resolution.operationId,
               );
+              if (resolution.activeAfter) {
+                local.activeUnitId = resolution.activeAfter;
+                local.literal = resolution.literalAfter ?? false;
+              }
               local.messages.push({
                 id: receipt.eventId,
                 role: "assistant",
@@ -598,13 +604,24 @@ export function useFamily(
               r.messageId === choice.proposal!.messageId &&
               r.choiceIndex === choice.proposal!.choiceIndex,
           )
-        )
+        ) {
+          const action = choice.action!;
+          const actions =
+            action.type === "compound" ? action.payload.actions : [action];
+          const created = actions
+            .filter((a) => a.type === "create_unit")
+            .at(-1);
           local.resolutions.push({
             ...choice.proposal!,
             operationId: crypto.randomUUID(),
             expectedParticipantId: session.actorId,
             deviceId: local.deviceId,
+            activeAfter: created?.payload.id,
+            literalAfter: created
+              ? created.payload.kind === "box" || created.payload.kind === "bag"
+              : undefined,
           });
+        }
       });
       void sync();
       return;

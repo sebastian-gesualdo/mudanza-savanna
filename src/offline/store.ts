@@ -66,6 +66,8 @@ export interface LocalDocument {
     expectedParticipantId: string;
     deviceId: string;
     status?: string;
+    activeAfter?: string;
+    literalAfter?: boolean;
   }[];
   queue: Pending[];
   messages: Message[];

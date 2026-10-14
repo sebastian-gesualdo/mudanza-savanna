@@ -217,3 +217,6 @@ Esta publicación aplica explícitamente la migración aditiva `202610140001_com
 
 
 La protección de previews también está en `configured()`: una referencia al proyecto de producción en API/PostgreSQL/origen bloquea Auth y por tanto todos los endpoints familiares. Los POST facturados `/ai/check` y `/search/semantic` requieren actor esperado y rechazan una pestaña de otra cuenta antes de reservar o llamar al proveedor. Confirmar una propuesta valida todas sus versiones originales; un comando manual de adición conserva la concurrencia permitida por el dominio.
+
+
+La comprobación temporal de Gateway del release usa únicamente el organizador con membresía activa ya vinculada a Auth, dos casos ficticios y reservas persistentes por etapa. No es una API administrativa ni simula Google Login. Si IA está activa exige decisiones/esquema válidos antes de completar el build; el resultado se registra sin secretos ni datos de inventario. Un flag false explícito se conserva y se informa como desactivado. Esta prueba no sustituye la calibración live ni el recorrido familiar; se retira junto con el hook.

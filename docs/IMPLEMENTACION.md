@@ -66,7 +66,7 @@ La salida estática está en `out/`. Para actualizar el sitio publicado, conserv
 
 El organizador confirmó Google Login como Sebas, guardado de una caja y saldo en Gateway. La ampliación implementa chat libre con Jev, extracción excepcional mediante Gateway, propuestas confirmadas, leases de mensajes, reservas por etapa recuperables, búsqueda por bloques/caché con evidencia, sesiones de importación y lotes repetibles, división de contenido/relaciones, correcciones, llegada parcial y sincronización incremental. Los detalles operativos están en los contratos 03–06 y la guía.
 
-Verificación local intermedia: 49 pruebas de dominio/chat/IA/TLS/IndexedDB y 19 PostgreSQL real temporal, incluida API con Auth simulado; cuarenta reglas offline correctas. Se están ejecutando los controles finales de la versión de entrega. Las pruebas con adaptadores no acreditan la exactitud del proveedor real.
+Verificación local intermedia: 49 pruebas de dominio/chat/IA/TLS/IndexedDB y 21 PostgreSQL real temporal, incluida API con Auth simulado; cuarenta reglas offline correctas. Se están ejecutando los controles finales de la versión de entrega. Las pruebas con adaptadores no acreditan la exactitud del proveedor real.
 
 Pendiente para certificar T11: calibración live de Jev/extracción con el conjunto etiquetado, medición p95 en el entorno alojado, una operación compartida entre dos cuentas reales e instalación/OAuth/suspensión/offline en iPhone físico. Codex no dispone de sesión Google del usuario, OIDC de un deployment o credenciales administrativas de Vercel/Supabase. El deployment ofrece una prueba explícita y pequeña del asistente sin escribir inventario. La comparación de tarifas favorece al candidato Gemini Flash Lite; no se presenta como una comparación empírica de exactitud contra Nano.
 
@@ -103,3 +103,9 @@ El release de ampliación aplica únicamente `202610140001_complete_v1.sql` medi
 
 
 La búsqueda semántica incluye relaciones registradas de accesorios; su caché incorpora versiones de relaciones y muebles. La confirmación de una propuesta verifica todas las referencias originales, incluso una adición cuyo comando manual permite concurrencia. Las previews rechazan reutilizar URL API, conexión PostgreSQL u origen de producción aunque las variables se hayan guardado por error en ese ámbito; producción no ofrece una demo ante falta de configuración.
+
+
+El paso temporal de publicación verifica además Gateway desde Vercel: dos etapas pequeñas con datos ficticios, actor del organizador ya vinculado y presupuesto persistente. Claves estables por revisión recuperan resultados al repetir el mismo build; no crea membresías ni cambia inventario. Con flags activos, un fallo del proveedor o del esquema impide certificar esa publicación. Si los flags están explícitamente desactivados, el resultado indica disabled. Un resultado verified demuestra acceso y los dos casos de prueba, sin afirmar calibración del conjunto completo ni p95. El hook se retira después de la publicación confirmada.
+
+
+CI de `5103d44` pasó tipos, lint, 49 pruebas locales, 19 PostgreSQL, build y 17 de 18 recorridos de navegador. El único fallo fue la importación con API simulada en WebKit: no apareció el botón de revisión en el test con service worker habilitado. Para comprobar una posible interferencia con las respuestas simuladas, se bloquea el service worker solo en `shared.spec.ts`, como recomienda [Playwright](https://playwright.dev/docs/network#missing-network-events-and-service-workers); la prueba real de shell/reapertura offline mantiene el worker habilitado. Los controles de división/corrección y la cola compartida también pasaron en Chromium móvil local por separado. Se exige repetir los 18 escenarios en CI antes de integrar.

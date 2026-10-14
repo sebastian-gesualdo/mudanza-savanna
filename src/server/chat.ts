@@ -223,6 +223,19 @@ export async function processMessage(
           },
         ],
       };
+    if (b.structuredCommand) {
+      const action = b.structuredCommand.action;
+      const actions =
+        action.type === "compound" ? action.payload.actions : [action];
+      const created = actions.filter((a) => a.type === "create_unit").at(-1);
+      reply.activeUnitId = created?.payload.id ?? b.activeUnitId ?? undefined;
+      if (created)
+        reply.literal =
+          created.payload.kind === "box" || created.payload.kind === "bag";
+    } else if (reply.command?.action.type === "create_unit") {
+      reply.activeUnitId = undefined;
+      reply.literal = undefined;
+    }
     const expiresAt = new Date(Date.now() + 600000).toISOString();
     const response: ChatResponse = {
       ...reply,

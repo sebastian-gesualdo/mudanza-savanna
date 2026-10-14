@@ -4,6 +4,8 @@ import { emptyState } from "../../src/domain/model";
 const sebas = "00000000-0000-4000-8000-000000000011";
 const lu = "00000000-0000-4000-8000-000000000012";
 const move = "00000000-0000-4000-8000-000000000013";
+// Mocked HTTP requests must reach route handlers; PWA service-worker behavior is tested in offline.spec.ts.
+test.use({ serviceWorkers: "block" });
 // HTTP/Auth adapter simulated. PostgreSQL transactions are tested separately.
 test("dos cuentas sincronizan cambios y una cola offline conserva autoría al reabrir", async ({
   browser,
