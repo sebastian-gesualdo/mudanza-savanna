@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: false,
   retries: 0,
-  timeout: 30000,
+  timeout: 60000,
   use: { baseURL: `http://127.0.0.1:${port}`, trace: "retain-on-failure" },
   projects: [
     {

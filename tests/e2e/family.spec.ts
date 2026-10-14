@@ -155,7 +155,7 @@ test("separar contenido y corregir un estado conserva cantidades e historial", a
     .getByRole("button", { name: "Corregir estado o ubicación" })
     .click();
   await dialog
-    .getByLabel("Traslado", { exact: true })
+    .getByRole("combobox", { name: "Traslado", exact: true })
     .selectOption("at_origin");
   await dialog
     .getByLabel("Confirmo el nuevo estado y su efecto sobre el contenido")

@@ -265,7 +265,7 @@ test("revisión histórica conserva un lote hasta confirmar y deja Removed exclu
   await page.getByRole("button", { name: "Revisar fila", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await dialog
-    .getByLabel("Destino en la casa nueva", { exact: true })
+    .getByRole("combobox", { name: "Destino en la casa nueva", exact: true })
     .selectOption("office");
   await dialog
     .getByRole("button", { name: "Guardar revisión de esta fila" })
