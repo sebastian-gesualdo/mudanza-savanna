@@ -1073,8 +1073,9 @@ it("confirmación de IA rechaza cualquier referencia que cambió, incluso una ad
 it("verificación del release usa dos etapas recuperables, sin cambiar inventario ni accesos", async () => {
   const { a } = await chatFixture();
   const before = await snapshot(a, pool);
-  vi.stubEnv("AI_ENABLED", "true");
-  vi.stubEnv("GENERATION_ENABLED", "true");
+  vi.stubEnv("VERCEL_ENV", "production");
+  vi.stubEnv("AI_ENABLED", "false");
+  vi.stubEnv("GENERATION_ENABLED", "false");
   const decision = {
     choose: vi.fn(async () => ({
       choice: "match",

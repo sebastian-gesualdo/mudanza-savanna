@@ -4,19 +4,52 @@ import { aiEnabled, generationEnabled, modelConfig } from "../src/ai/config";
 import { compilePlan, stableId } from "../src/ai/pipeline";
 import { extractionSchema, Extraction } from "../src/ai/services";
 import { actorId, unitId, withBox } from "./fixtures";
+import { deploymentEnvironment } from "../src/deployment";
 afterEach(() => vi.unstubAllEnvs());
-it("solo producción habilita IA automáticamente; una desactivación explícita prevalece", () => {
+it("producción activa ambos modelos aunque conserve flags de la instalación inicial", () => {
   expect(aiEnabled({ VERCEL_ENV: "production" })).toBe(true);
   expect(aiEnabled({ VERCEL_ENV: "preview" })).toBe(false);
   expect(aiEnabled({ VERCEL_ENV: "production", AI_ENABLED: "false" })).toBe(
-    false,
+    true,
   );
   expect(
     generationEnabled({
       VERCEL_ENV: "production",
       GENERATION_ENABLED: "false",
     }),
-  ).toBe(false);
+  ).toBe(true);
+});
+it("los interruptores operativos prevalecen también sobre activación explícita", () => {
+  const env = {
+    VERCEL_ENV: "production",
+    AI_ENABLED: "true",
+    GENERATION_ENABLED: "true",
+  };
+  expect(aiEnabled({ ...env, AI_DISABLED: "true" })).toBe(false);
+  expect(generationEnabled({ ...env, AI_DISABLED: "true" })).toBe(false);
+  expect(aiEnabled({ ...env, GENERATION_DISABLED: "true" })).toBe(true);
+  expect(generationEnabled({ ...env, GENERATION_DISABLED: "true" })).toBe(
+    false,
+  );
+  expect(generationEnabled({ VERCEL_ENV: "preview" })).toBe(false);
+  expect(
+    generationEnabled({
+      VERCEL_ENV: "preview",
+      AI_ENABLED: "true",
+      GENERATION_ENABLED: "true",
+    }),
+  ).toBe(true);
+});
+it("conserva el destino del build cuando la función no recibe variables de sistema", () => {
+  vi.stubEnv("VERCEL_ENV", undefined);
+  vi.stubEnv("CASA_BUILD_ENV", "production");
+  vi.stubEnv("APP_ENV", "development");
+  vi.stubEnv("AI_ENABLED", "false");
+  vi.stubEnv("GENERATION_ENABLED", "false");
+  expect(deploymentEnvironment()).toBe("production");
+  expect(generationEnabled()).toBe(true);
+  vi.stubEnv("CASA_BUILD_ENV", "preview");
+  expect(generationEnabled()).toBe(false);
 });
 it("rechaza modelos sin tarifa verificada", () => {
   vi.stubEnv("GENERATION_MODEL", "unverified/model");
@@ -117,7 +150,8 @@ it("variables vacías usan tarifas y modelo conocidos; no fingen un precio cero"
 });
 
 it("una preview no puede reutilizar conexión u origen de producción", () => {
-  vi.stubEnv("VERCEL_ENV", "preview");
+  vi.stubEnv("VERCEL_ENV", undefined);
+  vi.stubEnv("CASA_BUILD_ENV", "preview");
   vi.stubEnv("SUPABASE_URL", "https://jncnmxsiylhqeycqhhya.supabase.co");
   vi.stubEnv("SUPABASE_PUBLISHABLE_KEY", "test-public");
   vi.stubEnv("DATABASE_URL", "postgresql://unused:unused@localhost:1/unused");

@@ -6,6 +6,7 @@ import {
   validateProductionTarget,
 } from "../src/server/initial-setup";
 import { applyMigrations } from "../src/server/migrations";
+import { DomainError } from "../src/domain/model";
 // Temporary, reviewed release step. No seed, membership changes or budget reset.
 if (process.env.VERCEL_ENV === "production") {
   if (process.env.VERCEL_GIT_COMMIT_REF !== "main")
@@ -16,10 +17,14 @@ if (process.env.VERCEL_ENV === "production") {
   try {
     console.log("RELEASE_MIGRATIONS", await applyMigrations(pool));
     phase = "gateway_validation";
-    console.log(
-      "RELEASE_AI_CHECK",
-      await checkReleaseAi(pool, productionSetup),
-    );
+    const result = await checkReleaseAi(pool, productionSetup);
+    if (result.status !== "verified")
+      throw new DomainError(
+        "RELEASE_AI_DISABLED",
+        "Esta publicación requiere verificar ambos modelos activos.",
+        503,
+      );
+    console.log("RELEASE_AI_CHECK", result);
   } catch (error) {
     console.error("RELEASE_SETUP_FAILED", {
       phase,

@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
+  env: {
+    CASA_BUILD_ENV:
+      process.env.VERCEL_ENV || process.env.APP_ENV || "development",
+  },
   serverExternalPackages: ["pg"],
   poweredByHeader: false,
   allowedDevOrigins: ["127.0.0.1", "localhost"],
