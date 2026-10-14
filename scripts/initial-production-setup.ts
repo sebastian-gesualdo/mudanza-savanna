@@ -11,6 +11,7 @@ import {
 // Temporary release hook: local builds, CI and previews never initialize production.
 if (process.env.VERCEL && process.env.VERCEL_GIT_COMMIT_REF === "main") {
   let pool;
+  let phase = "target_validation";
   try {
     if (process.env.VERCEL_ENV !== "production")
       throw new Error("INITIAL_SETUP_PRODUCTION_CONTEXT_REQUIRED");
@@ -20,12 +21,14 @@ if (process.env.VERCEL && process.env.VERCEL_GIT_COMMIT_REF === "main") {
       "supabase/migrations/202610130001_initial.sql",
       "utf8",
     );
+    phase = "database_initialization";
     const result = await applyInitialSetup(
       pool,
       productionSetup,
       schema,
       loadAuthorizedOrganizer,
     );
+    phase = "receipt_publication";
     await writeFile(
       "public/initial-setup-status.json",
       JSON.stringify({
@@ -40,7 +43,15 @@ if (process.env.VERCEL && process.env.VERCEL_GIT_COMMIT_REF === "main") {
       error instanceof Error && error.message.startsWith("INITIAL_SETUP_")
         ? error.message
         : "INITIAL_SETUP_FAILED";
-    console.error(name);
+    const rawCode =
+      typeof error === "object" && error !== null && "code" in error
+        ? error.code
+        : undefined;
+    const code =
+      typeof rawCode === "string" && /^[A-Z0-9_]+$/.test(rawCode)
+        ? rawCode
+        : undefined;
+    console.error(name, { phase, code });
     process.exitCode = 1;
   } finally {
     await pool?.end();
