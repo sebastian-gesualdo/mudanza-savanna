@@ -1,3 +1,4 @@
+import { configured } from "../src/server/auth";
 import { afterEach, expect, it, vi } from "vitest";
 import { aiEnabled, generationEnabled, modelConfig } from "../src/ai/config";
 import { compilePlan, stableId } from "../src/ai/pipeline";
@@ -113,4 +114,16 @@ it("variables vacías usan tarifas y modelo conocidos; no fingen un precio cero"
     input: 0.1,
     output: 0.4,
   });
+});
+
+it("una preview no puede reutilizar conexión u origen de producción", () => {
+  vi.stubEnv("VERCEL_ENV", "preview");
+  vi.stubEnv("SUPABASE_URL", "https://jncnmxsiylhqeycqhhya.supabase.co");
+  vi.stubEnv("SUPABASE_PUBLISHABLE_KEY", "test-public");
+  vi.stubEnv("DATABASE_URL", "postgresql://unused:unused@localhost:1/unused");
+  vi.stubEnv("APP_BASE_URL", "https://mudanza-savanna.vercel.app");
+  expect(configured()).toBe(false);
+  vi.stubEnv("SUPABASE_URL", "https://test.example.invalid");
+  vi.stubEnv("APP_BASE_URL", "https://test-app.example.invalid");
+  expect(configured()).toBe(true);
 });

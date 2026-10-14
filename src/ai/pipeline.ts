@@ -214,12 +214,6 @@ export async function semanticSearch(
   pool: Pool = database(),
   service: DecisionService = new JevDecisionService(),
 ) {
-  if (Buffer.byteLength(query) > 4000)
-    throw new DomainError(
-      "AI_INPUT",
-      "Usá una descripción más corta para buscar. Tu mensaje se conserva.",
-      422,
-    );
   const state = await snapshot(actor, pool);
   const exact = search(state, query);
   if (exact.length)
@@ -230,6 +224,12 @@ export async function semanticSearch(
       nextOffset: null,
       revision: state.revision,
     };
+  if (Buffer.byteLength(query) > 4000)
+    throw new DomainError(
+      "AI_INPUT",
+      "Usá una descripción más corta para buscar. Tu mensaje se conserva.",
+      422,
+    );
   // Descriptions are reviewed in full, not shortened snippets. Bound byte size and scope.
   const all = [
     ...state.entries.filter((e) => e.state !== "archived"),
@@ -243,6 +243,16 @@ export async function semanticSearch(
         lastUnitId: u.id,
       })),
   ];
+  const relations = (entryId: string) =>
+    state.links
+      .filter((l) => l.entryId === entryId && l.relation !== "removed")
+      .map((l) => ({
+        link: l.id,
+        version: l.version,
+        relation: l.relation,
+        unit: state.units.find((u) => u.id === l.unitId && !u.archived),
+      }))
+      .filter((l) => l.unit);
   const candidates = all.slice(offset, offset + 24);
   const hits: SearchHit[] = [];
   let reviewed = 0;
@@ -270,12 +280,13 @@ export async function semanticSearch(
     const cacheKey = createHash("sha256")
       .update(
         JSON.stringify({
-          version: 2,
+          version: 3,
           model: modelConfig("decision").model,
           query: normalize(query),
           batch: batch.map((e) => [
             e.id,
             e.version,
+            relations(e.id),
             state.units.find((u) => u.id === (e.unitId ?? e.lastUnitId))
               ?.version,
           ]),
@@ -293,6 +304,11 @@ export async function semanticSearch(
       records: batch.map((e, i) => ({
         key: `R${i}`,
         description: e.description,
+        related: relations(e.id).map((r) => ({
+          relation: r.relation,
+          name: r.unit!.name,
+          code: r.unit!.code,
+        })),
         unit: state.units.find((u) => u.id === (e.unitId ?? e.lastUnitId))
           ?.code,
       })),
@@ -356,7 +372,11 @@ export async function semanticSearch(
         if (found)
           hits.push({
             ...found,
-            evidence: `${choices[`R${i}`] === "clue" ? "Pista posible: " : ""}${found.evidence}`,
+            evidence: `${choices[`R${i}`] === "clue" ? "Pista posible: " : ""}${found.evidence}${relations(
+              e.id,
+            )
+              .map((r) => ` · Relación registrada: ${r.unit!.name}`)
+              .join("")}`,
           });
       }
   }

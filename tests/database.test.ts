@@ -1019,3 +1019,52 @@ it("búsqueda semántica cacheada respeta versiones y nunca elimina resultados e
     vi.unstubAllEnvs();
   }
 }, 60000);
+
+it("confirmación de IA rechaza cualquier referencia que cambió, incluso una adición", async () => {
+  const { a, box, request } = await chatFixture();
+  const state = await snapshot(a, pool);
+  await processMessage(a, request, pool, async () => ({
+    text: "Propuesta",
+    choices: [
+      {
+        label: "Confirmar",
+        action: {
+          type: "append_content" as const,
+          payload: {
+            unitId: box,
+            id: crypto.randomUUID(),
+            description: "Platos",
+          },
+        },
+        versions: versionsFor(state, [box]),
+      },
+    ],
+  }));
+  await executeCommand(
+    a,
+    command(
+      a.participantId,
+      {
+        type: "update_unit",
+        payload: { unitId: box, patch: { name: "Otra descripción" } },
+      },
+      versionsFor(state, [box]),
+    ),
+    undefined,
+    pool,
+  );
+  await expect(
+    resolveProposal(
+      a,
+      request.messageId,
+      {
+        operationId: crypto.randomUUID(),
+        choiceIndex: 0,
+        expectedParticipantId: a.participantId,
+        deviceId: request.deviceId,
+      },
+      pool,
+    ),
+  ).rejects.toThrow("cambiaron");
+  expect((await snapshot(a, pool)).entries).toHaveLength(0);
+}, 60000);

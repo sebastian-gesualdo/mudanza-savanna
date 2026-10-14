@@ -66,7 +66,7 @@ La salida estática está en `out/`. Para actualizar el sitio publicado, conserv
 
 El organizador confirmó Google Login como Sebas, guardado de una caja y saldo en Gateway. La ampliación implementa chat libre con Jev, extracción excepcional mediante Gateway, propuestas confirmadas, leases de mensajes, reservas por etapa recuperables, búsqueda por bloques/caché con evidencia, sesiones de importación y lotes repetibles, división de contenido/relaciones, correcciones, llegada parcial y sincronización incremental. Los detalles operativos están en los contratos 03–06 y la guía.
 
-Verificación local intermedia: 48 pruebas de dominio/chat/IA/TLS/IndexedDB y 17 PostgreSQL real temporal, incluida API con Auth simulado; cuarenta reglas offline correctas. Se están ejecutando los controles finales de la versión de entrega. Las pruebas con adaptadores no acreditan la exactitud del proveedor real.
+Verificación local intermedia: 49 pruebas de dominio/chat/IA/TLS/IndexedDB y 19 PostgreSQL real temporal, incluida API con Auth simulado; cuarenta reglas offline correctas. Se están ejecutando los controles finales de la versión de entrega. Las pruebas con adaptadores no acreditan la exactitud del proveedor real.
 
 Pendiente para certificar T11: calibración live de Jev/extracción con el conjunto etiquetado, medición p95 en el entorno alojado, una operación compartida entre dos cuentas reales e instalación/OAuth/suspensión/offline en iPhone físico. Codex no dispone de sesión Google del usuario, OIDC de un deployment o credenciales administrativas de Vercel/Supabase. El deployment ofrece una prueba explícita y pequeña del asistente sin escribir inventario. La comparación de tarifas favorece al candidato Gemini Flash Lite; no se presenta como una comparación empírica de exactitud contra Nano.
 
@@ -100,3 +100,6 @@ El organizador confirmó ingreso real con Google como Sebas y guardado de una ca
 
 
 El release de ampliación aplica únicamente `202610140001_complete_v1.sql` mediante el runner idempotente. Son columnas de recuperación y tablas de caché/importación con RLS; no se reinicia presupuesto, seeding ni membresías. El hook temporal debe retirarse tras el deployment exitoso. Las previews omiten ese paso y no habilitan IA pagada por defecto.
+
+
+La búsqueda semántica incluye relaciones registradas de accesorios; su caché incorpora versiones de relaciones y muebles. La confirmación de una propuesta verifica todas las referencias originales, incluso una adición cuyo comando manual permite concurrencia. Las previews rechazan reutilizar URL API, conexión PostgreSQL u origen de producción aunque las variables se hayan guardado por error en ese ámbito; producción no ofrece una demo ante falta de configuración.

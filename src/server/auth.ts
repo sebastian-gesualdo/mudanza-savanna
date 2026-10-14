@@ -2,13 +2,22 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { DomainError } from "../domain/model";
 import { bindMembership } from "./database";
-export const configured = () =>
-  Boolean(
+export const configured = () => {
+  // A mis-scoped environment variable must never connect a preview to this family's production data.
+  if (
+    process.env.VERCEL_ENV === "preview" &&
+    (process.env.SUPABASE_URL?.includes("jncnmxsiylhqeycqhhya.supabase.co") ||
+      process.env.APP_BASE_URL?.includes("mudanza-savanna.vercel.app") ||
+      process.env.DATABASE_URL?.includes("jncnmxsiylhqeycqhhya"))
+  )
+    return false;
+  return Boolean(
     process.env.SUPABASE_URL &&
       process.env.SUPABASE_PUBLISHABLE_KEY &&
       process.env.DATABASE_URL &&
       process.env.APP_BASE_URL,
   );
+};
 export async function authClient() {
   if (!configured())
     throw new DomainError(

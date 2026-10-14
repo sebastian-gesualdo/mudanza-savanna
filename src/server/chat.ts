@@ -300,6 +300,20 @@ export async function resolveProposal(
         "La propuesta venció. Repetí el pedido para revisar los datos actuales.",
         409,
       );
+    for (const [id, version] of Object.entries(choice.versions ?? {})) {
+      const entity = [
+        ...current.units,
+        ...current.entries,
+        ...current.links,
+        ...current.participants,
+      ].find((e) => e.id === id);
+      if (entity?.version !== version)
+        throw new DomainError(
+          "VERSION_CONFLICT",
+          "Los datos de esta propuesta cambiaron. Repetí el pedido antes de confirmar.",
+          409,
+        );
+    }
     const receipt = await executeInTransaction(
       client,
       actor,

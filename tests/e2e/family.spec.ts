@@ -111,17 +111,16 @@ test("separar contenido y corregir un estado conserva cantidades e historial", a
     .click();
   await expect(page.locator(".chat-context")).toContainText("C-001");
   await page
-    .getByRole("button", { name: "Agregar contenido a C-001", exact: true })
+    .getByRole("button", { name: "Ver ficha de unidad activa" })
     .click();
+  await page.getByRole("button", { name: "Agregar", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Descripción", { exact: true }).fill("Platos azules");
   await dialog.getByLabel("Cantidad · opcional").fill("6");
   await dialog
     .getByRole("button", { name: "Guardar cambio", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Ver ficha de unidad activa" })
-    .click();
+
   await page
     .getByRole("button", { name: "Separar parte del contenido" })
     .click();

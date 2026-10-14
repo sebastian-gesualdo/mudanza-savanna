@@ -214,3 +214,6 @@ El organizador confirmó Google Login y guardado real y pidió implementar el ch
 Esta publicación aplica explícitamente la migración aditiva `202610140001_complete_v1.sql` mediante un hook temporal `release-migrations.ts`, restringido a main/Production y al proyecto/origen confirmado. Conserva inventario, accesos y presupuesto. Retirar el hook después de comprobar la publicación. No usarlo como migración indiscriminada de futuras versiones.
 
 `POST /ai/check` es una prueba explícita de dos llamadas pequeñas, con UUID durable, presupuesto y sesión. No modifica inventario. GET/bootstrap/settings nunca disparan modelos facturados.
+
+
+La protección de previews también está en `configured()`: una referencia al proyecto de producción en API/PostgreSQL/origen bloquea Auth y por tanto todos los endpoints familiares. Los POST facturados `/ai/check` y `/search/semantic` requieren actor esperado y rechazan una pestaña de otra cuenta antes de reservar o llamar al proveedor. Confirmar una propuesta valida todas sus versiones originales; un comando manual de adición conserva la concurrencia permitida por el dominio.
