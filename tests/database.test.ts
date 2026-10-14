@@ -12,7 +12,11 @@ import {
   snapshot,
   transaction,
 } from "../src/server/database";
-import { reserveBudget } from "../src/ai/services";
+import { reserveBudget, paidCall } from "../src/ai/services";
+import { processMessage, resolveProposal } from "../src/server/chat";
+import { semanticSearch } from "../src/ai/pipeline";
+import { previewImport, commitImport } from "../src/server/imports";
+import { applyMigrations } from "../src/server/migrations";
 import { exportInventory } from "../src/server/backup";
 import { restoreEmpty } from "../src/server/restore";
 import {
@@ -21,6 +25,22 @@ import {
   validateProductionTarget,
 } from "../src/server/initial-setup";
 
+const mockedSession = vi.hoisted(() => ({ actor: null as Actor | null }));
+vi.mock("../src/server/auth", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../src/server/auth")>();
+  return {
+    ...original,
+    authenticate: async () => {
+      if (!mockedSession.actor)
+        throw new (await import("../src/domain/model")).DomainError(
+          "SESSION_REQUIRED",
+          "Ingresá con Google.",
+          401,
+        );
+      return mockedSession.actor;
+    },
+  };
+});
 const pg = new EmbeddedPostgres({
   databaseDir: `/tmp/gesualdo-test-${process.pid}`,
   user: "postgres",
@@ -75,6 +95,9 @@ beforeAll(async () => {
   );
   await pool.query(
     await readFile("supabase/migrations/202610130001_initial.sql", "utf8"),
+  );
+  await pool.query(
+    await readFile("supabase/migrations/202610140001_complete_v1.sql", "utf8"),
   );
   await transaction(pool, async (client) => {
     await seedMove(client, moveId);
@@ -459,7 +482,7 @@ describe("PostgreSQL real: transacciones, aislamiento y permisos", () => {
     } finally {
       await closePool(restored);
     }
-  });
+  }, 60000);
   it("primeros logins simultáneos vinculan un único participante y revocación bloquea pedidos", async () => {
     await pool.query(
       "update move_memberships set auth_user_id=null where participant_id=$1",
@@ -519,3 +542,480 @@ describe("PostgreSQL real: transacciones, aislamiento y permisos", () => {
     ).toBeGreaterThan(0);
   });
 });
+
+async function freshActor(sharedMoveId = crypto.randomUUID()) {
+  const a = {
+    moveId: sharedMoveId,
+    participantId: crypto.randomUUID(),
+    userId: crypto.randomUUID(),
+    email: `${crypto.randomUUID()}@example.invalid`,
+  };
+  await transaction(pool, async (client) => {
+    await seedMove(client, a.moveId);
+    await client.query("insert into auth.users(id) values($1)", [a.userId]);
+    await client.query(
+      "insert into participants(id,move_id,data) values($1,$2,$3)",
+      [
+        a.participantId,
+        a.moveId,
+        {
+          id: a.participantId,
+          nickname: `Test ${a.participantId.slice(0, 8)}`,
+          version: 1,
+        },
+      ],
+    );
+    await client.query(
+      "insert into move_memberships(id,move_id,participant_id,auth_user_id,email_normalized) values($1,$2,$3,$4,$5)",
+      [crypto.randomUUID(), a.moveId, a.participantId, a.userId, a.email],
+    );
+  });
+  return a;
+}
+async function chatFixture() {
+  const a = await freshActor();
+  const conversationId = crypto.randomUUID();
+  const deviceId = crypto.randomUUID();
+  const box = crypto.randomUUID();
+  await pool.query(
+    "insert into conversations(id,move_id,participant_id,device_id) values($1,$2,$3,$4)",
+    [conversationId, a.moveId, a.participantId, deviceId],
+  );
+  await executeCommand(
+    a,
+    command(a.participantId, {
+      type: "create_unit",
+      payload: {
+        id: box,
+        kind: "box",
+        name: "Caja AI",
+        destination: "kitchen",
+      },
+    }),
+    deviceId,
+    pool,
+  );
+  return {
+    a,
+    box,
+    request: {
+      messageId: crypto.randomUUID(),
+      conversationId,
+      deviceId,
+      expectedParticipantId: a.participantId,
+      text: "Pedido libre",
+      activeUnitId: box,
+      literal: false,
+    },
+  };
+}
+describe("chat IA y lotes en PostgreSQL real", { timeout: 60000 }, () => {
+  it("reintentos concurrentes usan una lease y el proveedor no bloquea escrituras", async () => {
+    const { a, box, request } = await chatFixture();
+    let release!: () => void;
+    let started!: () => void;
+    const waiting = new Promise<void>((resolve) => (release = resolve));
+    const entered = new Promise<void>((resolve) => (started = resolve));
+    const assistant = vi.fn(async () => {
+      started();
+      await waiting;
+      return { text: "Respuesta persistida" };
+    });
+    const first = processMessage(a, request, pool, assistant);
+    await entered;
+    const second = await processMessage(a, request, pool, assistant);
+    expect(second.processing).toBe(true);
+    await executeCommand(
+      a,
+      command(a.participantId, {
+        type: "append_content",
+        payload: {
+          unitId: box,
+          id: crypto.randomUUID(),
+          description: "Cambio concurrente",
+        },
+      }),
+      undefined,
+      pool,
+    );
+    release();
+    expect((await first).text).toBe("Respuesta persistida");
+    expect((await processMessage(a, request, pool, assistant)).text).toBe(
+      "Respuesta persistida",
+    );
+    expect(assistant).toHaveBeenCalledTimes(1);
+    await expect(
+      processMessage(a, { ...request, text: "Otro payload" }, pool, assistant),
+    ).rejects.toThrow("otros datos");
+  });
+  it("confirma una propuesta una vez y rechaza propuestas obsoletas o de otra cuenta", async () => {
+    const { a, box, request } = await chatFixture();
+    const state = await snapshot(a, pool);
+    const proposal = await processMessage(a, request, pool, async () => ({
+      text: "Cerrar",
+      choices: [
+        {
+          label: "Confirmar",
+          action: {
+            type: "close_unit" as const,
+            payload: { unitId: box, declaredEmpty: true },
+          },
+          versions: versionsFor(state, [box]),
+        },
+      ],
+    }));
+    expect(proposal.choices?.[0].proposal?.messageId).toBe(request.messageId);
+    const resolve = {
+      operationId: crypto.randomUUID(),
+      choiceIndex: 0,
+      expectedParticipantId: a.participantId,
+      deviceId: request.deviceId,
+    };
+    const first = await resolveProposal(a, request.messageId, resolve, pool);
+    const retry = await resolveProposal(
+      a,
+      request.messageId,
+      { ...resolve, operationId: crypto.randomUUID() },
+      pool,
+    );
+    expect(retry.receipt).toEqual(first.receipt);
+    const outsider = await freshActor();
+    await expect(
+      resolveProposal(
+        outsider,
+        request.messageId,
+        { ...resolve, expectedParticipantId: outsider.participantId },
+        pool,
+      ),
+    ).rejects.toThrow("no encontrada");
+    const next = { ...request, messageId: crypto.randomUUID() };
+    await processMessage(a, next, pool, async () => ({
+      text: "Reabrir",
+      choices: [
+        {
+          label: "Confirmar",
+          action: { type: "reopen_unit" as const, payload: { unitId: box } },
+          versions: versionsFor(await snapshot(a, pool), [box]),
+        },
+      ],
+    }));
+    await pool.query(
+      "update messages set response=jsonb_set(response,'{expiresAt}',to_jsonb('2000-01-01T00:00:00Z'::text)) where id=$1",
+      [next.messageId],
+    );
+    await expect(
+      resolveProposal(a, next.messageId, resolve, pool),
+    ).rejects.toThrow("venció");
+  });
+  it("revocar durante la llamada impide finalizar y no toca inventario", async () => {
+    const { a, request } = await chatFixture();
+    await expect(
+      processMessage(a, request, pool, async () => {
+        await pool.query(
+          "update move_memberships set active=false where move_id=$1",
+          [a.moveId],
+        );
+        return { text: "No se puede publicar" };
+      }),
+    ).rejects.toThrow("acceso");
+    expect(
+      (
+        await pool.query("select response from messages where id=$1", [
+          request.messageId,
+        ])
+      ).rows[0].response,
+    ).toBeNull();
+  });
+  it("una consulta pagada se reutiliza y un timeout no se redispara", async () => {
+    const a = await freshActor();
+    vi.stubEnv("AI_ENABLED", "true");
+    vi.stubEnv("AI_REQUEST_RESERVE_USD", "0.001");
+    try {
+      const fn = vi.fn(async () => ({
+        model: "typesafe-ai/jev",
+        inputTokens: 100,
+        outputTokens: 0,
+        choice: "match",
+      }));
+      const key = crypto.randomUUID();
+      await paidCall(a, "decision", key, "texto", fn, pool);
+      await paidCall(a, "decision", key, "texto", fn, pool);
+      expect(fn).toHaveBeenCalledTimes(1);
+      await expect(
+        paidCall(a, "decision", key, "otros datos", fn, pool),
+      ).rejects.toThrow("otros datos");
+      const broken = vi.fn(async () => {
+        throw new Error("timeout");
+      });
+      const failedKey = crypto.randomUUID();
+      await expect(
+        paidCall(a, "decision", failedKey, "texto", broken, pool),
+      ).rejects.toThrow("timeout");
+      await expect(
+        paidCall(a, "decision", failedKey, "texto", broken, pool),
+      ).rejects.toThrow("pendiente");
+      expect(broken).toHaveBeenCalledTimes(1);
+      const usage = (
+        await pool.query(
+          "select cost,reserved,status from ai_usage where request_key=$1",
+          [failedKey],
+        )
+      ).rows[0];
+      expect(usage.cost).toBeNull();
+      expect(Number(usage.reserved)).toBeGreaterThan(0);
+      expect(usage.status).toBe("unreconciled");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+  it("preview no importa; lotes fallidos revierten enteros y reintentos no duplican", async () => {
+    const a = await freshActor();
+    const preview = await previewImport(a, pool);
+    expect(preview.candidates).toHaveLength(145);
+    expect((await snapshot(a, pool)).units).toHaveLength(0);
+    const deviceId = crypto.randomUUID();
+    const rows = preview.candidates.slice(0, 2).map((c) => ({
+      row: c.row,
+      exists: true,
+      kind: "furniture" as const,
+      name: c.name,
+      count: 1,
+      destination: "kitchen",
+    }));
+    const payload = {
+      sessionId: preview.sessionId,
+      deviceId,
+      expectedParticipantId: a.participantId,
+      rows,
+    };
+    await expect(
+      commitImport(
+        a,
+        { ...payload, rows: [rows[0], { ...rows[1], row: 99999 }] },
+        pool,
+      ),
+    ).rejects.toThrow("no encontrada");
+    expect((await snapshot(a, pool)).units).toHaveLength(0);
+    const result = await commitImport(a, payload, pool);
+    expect((await commitImport(a, payload, pool)).rows).toEqual(result.rows);
+    expect((await snapshot(a, pool)).units).toHaveLength(2);
+    const remaining = preview.candidates[2];
+    await commitImport(
+      a,
+      { ...payload, rows: [{ ...rows[0], row: remaining.row, exists: false }] },
+      pool,
+    );
+    expect((await snapshot(a, pool)).units).toHaveLength(2);
+    expect((await previewImport(a, pool)).sessionId).toBe(preview.sessionId);
+  });
+  it("la migración es repetible y conserva inventario y presupuesto", async () => {
+    const { a } = await chatFixture();
+    const before = await snapshot(a, pool);
+    await applyMigrations(pool);
+    expect(await applyMigrations(pool)).toEqual([]);
+    expect(await snapshot(a, pool)).toEqual(before);
+    expect(
+      Number(
+        (
+          await pool.query("select ai_budget from moves where id=$1", [
+            a.moveId,
+          ])
+        ).rows[0].ai_budget,
+      ),
+    ).toBe(5);
+  });
+});
+
+it("HTTP autenticado valida origen, actor, recuperación y deltas entre dos participantes", async () => {
+  const { a, box, request } = await chatFixture();
+  const other = await freshActor(a.moveId);
+  const globals = globalThis as unknown as { gesualdoPool?: Pool };
+  const previous = globals.gesualdoPool;
+  globals.gesualdoPool = pool;
+  vi.stubEnv("APP_BASE_URL", "http://local.test");
+  vi.stubEnv("AI_ENABLED", "false");
+  try {
+    const { GET, POST } = await import("../app/api/[...path]/route");
+    const req = (
+      path: string,
+      payload: unknown,
+      origin = "http://local.test",
+    ) =>
+      new Request(`http://local.test/api/${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", origin },
+        body: JSON.stringify(payload),
+      });
+    mockedSession.actor = null;
+    expect(
+      (await GET(new Request("http://local.test/api/bootstrap"))).status,
+    ).toBe(401);
+    mockedSession.actor = a;
+    expect(
+      (await POST(req("chat/messages", request, "http://foreign.test"))).status,
+    ).toBe(403);
+    expect(
+      (
+        await POST(
+          req("chat/messages", {
+            ...request,
+            expectedParticipantId: other.participantId,
+          }),
+        )
+      ).status,
+    ).toBe(409);
+    const action = command(a.participantId, {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId: box,
+        description: "Respuesta HTTP perdida",
+      },
+    });
+    action.operationId = request.messageId;
+    const payload = { ...request, structuredCommand: action };
+    const first = await POST(req("chat/messages", payload));
+    expect(first.status).toBe(200);
+    const receipt = (await first.json()).receipt;
+    expect(
+      (await (await POST(req("chat/messages", payload))).json()).receipt,
+    ).toEqual(receipt);
+    const cursor = await GET(
+      new Request("http://local.test/api/sync?after=0&limit=1"),
+    );
+    const page = await cursor.json();
+    expect(page.events).toHaveLength(1);
+    expect(page.hasMore).toBe(true);
+    const rest = await (
+      await GET(
+        new Request(
+          `http://local.test/api/sync?after=${page.nextCursor}&limit=100`,
+        ),
+      )
+    ).json();
+    expect(rest.nextCursor).toBe(receipt.revision);
+    expect(rest.events[0].operationId).toBe(request.messageId);
+    mockedSession.actor = other;
+    expect(
+      (
+        await GET(
+          new Request(
+            `http://local.test/api/chat/messages/${request.messageId}`,
+          ),
+        )
+      ).status,
+    ).toBe(404);
+  } finally {
+    mockedSession.actor = null;
+    globals.gesualdoPool = previous;
+    vi.unstubAllEnvs();
+  }
+}, 60000);
+
+it("búsqueda semántica cacheada respeta versiones y nunca elimina resultados exactos", async () => {
+  const { a, box } = await chatFixture();
+  const entry = crypto.randomUUID();
+  await executeCommand(
+    a,
+    command(a.participantId, {
+      type: "append_content",
+      payload: { id: entry, unitId: box, description: "Pava eléctrica" },
+    }),
+    undefined,
+    pool,
+  );
+  vi.stubEnv("AI_ENABLED", "true");
+  try {
+    const evaluate = vi.fn(
+      async (
+        _text: string,
+        questions: Record<string, Record<string, string>>,
+      ) => ({
+        choices: Object.fromEntries(
+          Object.keys(questions).map((key) => [
+            key,
+            key === "R0" ? "match" : "unknown",
+          ]),
+        ),
+        model: "typesafe-ai/jev",
+        inputTokens: 100,
+        outputTokens: 0,
+      }),
+    );
+    const service = { choose: vi.fn(), evaluate };
+    const found = await semanticSearch(
+      a,
+      "aparato para hervir",
+      crypto.randomUUID(),
+      0,
+      pool,
+      service,
+    );
+    expect(found.hits.some((h) => h.entryId === entry)).toBe(true);
+    await semanticSearch(
+      a,
+      "aparato para hervir",
+      crypto.randomUUID(),
+      0,
+      pool,
+      service,
+    );
+    expect(evaluate).toHaveBeenCalledTimes(1);
+    const exact = await semanticSearch(
+      a,
+      "hervidor",
+      crypto.randomUUID(),
+      0,
+      pool,
+      service,
+    );
+    expect(exact.scope).toBe("exact");
+    expect(exact.hits).toHaveLength(1);
+    expect(evaluate).toHaveBeenCalledTimes(1);
+    const modifying = {
+      choose: vi.fn(),
+      evaluate: async (
+        _text: string,
+        questions: Record<string, Record<string, string>>,
+      ) => {
+        const current = await snapshot(a, pool);
+        await executeCommand(
+          a,
+          command(
+            a.participantId,
+            {
+              type: "edit_content",
+              payload: { entryId: entry, description: "Zapatos" },
+            },
+            versionsFor(current, [entry]),
+          ),
+          undefined,
+          pool,
+        );
+        return {
+          choices: Object.fromEntries(
+            Object.keys(questions).map((key) => [
+              key,
+              key === "R0" ? "match" : "unknown",
+            ]),
+          ),
+          model: "typesafe-ai/jev",
+          inputTokens: 100,
+          outputTokens: 0,
+        };
+      },
+    };
+    const changed = await semanticSearch(
+      a,
+      "calentar agua",
+      crypto.randomUUID(),
+      0,
+      pool,
+      modifying,
+    );
+    expect(changed.hits).toHaveLength(0);
+    expect(changed.message).toContain("cambiaron");
+  } finally {
+    vi.unstubAllEnvs();
+  }
+}, 60000);

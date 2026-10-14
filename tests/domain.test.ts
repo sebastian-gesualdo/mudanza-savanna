@@ -13,13 +13,36 @@ import {
 } from "./fixtures";
 
 describe("Integridad del inventario", () => {
-  it('tolera un error de escritura y distingue una zapatilla eléctrica del calzado', () => {
-    let s = run(withBox(), { type: 'append_content', payload: { id: crypto.randomUUID(), unitId, description: 'Pava eléctrica' } });
-    s = run(s, { type: 'append_content', payload: { id: crypto.randomUUID(), unitId, description: 'Zapatilla eléctrica' } });
-    s = run(s, { type: 'append_content', payload: { id: crypto.randomUUID(), unitId, description: 'Zapatos y zapatillas' } });
-    expect(search(s, 'pava electrca')[0].evidence).toBe('Pava eléctrica');
-    expect(search(s, 'pava electrca')[0].approximate).toBe(true);
-    expect(search(s, 'power strip').map(h => h.evidence)).toEqual(['Zapatilla eléctrica']);
+  it("tolera un error de escritura y distingue una zapatilla eléctrica del calzado", () => {
+    let s = run(withBox(), {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId,
+        description: "Pava eléctrica",
+      },
+    });
+    s = run(s, {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId,
+        description: "Zapatilla eléctrica",
+      },
+    });
+    s = run(s, {
+      type: "append_content",
+      payload: {
+        id: crypto.randomUUID(),
+        unitId,
+        description: "Zapatos y zapatillas",
+      },
+    });
+    expect(search(s, "pava electrca")[0].evidence).toBe("Pava eléctrica");
+    expect(search(s, "pava electrca")[0].approximate).toBe(true);
+    expect(search(s, "power strip").map((h) => h.evidence)).toEqual([
+      "Zapatilla eléctrica",
+    ]);
   });
   it("comienza vacío con 17 ambientes y cantidades desconocidas", () => {
     expect(makeState().units).toEqual([]);
@@ -282,4 +305,55 @@ describe("Integridad del inventario", () => {
     );
     expect(unitsCsv(s)).toContain("'=HYPERLINK");
   });
+});
+
+it("dividir contenido conserva relaciones en ambas partes", () => {
+  let state = withBox();
+  const entry = crypto.randomUUID();
+  const furniture = crypto.randomUUID();
+  state = run(state, {
+    type: "append_content",
+    payload: {
+      id: entry,
+      unitId,
+      description: "Tornillos del escritorio",
+      quantity: 8,
+    },
+  });
+  state = run(state, {
+    type: "create_unit",
+    payload: { id: furniture, kind: "furniture", name: "Escritorio" },
+  });
+  state = run(
+    state,
+    {
+      type: "link_accessory",
+      payload: {
+        id: crypto.randomUUID(),
+        entryId: entry,
+        unitId: furniture,
+        relation: "screws",
+      },
+    },
+    [entry, furniture],
+  );
+  const part = crypto.randomUUID();
+  state = run(
+    state,
+    {
+      type: "split_content",
+      payload: {
+        entryId: entry,
+        id: part,
+        quantity: 3,
+        description: "Tornillos separados",
+      },
+    },
+    [entry, unitId],
+  );
+  expect(state.links.filter((l) => l.unitId === furniture)).toHaveLength(2);
+  expect(state.entries.find((e) => e.id === part)?.original).toBe(
+    "Tornillos del escritorio",
+  );
+  expect(state.entries.reduce((sum, e) => sum + (e.quantity ?? 0), 0)).toBe(8);
 });

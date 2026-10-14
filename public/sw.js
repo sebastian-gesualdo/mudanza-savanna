@@ -1,4 +1,4 @@
-const CACHE = 'gesualdo-shell-v1';
+const CACHE = 'gesualdo-shell-v2';
 const STATIC = ['/offline.html', '/icon.svg', '/casa.png', '/manifest.webmanifest'];
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE); await cache.addAll(STATIC);

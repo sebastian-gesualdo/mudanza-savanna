@@ -1,7 +1,14 @@
 import { openDB } from "idb";
 import { Clarification, Choice } from "../domain/chat";
 import { Command, execute } from "../domain/commands";
-import { Change, DomainError, Kind, Receipt, State } from "../domain/model";
+import {
+  Change,
+  DomainError,
+  Event,
+  Kind,
+  Receipt,
+  State,
+} from "../domain/model";
 import { SearchHit } from "../domain/search";
 export interface Message {
   id: string;
@@ -39,6 +46,27 @@ export interface Pending {
 export interface LocalDocument {
   owner: string;
   confirmed: State;
+  syncedRevision?: number;
+  aiCheckId?: string;
+  importReview?: {
+    sessionId: string;
+    rows: {
+      row: number;
+      exists: boolean;
+      kind: Kind;
+      name: string;
+      count: number;
+      destination: string | null;
+    }[];
+  };
+  resolutions?: {
+    messageId: string;
+    choiceIndex: number;
+    operationId: string;
+    expectedParticipantId: string;
+    deviceId: string;
+    status?: string;
+  }[];
   queue: Pending[];
   messages: Message[];
   activeUnitId: string | null;
@@ -88,6 +116,7 @@ export async function loadDocument(
     doc = {
       owner,
       confirmed: state,
+      syncedRevision: state.revision,
       queue: [],
       messages: [],
       activeUnitId: null,
@@ -111,13 +140,22 @@ export async function editDocument(
 ): Promise<LocalDocument> {
   const db = await open();
   const tx = db.transaction("documents", "readwrite");
-  const doc = (await tx.store.get(owner)) as LocalDocument | undefined;
-  if (!doc) throw new Error("Local document missing");
-  edit(doc);
-  await tx.store.put(doc);
-  await tx.done;
-  db.close();
-  return doc;
+  try {
+    const doc = (await tx.store.get(owner)) as LocalDocument | undefined;
+    if (!doc) throw new Error("Local document missing");
+    edit(doc);
+    await tx.store.put(doc);
+    await tx.done;
+    return doc;
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {}
+    await tx.done.catch(() => {});
+    throw error;
+  } finally {
+    db.close();
+  }
 }
 export function touched(command: Command) {
   const actions =
@@ -247,4 +285,37 @@ export async function withSyncLock<T>(owner: string, run: () => Promise<T>) {
     "Este navegador no permite coordinar pendientes entre pestañas. Usá una sola pestaña actualizada.",
     503,
   );
+}
+
+export interface Delta {
+  events: Event[];
+  nextCursor: number;
+  hasMore: boolean;
+  headRevision: number;
+  counters: State["counters"];
+}
+export function applyDelta(doc: LocalDocument, delta: Delta) {
+  let cursor = doc.syncedRevision ?? 0;
+  for (const event of delta.events) {
+    if (event.revision !== cursor + 1)
+      throw new DomainError(
+        "SYNC_GAP",
+        "Hay cambios intermedios pendientes de recuperar.",
+        409,
+      );
+    for (const change of event.changes) applyChange(doc.confirmed, change);
+    if (!doc.confirmed.events.some((e) => e.id === event.id))
+      doc.confirmed.events.push(event);
+    cursor = event.revision;
+  }
+  if (cursor !== delta.nextCursor)
+    throw new DomainError(
+      "SYNC_GAP",
+      "La página de cambios está incompleta.",
+      409,
+    );
+  doc.syncedRevision = cursor;
+  doc.confirmed.revision = Math.max(doc.confirmed.revision, cursor);
+  doc.confirmed.counters = delta.counters;
+  doc.lastSync = new Date().toISOString();
 }

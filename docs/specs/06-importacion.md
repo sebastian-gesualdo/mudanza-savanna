@@ -83,3 +83,8 @@ Restaurar participantes con sus UUID y apodos conserva autores históricos, pero
 Restaurar los contadores y códigos ya reservados para no reciclar etiquetas impresas/escritas que todavía no tengan una unidad sincronizada. Reconciliar el consumo de IA con su registro/proveedor antes de volver a habilitar llamadas: restaurar el inventario no debe reiniciar implícitamente el saldo gastado.
 
 El export offline tiene formato y etiqueta diferenciados, incluyendo `confirmed_revision` y `pending_commands`. No importar esos pendientes como hechos confirmados.
+
+
+### Sesiones y lotes implementados · 14/10/2026
+
+`POST /imports/preview` recupera la sesión propia para el hash inmutable y devuelve originales/progreso sin crear inventario. Cada fila se revisa con existencia, tipo, nombre, cantidad y destino; Removed empieza sin selección. Guardar una revisión la conserva en el dispositivo y el resumen muestra nombres, cantidades, destinos y exclusiones. Una confirmación explícita envía páginas de hasta veinte filas. Cada página es transaccional, la procedencia única evita duplicados incluso entre sesiones y cada reintento debe conservar la decisión original. Cajas/bolsas se revisan individualmente y comienzan vacías. El vínculo de participantes y la administración de accesos permanecen fuera de la API familiar.

@@ -5,6 +5,8 @@ import { ChatReply, Choice, interpret } from "../domain/chat";
 import { DomainError, emptyState, Receipt, State } from "../domain/model";
 import {
   acknowledge,
+  applyDelta,
+  Delta,
   editDocument,
   enqueue,
   loadDocument,
@@ -41,7 +43,9 @@ export async function api<T>(
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }),
-    signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(
+      path.startsWith("chat/messages") || path === "ai/check" ? 70000 : 20000,
+    ),
   });
   const b = await response.json();
   if (!response.ok)
@@ -226,8 +230,11 @@ export function useFamily(
                   command: pending.command,
                   deviceId: latest.deviceId,
                 });
-            if (result.receipt)
-              setDoc(await acknowledge(session.owner, result.receipt));
+            if (result.receipt) {
+              const next = await acknowledge(session.owner, result.receipt);
+              docRef.current = next;
+              setDoc(next);
+            }
           } catch (e) {
             if (
               e instanceof DomainError &&
@@ -252,6 +259,7 @@ export function useFamily(
               "chat/messages",
               message.request,
             );
+            if (result.processing) continue;
             await write((local) => {
               const original = local.messages.find((m) => m.id === message.id);
               if (original) {
@@ -263,8 +271,15 @@ export function useFamily(
               );
               if (response) {
                 response.text = result.text;
+                local.clarification = result.clarification;
                 response.hits = result.hits;
                 response.choices = result.choices;
+                response.expiresAt = result.expiresAt;
+
+                if (result.activeUnitId)
+                  local.activeUnitId = result.activeUnitId;
+                if (result.literal !== undefined)
+                  local.literal = result.literal;
                 response.receipt = result.receipt;
                 response.status = result.receipt
                   ? "Guardado"
@@ -288,12 +303,57 @@ export function useFamily(
             else throw e;
           }
         }
-        const snapshot = await api<State>("inventory/snapshot");
-        await write((local) => {
-          if (snapshot.revision >= local.confirmed.revision)
-            local.confirmed = snapshot;
-          local.lastSync = new Date().toISOString();
-        });
+        for (const resolution of (await editDocument(session.owner, () => {}))
+          .resolutions ?? []) {
+          if (resolution.status) continue;
+          try {
+            const { receipt } = await api<{ receipt: Receipt }>(
+              `chat/messages/${resolution.messageId}/resolve`,
+              {
+                operationId: resolution.operationId,
+                choiceIndex: resolution.choiceIndex,
+                expectedParticipantId: resolution.expectedParticipantId,
+                deviceId: resolution.deviceId,
+              },
+            );
+            await write((local) => {
+              local.resolutions = local.resolutions?.filter(
+                (r) => r.operationId !== resolution.operationId,
+              );
+              local.messages.push({
+                id: receipt.eventId,
+                role: "assistant",
+                text: receipt.summary,
+                at: receipt.at,
+                status: "Guardado",
+                receipt,
+              });
+            });
+          } catch (e) {
+            if (
+              e instanceof DomainError &&
+              [400, 404, 409, 422].includes(e.status)
+            )
+              await write((local) => {
+                const r = local.resolutions?.find(
+                  (r) => r.operationId === resolution.operationId,
+                );
+                if (r) r.status = e.message;
+              });
+            else throw e;
+          }
+        }
+        // Own receipts may be ahead of this cursor. Recover every intervening shared event.
+        for (let page = 0; page < 20; page++) {
+          const local = await editDocument(session.owner, () => {});
+          const delta = await api<Delta>(
+            `sync?after=${local.syncedRevision ?? 0}&limit=100`,
+          );
+          await write((doc) => applyDelta(doc, delta));
+          if (!delta.hasMore) break;
+        }
+        const snapshot = (await editDocument(session.owner, () => {}))
+          .confirmed;
         const currentContext = (await editDocument(session.owner, () => {}))
           .activeUnitId;
         if (
@@ -354,7 +414,10 @@ export function useFamily(
     channel.current.onmessage = (e) => {
       if (e.data === session.owner)
         editDocument(session.owner, () => {})
-          .then(setDoc)
+          .then((next) => {
+            docRef.current = next;
+            setDoc(next);
+          })
           .catch(() => setError("No se pudo leer la copia local."));
     };
     const refresh = () => {
@@ -526,6 +589,26 @@ export function useFamily(
         "Esta propuesta venció. Repetí el pedido para revisar los datos actuales.",
         409,
       );
+    if (choice.proposal && session && !session.demo) {
+      await write((local) => {
+        local.resolutions ??= [];
+        if (
+          !local.resolutions.some(
+            (r) =>
+              r.messageId === choice.proposal!.messageId &&
+              r.choiceIndex === choice.proposal!.choiceIndex,
+          )
+        )
+          local.resolutions.push({
+            ...choice.proposal!,
+            operationId: crypto.randomUUID(),
+            expectedParticipantId: session.actorId,
+            deviceId: local.deviceId,
+          });
+      });
+      void sync();
+      return;
+    }
     if (choice.text) return send(choice.text);
     if (choice.action && session)
       return submit({

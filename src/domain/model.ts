@@ -1,4 +1,4 @@
-import roomSource from "./rooms.json";
+import roomSource from "./rooms.json" with { type: "json" };
 export const rooms = roomSource.rooms;
 export type Kind = "box" | "bag" | "furniture" | "other";
 export type Transit = "at_origin" | "in_transit" | "at_destination";
