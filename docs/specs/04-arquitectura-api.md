@@ -233,3 +233,6 @@ Las etapas de la comprobación temporal usan VERCEL_DEPLOYMENT_ID, con VERCEL_UR
 
 
 La extracción tiene un timeout de 45 segundos, una sola llamada y un máximo de 4096 tokens. Con Jev (12 segundos) queda margen para completar el lease de mensaje de 75 segundos; la ruta conserva maxDuration=90. DeepSeek V4 Pro 0813 desactiva thinking para esta extracción estructurada y solo se enruta a deepseek/alibaba a las tarifas documentadas, sin cambiar de modelo automáticamente. Timeout conserva la reserva incierta y el texto del usuario; no se presenta como gasto cero ni se redispara esa etapa.
+
+
+La comprobación de conectividad del release admite cualquier respuesta Jev dentro del catálogo ficticio (match/unknown), registra decisionProbe.choice y decisionProbe.matched y exige después la extracción válida. Un unknown permitido no se clasifica como fallo de conexión. La calidad semántica se evalúa con el conjunto etiquetado y sus metas de aceptación independientes; un estado verified del helper solo acredita conectividad/formato y la extracción de prueba, no recall ni calibración.

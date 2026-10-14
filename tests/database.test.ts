@@ -1080,7 +1080,7 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
   vi.stubEnv("VERCEL_DEPLOYMENT_ID", "dpl_denied");
   const decision = {
     choose: vi.fn(async () => ({
-      choice: "match",
+      choice: "unknown",
       model: "typesafe-ai/jev",
       inputTokens: 50,
       outputTokens: 0,
@@ -1107,7 +1107,9 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
       outputTokens: 100,
     })),
   };
-  decision.choose.mockRejectedValueOnce(new Error("Provider rejected with 403"));
+  decision.choose.mockRejectedValueOnce(
+    new Error("Provider rejected with 403"),
+  );
   try {
     await expect(checkReleaseAi(pool, a, decision, extraction)).rejects.toThrow(
       "403",
@@ -1127,8 +1129,11 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
     vi.stubEnv("VERCEL_DEPLOYMENT_ID", "dpl_allowed");
     const stages = vi.fn();
     expect(
-      (await checkReleaseAi(pool, a, decision, extraction, stages)).status,
-    ).toBe("verified");
+      await checkReleaseAi(pool, a, decision, extraction, stages),
+    ).toMatchObject({
+      status: "verified",
+      decisionProbe: { choice: "unknown", matched: false },
+    });
     expect(stages.mock.calls).toEqual([
       ["gateway_decision", "typesafe-ai/jev"],
       ["gateway_extraction", "deepseek/deepseek-v4-pro-0813"],
@@ -1139,9 +1144,10 @@ it("verificación del release usa dos etapas recuperables, sin cambiar inventari
     expect(decision.choose).toHaveBeenCalledTimes(2);
     expect(extraction.extract).toHaveBeenCalledTimes(1);
     const preserved = (
-      await pool.query("select cost,reserved,status from ai_usage where id=$1", [
-        failed.id,
-      ])
+      await pool.query(
+        "select cost,reserved,status from ai_usage where id=$1",
+        [failed.id],
+      )
     ).rows[0];
     expect(preserved.status).toBe("unreconciled");
     expect(preserved.cost).toBeNull();
